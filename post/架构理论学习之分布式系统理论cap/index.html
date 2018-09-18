@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>架构理论学习之分布式系统理论CAP</title>
+  <meta property="og:title" content="架构理论学习之分布式系统理论CAP" />
+  <meta name="twitter:title" content="架构理论学习之分布式系统理论CAP" />
+  <meta name="description" content="分布式系统理论CAP
+
+
+CAP 定理（CAP theorem）又被称作布鲁尔定理（Brewer&rsquo;s theorem），是加州大学伯克利分校的计算机科学家埃里克·布鲁尔（Eric Brewer）在 2000 年的 ACM PODC 上提出的一个猜想。2002 年，麻省理工学院的赛斯·吉尔伯特（Seth Gilbert）和南希·林奇（Nancy Lynch）发表了布鲁尔猜想的证明，使之成为分布式计算领域公认的一个定理。
+
+
+==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。
+
+">
+  <meta property="og:description" content="分布式系统理论CAP
+
+
+CAP 定理（CAP theorem）又被称作布鲁尔定理（Brewer&rsquo;s theorem），是加州大学伯克利分校的计算机科学家埃里克·布鲁尔（Eric Brewer）在 2000 年的 ACM PODC 上提出的一个猜想。2002 年，麻省理工学院的赛斯·吉尔伯特（Seth Gilbert）和南希·林奇（Nancy Lynch）发表了布鲁尔猜想的证明，使之成为分布式计算领域公认的一个定理。
+
+
+==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。
+
+">
+  <meta name="twitter:description" content="分布式系统理论CAP
+
+
+CAP 定理（CAP theorem）又被称作布鲁尔定理（Brewer&rsquo;s theorem），是加州大学伯克利分校的计算机科学家埃里克·布鲁尔（Eric Brewer）在 2000 年的 ACM PODC 上提出的一个猜想。2002 年，麻省理工学院的赛斯·吉尔伯特（Seth Gilbert）和南希·林奇（Nancy Lynch）发表了布鲁尔猜想的证明，使之成 …">
+  <meta name="author" content=""/>
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/" />
+  <link rel="alternate" href="http://example.org/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="http://example.org/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="http://example.org/css/syntax.css" /><link rel="stylesheet" href="http://example.org/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="http://example.org/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tag clound" href="/getting-started/">tag clound</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Archive" href="/getting-started/">Archive</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>架构理论学习之分布式系统理论CAP</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on June 18, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="分布式系统理论cap">分布式系统理论CAP</h1>
+
+<blockquote>
+<p>CAP 定理（CAP theorem）又被称作布鲁尔定理（Brewer&rsquo;s theorem），是加州大学伯克利分校的计算机科学家埃里克·布鲁尔（Eric Brewer）在 2000 年的 ACM PODC 上提出的一个猜想。2002 年，麻省理工学院的赛斯·吉尔伯特（Seth Gilbert）和南希·林奇（Nancy Lynch）发表了布鲁尔猜想的证明，使之成为分布式计算领域公认的一个定理。</p>
+</blockquote>
+
+<h3 id="对于设计分布式系统的架构师来说-cap-是必须掌握的理论">==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。</h3>
+
+<p></p>
+
+<p>布鲁尔在提出 CAP 猜想的时候，并没有详细定义 Consistency、Availability、Partition Tolerance 三个单词的明确定义，因此如果初学者去查询 CAP 定义的时候会感到比较困惑，因为不同的资料对 CAP 的详细定义有一些细微的差别</p>
+
+<p>为了更好地解释 CAP 理论，我挑选了 Robert Greiner（<a href="http://robertgreiner.com/about/）的文章作为参考基础。">http://robertgreiner.com/about/）的文章作为参考基础。</a></p>
+
+<p>他的文章前后分别有两个CAP的版本，其中第一篇被标记为“outdated”（有一些中文翻译文章正好参考了第一篇），下面对这两个版本进行对比学习</p>
+
+<hr />
+
+<h2 id="cap-理论">CAP 理论</h2>
+
+<h3 id="第一版解释">第一版解释：</h3>
+
+<blockquote>
+<p>Any distributed system cannot guaranty C, A, and P simultaneously.</p>
+</blockquote>
+
+<p>对于一个分布式计算系统，不可能同时满足一致性（Consistence）、可用性（Availability）、分区容错性（Partition Tolerance）三个设计约束。</p>
+
+<h3 id="第二版解释">第二版解释：</h3>
+
+<blockquote>
+<p>In a distributed system (a collection of interconnected nodes that share data.), you can only have two out of the following three guarantees across a write/read pair: Consistency, Availability, and Partition Tolerance - one of them must be sacrificed.</p>
+</blockquote>
+
+<p>==在一个分布式系统（指互相连接并共享数据的节点的集合）中，当涉及读写操作时，只能保证一致性（Consistence）、可用性（Availability）、分区容错性（Partition Tolerance）三者中的两个，另外一个必须被牺牲。==</p>
+
+<h4 id="对比两个版本的定义-有几个很关键的差异点">对比两个版本的定义，有几个很关键的差异点：</h4>
+
+<ul>
+<li><p>第二版定义了什么才是 CAP 理论探讨的分布式系统，强调了两点：interconnected 和 share data，为何要强调这两点呢？ 因为分布式系统并不一定会互联和共享数据。最简单的例如 Memcache 的集群，相互之间就没有连接和共享数据，因此 Memcache 集群这类分布式系统就不符合 CAP 理论探讨的对象；而 MySQL 集群就是互联和进行数据复制的，因此是 CAP 理论探讨的对象。</p></li>
+
+<li><p>第二版强调了 write/read pair。也就是说，CAP 关注的是对数据的读写操作，而不是分布式系统的所有功能。例如，ZooKeeper 的选举机制就不是 CAP 探讨的对象。</p></li>
+</ul>
+
+<p>相比来说，第二版的定义更加精确。</p>
+
+<blockquote>
+<p>虽然第二版的定义和解释更加严谨，但内容相比第一版来说更加难记一些，所以现在大部分技术人员谈论 CAP 理论时，更多还是按照第一版的定义和解释来说的，因为第一版虽然不严谨，但非常简单和容易记住。</p>
+</blockquote>
+
+<p>第二版除了基本概念，三个基本的设计约束也进行了重新阐述，我来详细分析一下。</p>
+
+<h3 id="三个基本的设计约束">三个基本的设计约束</h3>
+
+<h3 id="1-一致性-consistency">1. 一致性（Consistency）</h3>
+
+<p>第一版解释：</p>
+
+<blockquote>
+<p>All nodes see the same data at the same time.</p>
+</blockquote>
+
+<p>所有节点在同一时刻都能看到相同的数据。</p>
+
+<p>&ensp;</p>
+
+<p>第二版解释：</p>
+
+<blockquote>
+<p>A read is guaranteed to return the most recent write for a given client.</p>
+</blockquote>
+
+<p>对某个指定的客户端来说，读操作保证能够返回最新的写操作结果。</p>
+
+<p>第一版解释和第二版解释的主要差异点表现在：</p>
+
+<ul>
+<li><p>第一版从节点 node 的角度描述，第二版从客户端 client 的角度描述。
+&gt; 相比来说，第二版更加符合我们观察和评估系统的方式，即站在客户端的角度来观察系统的行为和特征。</p></li>
+
+<li><p>第一版的关键词是 see，第二版的关键词是 read。</p></li>
+</ul>
+
+<blockquote>
+<p>第一版解释中的 see，其实并不确切，因为节点 node 是拥有数据，而不是看到数据，即使要描述也是用 have；第二版从客户端 client 的读写角度来描述一致性，定义更加精确。</p>
+</blockquote>
+
+<ul>
+<li>第一版强调同一时刻拥有相同数据（same time + same data），第二版并没有强调这点。</li>
+</ul>
+
+<p>==在事务执行过程中，系统其实处于一个不一致的状态，不同的节点的数据并不完全一致，== 因此第一版的解释“All nodes see the same data at the same time”是不严谨的。</p>
+
+<p>而第二版强调 client 读操作能够获取最新的写结果就没有问题，因为事务在执行过程中，client 是无法读取到未提交的数据的，只有等到事务提交后，client 才能读取到事务写入的数据，而如果事务失败则会进行回滚，client 也不会读取到事务中间写入的数据。</p>
+
+<p>&ensp;</p>
+
+<h3 id="2-可用性-availability">2. 可用性（Availability）</h3>
+
+<p>第一版解释：
+&gt; Every request gets a response on success/failure.</p>
+
+<p>每个请求都能得到成功或者失败的响应。</p>
+
+<p>&ensp;</p>
+
+<p>第二版解释：
+&gt; A non-failing node will return a reasonable response within a reasonable amount of time (no error or timeout).</p>
+
+<p>非故障的节点在合理的时间内返回合理的响应（不是错误和超时的响应）。</p>
+
+<p>第一版解释和第二版解释主要差异点表现在：</p>
+
+<ul>
+<li><p>第一版是 every request，第二版强调了 A non-failing node。
+&gt; 第一版的 every request 是不严谨的，因为只有非故障节点才能满足可用性要求，如果节点本身就故障了，发给节点的请求不一定能得到一个响应。</p></li>
+
+<li><p>第一版的 response 分为 success 和 failure，第二版用了两个 reasonable：reasonable response 和 reasonable time，而且特别强调了 no error or timeout。</p></li>
+</ul>
+
+<blockquote>
+<p>第一版的 success/failure 的定义太泛了，几乎任何情况，无论是否符合 CAP 理论，我们都可以说请求成功和失败，因为超时也算失败、错误也算失败、异常也算失败、结果不正确也算失败；即使是成功的响应，也不一定是正确的。</p>
+
+<p>例如，本来应该返回 100，但实际上返回了 90，这就是成功的响应，但并没有得到正确的结果。相比之下，第二版的解释明确了不能超时、不能出错，结果是合理的，注意没有说“正确”的结果。例如，应该返回 100 但实际上返回了 90，肯定是不正确的结果，但可以是一个合理的结果。</p>
+</blockquote>
+
+<p>&ensp;</p>
+
+<h3 id="3-分区容忍性-partition-tolerance">3. 分区容忍性（Partition Tolerance）</h3>
+
+<p>第一版解释：
+&gt; System continues to work despite message loss or partial failure.</p>
+
+<p>出现消息丢失或者分区错误时系统能够继续运行。</p>
+
+<p>第二版解释：</p>
+
+<blockquote>
+<p>The system will continue to function when network partitions occur.</p>
+</blockquote>
+
+<p>当出现网络分区后，系统能够继续“履行职责”。</p>
+
+<p>第一版解释和第二版解释主要差异点表现在：</p>
+
+<ul>
+<li>第一版用的是 work，第二版用的是 function。</li>
+</ul>
+
+<blockquote>
+<p>work 强调“运行”，只要系统不宕机，我们都可以说系统在 work，返回错误也是 work，拒绝服务也是 work；而 function 强调“发挥作用”“履行职责”，这点和可用性是一脉相承的。也就是说，只有返回 reasonable response 才是 function。相比之下，第二版解释更加明确。</p>
+</blockquote>
+
+<ul>
+<li>第一版描述分区用的是 message loss or partial failure，第二版直接用 network partitions。</li>
+</ul>
+
+<blockquote>
+<p>对比两版解释，第一版是直接说原因，即 message loss 造成了分区，但 message loss 的定义有点狭隘，因为通常我们说的 message loss（丢包），只是网络故障中的一种；第二版直接说现象，即发生了分区现象，不管是什么原因，可能是丢包，也可能是连接中断，还可能是拥塞，只要导致了网络分区，就通通算在里面。</p>
+</blockquote>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="分布式环境的各种问题">分布式环境的各种问题</h2>
+
+<h3 id="1-通信异常">1. 通信异常</h3>
+
+<p>从集中式向分布式演变的过程中，必然引入网络因素，由于网络本身的不可靠性，因此也引入了额外的问题。</p>
+
+<p>分布式系统需要在各个节点之间进行网络通信，因此每次网络通信都会伴随着网络不可用的风险，网络光纤、路由器或是DNS等硬件设备或是系统不可用都会导致最终分布式系统无法顺利完成一次网络通信。另外，即使分布式系统各个节点之间的网络通信能够正常进行，其延时也会大于单机操作。</p>
+
+<p>通常我们认为现代计算机体系结构中，单机内存访问的延时在纳秒数量级（通常是10ns），而正常的一次网络通信的延迟在0.1~1ms左右（相当于内存访问延时的105倍），如此巨大的延时差别，也会影响到消息的收发过程，因此消息丢失和消息延迟变得非常普遍</p>
+
+<h3 id="2-网络分区">2. 网络分区</h3>
+
+<p>==当网络由于发生异常情况，导致分布式系统中部分节点之间的网络延时不断增大，最终导致组成分布式系统的所有节点中，只有部分节点之间能够正常通信，而另一些节点则不能&mdash;-我们将这个现象称为网络分区。当网络分区出现时，分布式系统会出现局部小集群，在极端情况下，这些局部小集群会独立完成原本需要整个分布式系统才能完成的功能，包括对数据的事物处理，这就对分布式一致性提出了非常大的挑战==</p>
+
+<h3 id="3-三态">3. 三态</h3>
+
+<p>上面两点，我们已经了解到在分布式环境下，网络可能会出现各式各样的问题，因此分布式系统的每一次请求与响应，存在特有的三态概念，即==成功、失败、超时==。</p>
+
+<p>在传统的单机系统中，应用程序在调用一个函数之后，能够得到一个非常明确的响应：成功或失败。而在分布式系统中，由于网络是不可靠的，虽然在绝大部分情况下，网络通信也能够接受到成功或失败的响应，当时当网络出现异常的情况下，就可能会出现超时现象，通常有以下两种情况：</p>
+
+<ul>
+<li>由于网络原因，该请求并没有被成功地发送到接收方，而是在发送过程中就发生了消息丢失现象</li>
+<li>该请求成功地被接收方接收后，进行了处理，但是在将响应反馈给发送方的过程中，发生了消息丢失现象</li>
+</ul>
+
+<p>当出现这样的超时现象时，网络通信的发起方是无法确定当前请求是否被成功处理的</p>
+
+<h3 id="4-节点故障">4. 节点故障</h3>
+
+<p>节点故障则是分布式环境下另一个比较常见的问题，指的是组成分布式系统的服务器节点出现的宕机或&rdquo;僵死&rdquo;现象，通常根据经验来说，每个节点都有可能出现故障，并且每天都在发生</p>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="cap-应用">CAP 应用</h2>
+
+<h4 id="就分布式系统而言">就分布式系统而言</h4>
+
+<p>虽然 CAP 理论定义是三个要素中只能取两个，但放到分布式环境下来思考，我们会发现必须选择 P（分区容忍）要素，因为网络本身无法做到 100% 可靠，有可能出故障，所以分区是一个必然的现象。</p>
+
+<p>如果我们选择了 CA 而放弃了 P，那么当发生分区现象时，为了保证 C，系统需要禁止写入，当有写入请求时，系统返回 error（例如，当前系统不允许写入），这又和 A 冲突了，因为 A 要求返回 no error 和 no timeout。</p>
+
+<p>因此，分布式系统理论上不可能选择 CA 架构，只能选择 CP 或者 AP 架构。</p>
+
+<h3 id="1-cp-consistency-partition-tolerance">1.CP - Consistency/Partition Tolerance</h3>
+
+<p>如下图所示，为了保证一致性，当发生分区现象后，N1 节点上的数据已经更新到 y，但由于 N1 和 N2 之间的复制通道中断，数据 y 无法同步到 N2，N2 节点上的数据还是 x。这时客户端 C 访问 N2 时，N2 需要返回 Error，提示客户端 C“系统现在发生了错误”，这种处理方式违背了可用性（Availability）的要求，因此 CAP 三者只能满足 CP。</p>
+
+<p><img src="https://static001.geekbang.org/resource/image/6e/d7/6e7d7bd54d7a4eb67918080863d354d7.png" alt="image" /></p>
+
+<h3 id="2-ap-availability-partition-tolerance">2.AP - Availability/Partition Tolerance</h3>
+
+<p>如下图所示，为了保证可用性，当发生分区现象后，N1 节点上的数据已经更新到 y，但由于 N1 和 N2 之间的复制通道中断，数据 y 无法同步到 N2，N2 节点上的数据还是 x。这时客户端 C 访问 N2 时，N2 将当前自己拥有的数据 x 返回给客户端 C 了，而实际上当前最新的数据已经是 y 了，这就不满足一致性（Consistency）的要求了，因此 CAP 三者只能满足 AP。注意：这里 N2 节点返回 x，虽然不是一个“正确”的结果，但是一个“合理”的结果，因为 x 是旧的数据，并不是一个错乱的值，只是不是最新的数据而已。</p>
+
+<p><img src="https://static001.geekbang.org/resource/image/2c/d6/2ccafe41de9bd7f8dec4658f004310d6.png" alt="image" /></p>
+
+<hr />
+
+<h2 id="总结">总结：</h2>
+
+<h4 id="cap理论">CAP理论：</h4>
+
+<p>在一个分布式系统（指互相连接并共享数据的节点的集合）中，当涉及读写操作时，只能保证一致性（Consistence）、可用性（Availability）、分区容错性（Partition Tolerance）三者中的两个，另外一个必须被牺牲。</p>
+
+<h4 id="一致性-consistence">一致性 Consistence：</h4>
+
+<ul>
+<li>对某个指定的客户端来说，读操作保证能够返回最新的写操作结果。</li>
+</ul>
+
+<h4 id="可用性-availability">可用性 Availability：</h4>
+
+<ul>
+<li>非故障的节点在合理的时间内返回合理的响应（不是错误和超时的响应）。</li>
+</ul>
+
+<h4 id="分区容错性-partition-tolerance">分区容错性 Partition Tolerance：</h4>
+
+<ul>
+<li>当出现网络分区后，系统能够继续“履行职责”。</li>
+</ul>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="cap定理存在不少坑点-理解起来很是令人费解">CAP定理存在不少坑点，理解起来很是令人费解。</h2>
+
+<h4 id="1-适用场景-分布式系统有很多类型-有异构的-比如节点之间是上下游依赖的关系-有同构的-比如分区-分片型的-副本型的-主从-多主-cap定理的适用场景是副本型的这种">1、适用场景。分布式系统有很多类型，有异构的，比如节点之间是上下游依赖的关系，有同构的，比如分区/分片型的、副本型的（主从、多主）。CAP定理的适用场景是副本型的这种。</h4>
+
+<h4 id="2-一致性的概念-从强到弱-线性一致性-顺序一致性-因果一致性-单调一致性-最终一致性-cap中的一致性应该是指顺序一致性">2、一致性的概念，从强到弱，线性一致性、顺序一致性、因果一致性、单调一致性、最终一致性，CAP中的一致性应该是指顺序一致性。</h4>
+
+<h4 id="3-cap中的一致性-与acid中的一致性的区别-事务中的一致性-是指满足完整性约束条件-cap中的一致性-是指读写一致性">3、CAP中的一致性，与ACID中的一致性的区别。事务中的一致性，是指满足完整性约束条件，CAP中的一致性，是指读写一致性。</h4>
+
+<h4 id="4-cap中的可用性-与我们常说的高可用的区别-比如hbase-mongodb属于cp架构-cassandra-counchdb属于ap系统-能说后者比前者更高可用么-应该不是-cap中的可用性-是指在某一次读操作中-即便发现不一致-也要返回响应-即在合理时间内返回合理响应-我们常说的高可用-是指部分实例挂了-能自动摘除-并由其它实例继续提供服务-关键是冗余">4、CAP中的可用性，与我们常说的高可用的区别。比如HBase、MongoDB属于CP架构，Cassandra、CounchDB属于AP系统，能说后者比前者更高可用么？应该不是。CAP中的可用性，是指在某一次读操作中，即便发现不一致，也要返回响应，即在合理时间内返回合理响应。我们常说的高可用，是指部分实例挂了，能自动摘除，并由其它实例继续提供服务，关键是冗余。</h4>
+
+<h4 id="5-哪些情况属于网络分区-网络故障造成的分区-属于-节点应用出现问题导致超时-属于-节点宕机或硬件故障-不属于">5、哪些情况属于网络分区。网络故障造成的分区，属于。节点应用出现问题导致超时，属于。节点宕机或硬件故障，不属于。</h4>
+
+<blockquote>
+<p>接下来会写关于数据库 ACID 的内容 和 分布式事务处理</p>
+</blockquote>
+
+        
+          <div class="blog-tags">
+            
+              <a href="http://example.org//tags/%E6%9E%B6%E6%9E%84/">架构</a>&nbsp;
+            
+              <a href="http://example.org//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+            <li class="next">
+              <a href="http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="初探架构(一)何为架构?">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="http://example.org/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="http://example.org/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="http://example.org/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

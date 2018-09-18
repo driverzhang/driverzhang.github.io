@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构 on Gopherzhang</title>
+    <link>http://example.org/tags/%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 架构 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 15 Sep 2018 12:55:05 +0800</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>初探架构(一)何为架构?</title>
+      <link>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</link>
+      <pubDate>Sat, 15 Sep 2018 12:55:05 +0800</pubDate>
+      
+      <guid>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</guid>
+      <description>&lt;h1 id=&#34;初探说明&#34;&gt;初探说明：&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;最近极客时间推出一个性价比很高的架构课程“从零开始学架构”，我抱着试一试学习的态度付钱了。于是就有了这个“从零开始学架构”的系列文章。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;下面开始表演真正的技术吧。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>架构理论学习之分布式系统理论CAP</title>
+      <link>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
+      <pubDate>Mon, 18 Jun 2018 14:03:56 +0000</pubDate>
+      
+      <guid>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
+      <description>&lt;h1 id=&#34;分布式系统理论cap&#34;&gt;分布式系统理论CAP&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CAP 定理（CAP theorem）又被称作布鲁尔定理（Brewer&amp;rsquo;s theorem），是加州大学伯克利分校的计算机科学家埃里克·布鲁尔（Eric Brewer）在 2000 年的 ACM PODC 上提出的一个猜想。2002 年，麻省理工学院的赛斯·吉尔伯特（Seth Gilbert）和南希·林奇（Nancy Lynch）发表了布鲁尔猜想的证明，使之成为分布式计算领域公认的一个定理。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;对于设计分布式系统的架构师来说-cap-是必须掌握的理论&#34;&gt;==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
