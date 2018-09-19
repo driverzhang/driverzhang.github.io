@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sat, 15 Sep 2018 12:55:05 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 19 Sep 2018 21:11:34 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>博客转移hexo到hugo</title>
+      <link>https://driverzhang.github.io/post/%E5%8D%9A%E5%AE%A2%E8%BD%AC%E7%A7%BBhexo%E5%88%B0hugo/</link>
+      <pubDate>Wed, 19 Sep 2018 21:11:34 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%8D%9A%E5%AE%A2%E8%BD%AC%E7%A7%BBhexo%E5%88%B0hugo/</guid>
+      <description>博客转移 hexo 到 hugo Hexo 被我淘汰的博客系统 之前的博客也写了一年多了，一直用的是hexo，这玩意是基于node.js搞出来的货，网上的文档和资源主题什么的都还是很不错的，遇见的坑都能在网上搜到。
+hexo 缺点：  本地执行编译太慢，而且要敲多次命令，相当于你要编译多次就要感受多次 “很慢” 的感觉！
+ 之前的博客时间过的越久，总感觉越发丑low!!!
+  如下图： Hugo 新的发现 Go语言的优越感 Hugo 是由 Steve Francis基于Go语言开发的静态网站构建工具。
+就是因为 Go语言 所以构建速度非常之快。YouTube 上有专门的视频讲解对比它到底有多快！
+安装hugo  Hugo的安装十分简单，安装时不需要安装任何依赖软件，其本身只是一个二进制文件，可以使用以下几种方式安装：
+ 1. 直接使用二进制文件安装 到 Hugo release 下载对应系统的安装包，解压后放到$PATH目录下即可使用
+2. 使用go get安装 这种安装方式的前提是您的电脑上已经配置了Go开发环境，为了简单起见，建议直接下载编译好的发型版安装。
+go get -u -v github.com/gohugoio/hugo 详细方式请参考：https://github.com/gohugoio/hugo
+3. Brew安装 Mac用户，可以使用brew命令来安装。
+brew install hugo 注意：这种安装方式安装的往往不是最新版本的hugo，如果要使用最新版的hugo，请使用前两种方式安装。 至于其他安装方式 和 配置参数请参考 这篇文章 手把手教你通过Hugo搭建个人博客。</description>
+    </item>
     
     <item>
       <title>初探架构(一)何为架构?</title>
