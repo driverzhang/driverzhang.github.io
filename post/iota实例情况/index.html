@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>iota实例情况</title>
+  <meta property="og:title" content="iota实例情况" />
+  <meta name="twitter:title" content="iota实例情况" />
+  <meta name="description" content="iota 的一个实例
+
+
+iota是golang语言的常量计数器,只能在常量的表达式中使用。
+
+iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。
+
+
+使用iota能简化定义，在定义枚举时很有用。
+
+">
+  <meta property="og:description" content="iota 的一个实例
+
+
+iota是golang语言的常量计数器,只能在常量的表达式中使用。
+
+iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。
+
+
+使用iota能简化定义，在定义枚举时很有用。
+
+">
+  <meta name="twitter:description" content="iota 的一个实例
+
+
+iota是golang语言的常量计数器,只能在常量的表达式中使用。
+
+iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。
+
+
+使用iota能简化定义，在定义枚举时很有用。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>iota实例情况</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 24, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="iota-的一个实例">iota 的一个实例</h1>
+
+<blockquote>
+<p>iota是golang语言的常量计数器,只能在常量的表达式中使用。</p>
+
+<p>iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。</p>
+</blockquote>
+
+<p>使用iota能简化定义，在定义枚举时很有用。</p>
+
+<p></p>
+
+<h2 id="1-iota只能在常量的表达式中使用">1. iota只能在常量的表达式中使用。</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#859900;font-weight:bold">iota</span>)  
+<span style="color:#268bd2">编译错误</span>： <span style="color:#268bd2">undefined</span>: <span style="color:#859900;font-weight:bold">iota</span></code></pre></div>
+<h2 id="2-每次-const-出现时-都会让-iota-初始化为0">2. 每次 const 出现时，都会让 iota 初始化为0.</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">const</span> <span style="color:#268bd2">a</span> = <span style="color:#859900;font-weight:bold">iota</span> <span style="color:#93a1a1;font-style:italic">// a=0 
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">const</span> ( 
+  <span style="color:#268bd2">b</span> = <span style="color:#859900;font-weight:bold">iota</span>     <span style="color:#93a1a1;font-style:italic">//b=0 
+</span><span style="color:#93a1a1;font-style:italic"></span>  <span style="color:#268bd2">c</span>            <span style="color:#93a1a1;font-style:italic">//c=1 
+</span><span style="color:#93a1a1;font-style:italic"></span>)</code></pre></div>
+<h2 id="3-自定义类型">3. 自定义类型</h2>
+
+<blockquote>
+<p>自增长常量经常包含一个自定义枚举类型，允许你依靠编译器完成自增设置。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">type</span> <span style="color:#268bd2">Stereotype</span> <span style="color:#859900;font-weight:bold">int</span>
+
+<span style="color:#859900">const</span> ( 
+    <span style="color:#268bd2">TypicalNoob</span> <span style="color:#268bd2">Stereotype</span> = <span style="color:#859900;font-weight:bold">iota</span> <span style="color:#93a1a1;font-style:italic">// 0 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">TypicalHipster</span>                <span style="color:#93a1a1;font-style:italic">// 1 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">TypicalUnixWizard</span>             <span style="color:#93a1a1;font-style:italic">// 2 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">TypicalStartupFounder</span>         <span style="color:#93a1a1;font-style:italic">// 3 
+</span><span style="color:#93a1a1;font-style:italic"></span>)</code></pre></div>
+<h2 id="4-可跳过的值">4. 可跳过的值</h2>
+
+<blockquote>
+<p>可以使用下划线跳过不想要的值。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">type</span> <span style="color:#268bd2">AudioOutput</span> <span style="color:#859900;font-weight:bold">int</span>
+
+<span style="color:#859900">const</span> ( 
+    <span style="color:#268bd2">OutMute</span> <span style="color:#268bd2">AudioOutput</span> = <span style="color:#859900;font-weight:bold">iota</span> <span style="color:#93a1a1;font-style:italic">// 0 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">OutMono</span>                    <span style="color:#93a1a1;font-style:italic">// 1 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">OutStereo</span>                  <span style="color:#93a1a1;font-style:italic">// 2 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">_</span> 
+    <span style="color:#268bd2">_</span> 
+    <span style="color:#268bd2">OutSurround</span>                <span style="color:#93a1a1;font-style:italic">// 5 
+</span><span style="color:#93a1a1;font-style:italic"></span>)</code></pre></div>
+<h2 id="5-位掩码表达式">5. 位掩码表达式</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+<span style="color:#859900">type</span> <span style="color:#268bd2">BitFlag</span> <span style="color:#859900;font-weight:bold">int</span>
+<span style="color:#859900">const</span> (
+    <span style="color:#93a1a1;font-style:italic">// iota为0，1左移0位 = 1
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">Active</span> <span style="color:#268bd2">BitFlag</span> = <span style="color:#2aa198;font-weight:bold">1</span> &lt;&lt; <span style="color:#859900;font-weight:bold">iota</span>
+    <span style="color:#93a1a1;font-style:italic">// Send &lt;=&gt; Active &lt;=&gt; 1 &lt;&lt; iota，此时iota为1，1左移1位 = 2
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">Send</span>
+    <span style="color:#93a1a1;font-style:italic">// Receive &lt;=&gt; Send &lt;=&gt; 1 &lt;&lt; iota，此时iota为2，1左移2位 = 4
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">Receive</span>
+)
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">Active</span>, <span style="color:#268bd2">Send</span>, <span style="color:#268bd2">Receive</span>)
+}</code></pre></div>
+<p>or</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">type</span> <span style="color:#268bd2">Allergen</span> <span style="color:#859900;font-weight:bold">int</span>
+
+<span style="color:#859900">const</span> ( 
+    <span style="color:#268bd2">IgEggs</span> <span style="color:#268bd2">Allergen</span> = <span style="color:#2aa198;font-weight:bold">1</span> &lt;&lt; <span style="color:#859900;font-weight:bold">iota</span> <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; 0 which is 00000001 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">IgChocolate</span>                         <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; 1 which is 00000010 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">IgNuts</span>                              <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; 2 which is 00000100 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">IgStrawberries</span>                      <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; 3 which is 00001000 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">IgShellfish</span>                         <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; 4 which is 00010000 
+</span><span style="color:#93a1a1;font-style:italic"></span>)</code></pre></div>
+<h2 id="6-定义数量级">6. 定义数量级</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">type</span> <span style="color:#268bd2">ByteSize</span> <span style="color:#859900;font-weight:bold">float64</span>
+
+<span style="color:#859900">const</span> (
+    <span style="color:#268bd2">_</span>           = <span style="color:#859900;font-weight:bold">iota</span>                   <span style="color:#93a1a1;font-style:italic">// ignore first value by assigning to blank identifier
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">KB</span> <span style="color:#268bd2">ByteSize</span> = <span style="color:#2aa198;font-weight:bold">1</span> &lt;&lt; (<span style="color:#2aa198;font-weight:bold">10</span> * <span style="color:#859900;font-weight:bold">iota</span>) <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*1) =&gt; 1024
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">MB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*2)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">GB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*3)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">TB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*4)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">PB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*5)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">EB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*6)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">ZB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*7)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">YB</span>                                   <span style="color:#93a1a1;font-style:italic">// 1 &lt;&lt; (10*8)
+</span><span style="color:#93a1a1;font-style:italic"></span>)</code></pre></div>
+<h2 id="7-定义在一行的情况">7. 定义在一行的情况</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">const</span> (
+    <span style="color:#268bd2">Apple</span>, <span style="color:#268bd2">Banana</span> = <span style="color:#859900;font-weight:bold">iota</span> + <span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#859900;font-weight:bold">iota</span> + <span style="color:#2aa198;font-weight:bold">2</span>
+    <span style="color:#268bd2">Cherimoya</span>, <span style="color:#268bd2">Durian</span>
+    <span style="color:#268bd2">Elderberry</span>, <span style="color:#268bd2">Fig</span>
+)</code></pre></div>
+<p>ota 在下一行增长，而不是立即取得它的引用。</p>
+
+<p>// Apple: 1
+// Banana: 2
+// Cherimoya: 2
+// Durian: 3
+// Elderberry: 3
+// Fig: 4</p>
+
+<h2 id="8-中间插队">8、中间插队</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">const</span> ( 
+    <span style="color:#268bd2">i</span> = <span style="color:#859900;font-weight:bold">iota</span> 
+    <span style="color:#268bd2">j</span> = <span style="color:#2aa198;font-weight:bold">3.14</span> 
+    <span style="color:#268bd2">k</span> = <span style="color:#859900;font-weight:bold">iota</span> 
+    <span style="color:#268bd2">l</span> 
+)</code></pre></div>
+<p>那么打印出来的结果是 i=0,j=3.14,k=2,l=3</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f&amp;text=iota%e5%ae%9e%e4%be%8b%e6%83%85%e5%86%b5&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f&amp;title=iota%e5%ae%9e%e4%be%8b%e6%83%85%e5%86%b5" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f&amp;title=iota%e5%ae%9e%e4%be%8b%e6%83%85%e5%86%b5" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f&amp;title=iota%e5%ae%9e%e4%be%8b%e6%83%85%e5%86%b5" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fiota%25E5%25AE%259E%25E4%25BE%258B%25E6%2583%2585%25E5%2586%25B5%2f&amp;description=iota%e5%ae%9e%e4%be%8b%e6%83%85%e5%86%b5" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="golang 知识点.总结一">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/" data-toggle="tooltip" data-placement="top" title="Golang自学路劲资料讲解">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

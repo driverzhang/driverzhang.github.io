@@ -2,21 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>架构 on Gopherzhang</title>
-    <link>http://example.org/tags/%E6%9E%B6%E6%9E%84/</link>
+    <link>https://driverzhang.github.io/tags/%E6%9E%B6%E6%9E%84/</link>
     <description>Recent content in 架构 on Gopherzhang</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
     <lastBuildDate>Sat, 15 Sep 2018 12:55:05 +0800</lastBuildDate>
     
-	<atom:link href="http://example.org/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://driverzhang.github.io/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>初探架构(一)何为架构?</title>
-      <link>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</link>
+      <link>https://driverzhang.github.io/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</link>
       <pubDate>Sat, 15 Sep 2018 12:55:05 +0800</pubDate>
       
-      <guid>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</guid>
+      <guid>https://driverzhang.github.io/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</guid>
       <description>&lt;h1 id=&#34;初探说明&#34;&gt;初探说明：&lt;/h1&gt;
 
 &lt;blockquote&gt;
@@ -29,11 +30,32 @@
     </item>
     
     <item>
+      <title>高性能数据库集群：分库分表</title>
+      <link>https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</link>
+      <pubDate>Thu, 06 Sep 2018 11:26:43 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</guid>
+      <description>&lt;h1 id=&#34;高性能数据库集群-分库分表&#34;&gt;高性能数据库集群：分库分表&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;读写分离分散了数据库读写操作的压力，但没有分散存储压力，当数据量达到千万甚至上亿条的时候，单台数据库服务器的存储能力会成为系统的瓶颈，主要体现在这几个方面：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;数据量太大，读写的性能会下降，即使有索引，索引也会变得很大，性能同样会下降。&lt;/li&gt;
+&lt;li&gt;数据文件会变得很大，数据库备份和恢复需要耗费很长时间。&lt;/li&gt;
+&lt;li&gt;数据文件越大，极端情况下丢失数据的风险越高（例如，机房火灾导致数据库主备机都发生故障）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>架构理论学习之分布式系统理论CAP</title>
-      <link>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
+      <link>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
       <pubDate>Mon, 18 Jun 2018 14:03:56 +0000</pubDate>
       
-      <guid>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
+      <guid>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
       <description>&lt;h1 id=&#34;分布式系统理论cap&#34;&gt;分布式系统理论CAP&lt;/h1&gt;
 
 &lt;blockquote&gt;

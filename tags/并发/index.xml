@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>并发 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E5%B9%B6%E5%8F%91/</link>
+    <description>Recent content in 并发 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Tue, 28 Aug 2018 10:14:14 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E5%B9%B6%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>goroutin 与 map 并发的采坑事件</title>
+      <link>https://driverzhang.github.io/post/goroutin-%E4%B8%8E-map-%E5%B9%B6%E5%8F%91%E7%9A%84%E9%87%87%E5%9D%91%E4%BA%8B%E4%BB%B6/</link>
+      <pubDate>Tue, 28 Aug 2018 10:14:14 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/goroutin-%E4%B8%8E-map-%E5%B9%B6%E5%8F%91%E7%9A%84%E9%87%87%E5%9D%91%E4%BA%8B%E4%BB%B6/</guid>
+      <description>&lt;h1 id=&#34;goroutine-与-map-并发的采坑事件&#34;&gt;goroutine 与 map 并发的采坑事件&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-goroutine-与map-的并发读写操作&#34;&gt;1. goroutine 与map 的并发读写操作&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;在Go 1.6之前， 内置的map类型是部分goroutine安全的，并发的读没有问题，并发的写可能有问题。自go 1.6之后， 并发地读写map会报错，这在一些知名的开源库中都存在这个问题，所以go 1.9之前的解决方案是额外绑定一个锁，封装成一个新的struct或者单独使用锁都可以。&lt;/p&gt;
+
+&lt;p&gt;因为map为引用类型，所以即使函数传值调用，参数副本依然指向映射m, 所以多个goroutine并发写同一个映射m， 写过多线程程序的同学都知道，对于共享变量，资源，并发读写会产生竞争的， 故共享资源遭到破坏&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

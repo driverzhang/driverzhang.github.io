@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>奇技淫巧 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/</link>
+    <description>Recent content in 奇技淫巧 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>FileReader图片上传到服务器</title>
+      <link>https://driverzhang.github.io/post/%E5%A4%B4%E5%83%8F%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0filereader/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%A4%B4%E5%83%8F%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0filereader/</guid>
+      <description>&lt;h1 id=&#34;图片上传到服务器方法&#34;&gt;图片上传到服务器方法&lt;/h1&gt;
+
+&lt;h3 id=&#34;代码如下&#34;&gt;代码如下：&lt;/h3&gt;
+
+&lt;h4 id=&#34;html&#34;&gt;HTML ：&lt;/h4&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TouchSlide触屏滑动特效插件</title>
+      <link>https://driverzhang.github.io/post/touchslide-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/touchslide-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%B3%95/</guid>
+      <description>&lt;h1 id=&#34;touchslide&#34;&gt;TouchSlide&lt;/h1&gt;
+
+&lt;h4 id=&#34;可用于javascript触屏滑动特效插件-移动端滑动特效-触屏焦点图-触屏tab切换-触屏多图切换等&#34;&gt;可用于javascript触屏滑动特效插件，移动端滑动特效，触屏焦点图，触屏Tab切换，触屏多图切换等&lt;/h4&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

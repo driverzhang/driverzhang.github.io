@@ -2,21 +2,49 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gopherzhang</title>
-    <link>http://example.org/</link>
+    <link>https://driverzhang.github.io/</link>
     <description>Recent content on Gopherzhang</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 15 Sep 2018 12:55:05 +0800</lastBuildDate>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Mon, 17 Sep 2018 10:34:06 +0800</lastBuildDate>
     
-	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>初探架构(一)何为架构?</title>
-      <link>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</link>
+      <title>职业发展方向选择</title>
+      <link>https://driverzhang.github.io/life/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95%E6%96%B9%E5%90%91%E9%80%89%E6%8B%A9/</link>
+      <pubDate>Mon, 17 Sep 2018 10:34:06 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/life/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95%E6%96%B9%E5%90%91%E9%80%89%E6%8B%A9/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>关于本人</title>
+      <link>https://driverzhang.github.io/about/</link>
       <pubDate>Sat, 15 Sep 2018 12:55:05 +0800</pubDate>
       
-      <guid>http://example.org/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</guid>
+      <guid>https://driverzhang.github.io/about/</guid>
+      <description> i a gopher </description>
+    </item>
+    
+    <item>
+      <title>关于生活</title>
+      <link>https://driverzhang.github.io/life/life/</link>
+      <pubDate>Sat, 15 Sep 2018 12:55:05 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/life/life/</guid>
+      <description> i a gopher </description>
+    </item>
+    
+    <item>
+      <title>初探架构(一)何为架构?</title>
+      <link>https://driverzhang.github.io/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</link>
+      <pubDate>Sat, 15 Sep 2018 12:55:05 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/</guid>
       <description>&lt;h1 id=&#34;初探说明&#34;&gt;初探说明：&lt;/h1&gt;
 
 &lt;blockquote&gt;
@@ -29,11 +57,190 @@
     </item>
     
     <item>
+      <title>Go语言核心36讲-040606程序实体</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</link>
+      <pubDate>Sat, 08 Sep 2018 14:37:53 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</guid>
+      <description>04.05.06 | 程序实体知识点汇总 04 程序实体哪些事（上） 问题1： 声明变量有几种方式  var :=  问题解析： 考点：  #### 1. 类型推断   简单地说，类型推断是一种编程语言在编译期自动解释表达式类型的能力。
+ var name = &amp;#34;zhang&amp;#34; 这里利用了 Go 语言自身的类型推断省去了 string 它只能用于对变量或常量的初始化。
+ #### 2. 短变量声明用法  知识扩展 1. ==Go 语言的类型推断可以带来哪些好处==？  通过使用 Go 语言的类型推断，而节省下来的键盘敲击次数几乎可以忽略不计。但它真正的好处往往体现在我们写代码之后的事情上， 比如代码的 重构。
+ 重构： 通常把“不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。 重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。
+package main import ( &amp;#34;flag&amp;#34; &amp;#34;fmt&amp;#34; ) func main() { var name = getTheFlag() flag.Parse() fmt.Printf(&amp;#34;Hello, %v!\n&amp;#34;, *name) } func getTheFlag() *string { return flag.</description>
+    </item>
+    
+    <item>
+      <title>高性能数据库集群：分库分表</title>
+      <link>https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</link>
+      <pubDate>Thu, 06 Sep 2018 11:26:43 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/</guid>
+      <description>&lt;h1 id=&#34;高性能数据库集群-分库分表&#34;&gt;高性能数据库集群：分库分表&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;读写分离分散了数据库读写操作的压力，但没有分散存储压力，当数据量达到千万甚至上亿条的时候，单台数据库服务器的存储能力会成为系统的瓶颈，主要体现在这几个方面：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;数据量太大，读写的性能会下降，即使有索引，索引也会变得很大，性能同样会下降。&lt;/li&gt;
+&lt;li&gt;数据文件会变得很大，数据库备份和恢复需要耗费很长时间。&lt;/li&gt;
+&lt;li&gt;数据文件越大，极端情况下丢失数据的风险越高（例如，机房火灾导致数据库主备机都发生故障）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>goroutin 与 map 并发的采坑事件</title>
+      <link>https://driverzhang.github.io/post/goroutin-%E4%B8%8E-map-%E5%B9%B6%E5%8F%91%E7%9A%84%E9%87%87%E5%9D%91%E4%BA%8B%E4%BB%B6/</link>
+      <pubDate>Tue, 28 Aug 2018 10:14:14 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/goroutin-%E4%B8%8E-map-%E5%B9%B6%E5%8F%91%E7%9A%84%E9%87%87%E5%9D%91%E4%BA%8B%E4%BB%B6/</guid>
+      <description>&lt;h1 id=&#34;goroutine-与-map-并发的采坑事件&#34;&gt;goroutine 与 map 并发的采坑事件&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-goroutine-与map-的并发读写操作&#34;&gt;1. goroutine 与map 的并发读写操作&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;在Go 1.6之前， 内置的map类型是部分goroutine安全的，并发的读没有问题，并发的写可能有问题。自go 1.6之后， 并发地读写map会报错，这在一些知名的开源库中都存在这个问题，所以go 1.9之前的解决方案是额外绑定一个锁，封装成一个新的struct或者单独使用锁都可以。&lt;/p&gt;
+
+&lt;p&gt;因为map为引用类型，所以即使函数传值调用，参数副本依然指向映射m, 所以多个goroutine并发写同一个映射m， 写过多线程程序的同学都知道，对于共享变量，资源，并发读写会产生竞争的， 故共享资源遭到破坏&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-02工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Fri, 24 Aug 2018 11:15:02 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;02-命令源码文件&#34;&gt;02 | 命令源码文件&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们已经知道，环境变量 GOPATH 指向的是一个或多个工作区，而每个工作区中都会有以代码包为基本组织形式的源码文件。&lt;/p&gt;
+
+&lt;p&gt;这里的源码文件又分为三种，即：命令源码文件、库源码文件和测试源码文件，它们都有着不同的用途和编写规则。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-什么是命令源码文件-用途是什么-如何编写它&#34;&gt;1. 什么是命令源码文件，用途是什么？如何编写它&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-命令源码文件&#34;&gt;1.1 命令源码文件：&lt;/h3&gt;
+
+&lt;p&gt;==命令源码文件是程序的运行入口，是每个可独立运行的程序必须拥有的。==&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-01工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Tue, 21 Aug 2018 16:27:56 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;01-工作区和gopath&#34;&gt;01 | 工作区和GOPATH&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了&lt;/p&gt;
+
+&lt;p&gt;然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：&lt;/p&gt;
+
+&lt;p&gt;命令行运行下面命令：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Golang 关于 nil 的认识</title>
+      <link>https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/</link>
+      <pubDate>Fri, 17 Aug 2018 16:21:09 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/</guid>
+      <description>&lt;h1 id=&#34;golang-关于-nil-的认识&#34;&gt;Golang 关于 nil 的认识&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-什么是-nil&#34;&gt;1. 什么是 nil ？&lt;/h2&gt;
+
+&lt;p&gt;大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;bool      -&amp;gt; false                              
+numbers -&amp;gt; 0                                 
+string    -&amp;gt; &amp;#34;&amp;#34;      
+
+pointers -&amp;gt; nil
+slices -&amp;gt; nil
+maps -&amp;gt; nil
+channels -&amp;gt; nil
+functions -&amp;gt; nil
+interfaces -&amp;gt; nil&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Golang 中对请求超时设置时间</title>
+      <link>https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/</link>
+      <pubDate>Thu, 16 Aug 2018 18:38:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/</guid>
+      <description>&lt;h1 id=&#34;golang-中对请求超时设置时间&#34;&gt;Golang 中对请求超时设置时间&lt;/h1&gt;
+
+&lt;p&gt;http中有Get/Post/PostForm方法&lt;/p&gt;
+
+&lt;p&gt;可以通过http包中设置client 请求配置 ，然后通过client.Do方法实现请求&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>域名解析cname和A记录</title>
+      <link>https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Mon, 06 Aug 2018 21:25:51 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;h1 id=&#34;域名解析cname和a记录&#34;&gt;域名解析cname和A记录&lt;/h1&gt;
+
+&lt;h2 id=&#34;什么是-cname&#34;&gt;什么是 cname？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CNAME 被称为规范名字。这种记录允许您将多个名字映射到同一台计算机。 通常用于同时提供WWW和MAIL服务的计算机。例如，有一台计算机名为“r0WSPFSx58.”（A记录）。 它同时提供WWW和MAIL服务，为了便于用户访问服务。可以为该计算机设置两个别名（CNAME）：WWW和MAIL。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>本地配置SSH 登录服务商</title>
+      <link>https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/</link>
+      <pubDate>Sun, 08 Jul 2018 13:30:38 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/</guid>
+      <description>&lt;h1 id=&#34;本地配置ssh-登录服务商&#34;&gt;本地配置SSH 登录服务商&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-创建ssh公钥和私钥&#34;&gt;1. 创建ssh公钥和私钥&lt;/h2&gt;
+
+&lt;p&gt;在你的终端输入：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;ssh-keygen
+
+cd .ssh/
+
+open ./&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;你就会看见 有两个文件：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;### id_rsa (这是用于你本地登录服务器的秘钥)&lt;/li&gt;
+&lt;li&gt;### id_rsa.pub (这就是要给服务器配置你的公钥)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>架构理论学习之分布式系统理论CAP</title>
-      <link>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
+      <link>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
       <pubDate>Mon, 18 Jun 2018 14:03:56 +0000</pubDate>
       
-      <guid>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
+      <guid>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
       <description>&lt;h1 id=&#34;分布式系统理论cap&#34;&gt;分布式系统理论CAP&lt;/h1&gt;
 
 &lt;blockquote&gt;
@@ -43,6 +250,619 @@
 &lt;h3 id=&#34;对于设计分布式系统的架构师来说-cap-是必须掌握的理论&#34;&gt;==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。&lt;/h3&gt;
 
 &lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GraphQl初探</title>
+      <link>https://driverzhang.github.io/post/graphql%E5%88%9D%E6%8E%A2/</link>
+      <pubDate>Fri, 15 Jun 2018 19:48:18 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/graphql%E5%88%9D%E6%8E%A2/</guid>
+      <description>&lt;h1 id=&#34;graphql初探&#34;&gt;GraphQL初探&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-什么是-graphql&#34;&gt;1.什么是 GraphQL ？&lt;/h2&gt;
+
+&lt;h3 id=&#34;a-query-language-for-your-api&#34;&gt;A query language for your API&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.&lt;/p&gt;
+
+&lt;p&gt;GraphQL 是 Facebook 在2012年创建、2015年形成规范的一种应用层查询语言&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Golang自学路劲资料讲解</title>
+      <link>https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/</link>
+      <pubDate>Tue, 01 May 2018 10:34:14 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/</guid>
+      <description>&lt;h1 id=&#34;go语言-自学讲解与资料&#34;&gt;Go语言 自学讲解与资料&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;简单说下自己情况，本人目前已有一年多开发经验（前端+后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>iota实例情况</title>
+      <link>https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/</link>
+      <pubDate>Tue, 24 Apr 2018 11:48:05 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/</guid>
+      <description>&lt;h1 id=&#34;iota-的一个实例&#34;&gt;iota 的一个实例&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;iota是golang语言的常量计数器,只能在常量的表达式中使用。&lt;/p&gt;
+
+&lt;p&gt;iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;使用iota能简化定义，在定义枚举时很有用。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>golang 知识点.总结一</title>
+      <link>https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Tue, 06 Mar 2018 00:16:33 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;golang-知识点总结&#34;&gt;golang 知识点总结&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;此系列文档根据慕课网 golang视频总结的个模块知识点汇总。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-1-变量定义&#34;&gt;1.1  变量定义&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-1-使用-var-关键字&#34;&gt;1.1.1 使用 var 关键字&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git 本地分支与远程分支</title>
+      <link>https://driverzhang.github.io/post/git-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</link>
+      <pubDate>Thu, 01 Mar 2018 19:24:43 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</guid>
+      <description>&lt;h1 id=&#34;关于本地分支和远程分支的切换建立问题&#34;&gt;关于本地分支和远程分支的切换建立问题&lt;/h1&gt;
+
+&lt;p&gt;首先我们应该从以前得分支返回到主分支master上面来
+&amp;gt; git checkout master&lt;/p&gt;
+
+&lt;p&gt;然后我们执行下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;git pull  // 拉取一下主分支的代码才能看见哪些新分支更新了！
+
+git remote update origin  // 或者执行此代码 直接可以更新远程分支名。
+
+
+git remote update origin --prune  // 表示更新远程分支名同时，删除掉没有被跟踪的无用分支名
+
+git remote show origin // 查看具体哪些远程分支的跟踪信息等等！
+
+git branch -r  // 再查看下 目前主分支下的所有远程分支！&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Node.js之深入四个定时器</title>
+      <link>https://driverzhang.github.io/post/node-js%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%9B%9B%E4%B8%AA%E5%AE%9A%E6%97%B6%E5%99%A8/</link>
+      <pubDate>Thu, 01 Mar 2018 19:21:50 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/node-js%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%9B%9B%E4%B8%AA%E5%AE%9A%E6%97%B6%E5%99%A8/</guid>
+      <description>&lt;h1 id=&#34;node-js之深入四个定时器&#34;&gt;Node.js之深入四个定时器&lt;/h1&gt;
+
+&lt;h3 id=&#34;javascript-是单线程运行-异步操作特别重要&#34;&gt;JavaScript 是单线程运行，异步操作特别重要。&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Node 的异步语法比浏览器更复杂，因为它可以跟内核对话，不得不搞了一个专门的库 libuv 做这件事。这个库负责各种回调函数的执行时间，毕竟异步任务最后还是要回到主线程，一个个排队执行。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Node.js之node-xlsx模块</title>
+      <link>https://driverzhang.github.io/post/node-js%E4%B9%8Bnode-xlsx%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Wed, 07 Feb 2018 22:55:45 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/node-js%E4%B9%8Bnode-xlsx%E6%A8%A1%E5%9D%97/</guid>
+      <description>&lt;h1 id=&#34;nodejs包之node-xlsx&#34;&gt;Nodejs包之node-xlsx&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;支持读写Excel的node.js模块
+1. node-xlsx: 基于Node.js解析excel文件数据及生成excel文件，仅支持xlsx格式文件；
+2. excel-parser: 基于Node.js解析excel文件数据，支持xls及xlsx格式文件；
+3. excel-export : 基于Node.js将数据生成导出excel文件，生成文件格式为xlsx；
+4. node-xlrd: 基于node.js从excel文件中提取数据，仅支持xls格式文件。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Web工作方式</title>
+      <link>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Wed, 07 Feb 2018 22:51:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</guid>
+      <description>&lt;h2 id=&#34;一-web工作方式&#34;&gt;一. Web工作方式&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时浏览网页的时候,会打开浏览器，输入网址后按下回车键，然后就会显示出你想要浏览的内容。在这个看似简单的用户行为背后，到底隐藏了些什么呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>SQL之inner  join 和 left join、right join区别立</title>
+      <link>https://driverzhang.github.io/post/sql%E4%B9%8Binner-join-%E5%92%8C-left-joinright-join%E5%8C%BA%E5%88%AB%E7%AB%8B/</link>
+      <pubDate>Mon, 29 Jan 2018 20:03:12 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/sql%E4%B9%8Binner-join-%E5%92%8C-left-joinright-join%E5%8C%BA%E5%88%AB%E7%AB%8B/</guid>
+      <description>&lt;h1 id=&#34;inner-join-和-left-join-right-join区别&#34;&gt;inner join 和 left join、right join区别&lt;/h1&gt;
+
+&lt;h3 id=&#34;简单一句话先总结-inner-join-只返回两表条件相同的数据行-其余两个分别以左-右表为基准返回各自基准表的全部数据行-未满足条件部分以-null-返回填入&#34;&gt;简单一句话先总结：inner join 只返回两表条件相同的数据行，其余两个分别以左、右表为基准返回各自基准表的全部数据行，未满足条件部分以 null 返回填入！&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git本地分支与远程分支切换建立</title>
+      <link>https://driverzhang.github.io/post/git%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%BB%BA%E7%AB%8B/</link>
+      <pubDate>Mon, 29 Jan 2018 20:01:36 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%BB%BA%E7%AB%8B/</guid>
+      <description>&lt;h1 id=&#34;关于本地分支和远程分支的切换建立问题&#34;&gt;关于本地分支和远程分支的切换建立问题&lt;/h1&gt;
+
+&lt;h2 id=&#34;一-如果远程仓库没有-abc-分支&#34;&gt;一. 如果远程仓库没有 abc 分支&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;如果远程没有 abc 分支， 那么你想本地建立这个分支并推上远程再关联跟踪这个分支。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Nodejs 之 File System 模块</title>
+      <link>https://driverzhang.github.io/post/nodejs-%E4%B9%8B-file-system-%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Wed, 13 Dec 2017 22:17:48 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/nodejs-%E4%B9%8B-file-system-%E6%A8%A1%E5%9D%97/</guid>
+      <description>&lt;h1 id=&#34;nodejs-之-file-system-模块&#34;&gt;Nodejs 之 File System 模块&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;fs模块为nodejs的核心模块之一，主要处理文件的读写、复制、s删除、重命名等操作。当需要使用该模块时，需要先导入该文件&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>json web token</title>
+      <link>https://driverzhang.github.io/post/json-web-token/</link>
+      <pubDate>Fri, 24 Nov 2017 19:47:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/json-web-token/</guid>
+      <description>&lt;h1 id=&#34;json-web-token-前后端总结&#34;&gt;json web token 前后端总结&lt;/h1&gt;
+
+&lt;h2 id=&#34;一-关于-token-简介&#34;&gt;一. 关于 Token 简介&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-基于-token-的-web-后端认证机制&#34;&gt;1. 基于 Token 的 WEB 后端认证机制&lt;/h3&gt;
+
+&lt;p&gt;几种常见的认证机制
+&amp;gt;- HTTP Basic Auth&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>expressjs4.0之路由Router</title>
+      <link>https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/</link>
+      <pubDate>Fri, 24 Nov 2017 19:45:24 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/</guid>
+      <description>&lt;h1 id=&#34;express-router&#34;&gt;express.Router&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Express.js 4.0 有加入一個新的 Router 功能，它就像一個迷你的应用程序，可以让内部的路由改写更为方便，更具备弹性。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;首先来看下express3-0版本的旧版路由定义的写法&#34;&gt;首先来看下express3.0版本的旧版路由定义的写法：&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>javascript事件循环解析</title>
+      <link>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 22 Nov 2017 14:00:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</guid>
+      <description>&lt;h1 id=&#34;javascript-事件循环解析&#34;&gt;javascript 事件循环解析&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;用几张图来示意了解一下 事件循环和异步调用&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;先来个简单的-ajax-异步&#34;&gt;先来个简单的 ajax 异步&lt;/h2&gt;
+
+&lt;p&gt;让我们来看看下面的例子:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>并发与并行</title>
+      <link>https://driverzhang.github.io/post/%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C/</link>
+      <pubDate>Mon, 20 Nov 2017 11:18:13 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C/</guid>
+      <description>&lt;h1 id=&#34;并发与并行区别&#34;&gt;并发与并行区别&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;先来一张5岁小孩都能看懂的图解释了并发与并行的区别&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>杂记总结</title>
+      <link>https://driverzhang.github.io/post/%E6%9D%82%E8%AE%B0%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 20 Nov 2017 11:14:21 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E6%9D%82%E8%AE%B0%E6%80%BB%E7%BB%93/</guid>
+      <description>&lt;h1 id=&#34;杂记总结&#34;&gt;杂记总结&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-项目框架-express-理解&#34;&gt;1. 项目框架 express 理解&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-express-response-有哪些方法&#34;&gt;1.1 express response 有哪些方法：&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>void 0</title>
+      <link>https://driverzhang.github.io/post/void-0/</link>
+      <pubDate>Fri, 17 Nov 2017 14:20:37 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/void-0/</guid>
+      <description>&lt;h1 id=&#34;void-0-代替-undefined&#34;&gt;void 0 代替 undefined&lt;/h1&gt;
+
+&lt;h2 id=&#34;why&#34;&gt;why?&lt;/h2&gt;
+
+&lt;p&gt;首先说下 undefined 的一些不好的地方：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>promise与callback hell</title>
+      <link>https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/</link>
+      <pubDate>Tue, 07 Nov 2017 22:13:51 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/</guid>
+      <description>&lt;h1 id=&#34;callback-hell-和-promise-异步执行&#34;&gt;callback hell 和 promise 异步执行&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>express、koa框架</title>
+      <link>https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/</link>
+      <pubDate>Tue, 07 Nov 2017 22:06:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/</guid>
+      <description>&lt;h1 id=&#34;expres-koa-egg框架&#34;&gt;expres、koa、egg框架&lt;/h1&gt;
+
+&lt;h2 id=&#34;express的中间件是什么&#34;&gt;express的中间件是什么？&lt;/h2&gt;
+
+&lt;p&gt;中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Node.js之path模块</title>
+      <link>https://driverzhang.github.io/post/node-js%E4%B9%8Bpath%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Tue, 07 Nov 2017 22:06:11 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/node-js%E4%B9%8Bpath%E6%A8%A1%E5%9D%97/</guid>
+      <description>&lt;h1 id=&#34;node-js-之-path模块&#34;&gt;Node.js 之 Path模块&lt;/h1&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#93a1a1;font-style:italic&#34;&gt;//引用该模块
+&lt;/span&gt;&lt;span style=&#34;color:#93a1a1;font-style:italic&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#859900&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#268bd2&#34;&gt;path&lt;/span&gt; = &lt;span style=&#34;color:#268bd2&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#2aa198&#34;&gt;&amp;#34;path&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-path-normalize-路径解析-得到规范化的路径格式&#34;&gt;1. path.normalize 路径解析，得到规范化的路径格式&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>exports和module exports</title>
+      <link>https://driverzhang.github.io/post/exports%E5%92%8Cmodule-exports/</link>
+      <pubDate>Tue, 07 Nov 2017 22:02:45 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/exports%E5%92%8Cmodule-exports/</guid>
+      <description>&lt;h1 id=&#34;exports-和-module-exports&#34;&gt;exports 和 module exports&lt;/h1&gt;
+
+&lt;h2 id=&#34;require-中路径-和-区别&#34;&gt;require 中路径 ./ 和 ../区别&lt;/h2&gt;
+
+&lt;h4 id=&#34;这两种写法都是属于相对路径的使用符号&#34;&gt;这两种写法都是属于相对路径的使用符号&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;rdquo;./&amp;ldquo;：代表与当前文件所在的目录。&lt;/li&gt;
+&lt;li&gt;&amp;rdquo;../&amp;ldquo;：代表上一层目录。&lt;/li&gt;
+&lt;li&gt;&amp;rdquo;/&amp;ldquo;：开头代表根目录。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>端口使用</title>
+      <link>https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Tue, 07 Nov 2017 22:00:30 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;h1 id=&#34;端口的使用&#34;&gt;端口的使用&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;讲个场景，银行当做服务器，银行里每一个窗口当做一个服务，每个窗口的服务内容不一样。你我他可以当做客户端，需要到窗口办事，但是我们每个人办的事情不一样，如果每个窗口服务没有一个编号表示对应的服务，你我他怎么知道要去哪个窗口办理业务。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git分支问题</title>
+      <link>https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 31 Oct 2017 22:42:10 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;h1 id=&#34;git-分支问题&#34;&gt;Git 分支问题&lt;/h1&gt;
+
+&lt;h2 id=&#34;前瞻技能&#34;&gt;前瞻技能&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;h3 id=&#34;git鼓励大量使用分支&#34;&gt;Git鼓励大量使用分支：&lt;/h3&gt;
+
+&lt;p&gt;查看分支：git branch&lt;/p&gt;
+
+&lt;p&gt;创建分支：git branch &lt;name&gt;&lt;/p&gt;
+
+&lt;p&gt;创建+切换分支：git checkout -b &lt;name&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>JS原型和继承</title>
+      <link>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Sat, 21 Oct 2017 21:25:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</guid>
+      <description>&lt;h1 id=&#34;js原型与继承&#34;&gt;JS原型与继承&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-开篇&#34;&gt;1. 开篇&lt;/h2&gt;
+
+&lt;p&gt;先看如下代码出自 JavaScript 高级程序设计第三版 P163：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结四</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</link>
+      <pubDate>Sat, 21 Oct 2017 21:22:21 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</guid>
+      <description>&lt;h1 id=&#34;面试总结四&#34;&gt;面试总结四&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>getQueryStringArgs</title>
+      <link>https://driverzhang.github.io/post/getquerystringargs/</link>
+      <pubDate>Sat, 21 Oct 2017 21:02:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/getquerystringargs/</guid>
+      <description>&lt;h1 id=&#34;getquerystringargs&#34;&gt;getQueryStringArgs&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>this 豁然开朗！</title>
+      <link>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</link>
+      <pubDate>Mon, 16 Oct 2017 13:33:07 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</guid>
+      <description>&lt;h1 id=&#34;this-豁然开朗的四种规则&#34;&gt;this 豁然开朗的四种规则&lt;/h1&gt;
+
+&lt;h3 id=&#34;调用点-call-site&#34;&gt;调用点（call-site）&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;h4 id=&#34;调用点-找到一个函数是在哪里被调用的-但不总是那么简单-比如某些特定的编码模式会使-真正的-调用点变得不那么明确&#34;&gt;调用点：“找到一个函数是在哪里被调用的”，但不总是那么简单，比如某些特定的编码模式会使 真正的 调用点变得不那么明确。&lt;/h4&gt;
+
+&lt;h3 id=&#34;调用栈-call-stack&#34;&gt;调用栈（call-stack）&lt;/h3&gt;
+
+&lt;h4 id=&#34;调用栈-使我们到达当前执行位置而被调用的所有方法的堆栈&#34;&gt;调用栈：使我们到达当前执行位置而被调用的所有方法的堆栈。&lt;/h4&gt;
+
+&lt;p&gt;我们来展示一下调用栈和调用点：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>FileReader图片上传到服务器</title>
+      <link>https://driverzhang.github.io/post/%E5%A4%B4%E5%83%8F%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0filereader/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%A4%B4%E5%83%8F%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0filereader/</guid>
+      <description>&lt;h1 id=&#34;图片上传到服务器方法&#34;&gt;图片上传到服务器方法&lt;/h1&gt;
+
+&lt;h3 id=&#34;代码如下&#34;&gt;代码如下：&lt;/h3&gt;
+
+&lt;h4 id=&#34;html&#34;&gt;HTML ：&lt;/h4&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git常用命令及用法</title>
+      <link>https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/</guid>
+      <description>&lt;h1 id=&#34;git-常用命令&#34;&gt;Git 常用命令：&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;git init 创库初始化。&lt;/p&gt;
+
+&lt;p&gt;git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。&lt;/p&gt;
+
+&lt;p&gt;git commit 提交你所有添加的文件&lt;/p&gt;
+
+&lt;p&gt;git push origin master提交本地仓库到远处链接仓库。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TJS转化大写</title>
+      <link>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</guid>
+      <description>&lt;h1 id=&#34;用js转化大写-98-的都前端同学都没作出来&#34;&gt;用JS转化大写，98%的都前端同学都没作出来！&lt;/h1&gt;
+
+&lt;h3 id=&#34;题目-使用javascript-将字符串中由空格隔开的每个单词-首字-母大写-写出通用方法&#34;&gt;题目：使用JavaScript 将字符串中由空格隔开的每个单词 &lt;strong&gt;首字&lt;/strong&gt; 母大写，写出通用方法。&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;题目解释：&lt;/p&gt;
+
+&lt;p&gt;原始字符串: var string =”I believe I am the best”&lt;br /&gt;
+通过您的方法得到后的结果:string 的值为”I Believe I Am The Best”.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TouchSlide触屏滑动特效插件</title>
+      <link>https://driverzhang.github.io/post/touchslide-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/touchslide-%E6%8F%92%E4%BB%B6%E6%96%B9%E6%B3%95/</guid>
+      <description>&lt;h1 id=&#34;touchslide&#34;&gt;TouchSlide&lt;/h1&gt;
+
+&lt;h4 id=&#34;可用于javascript触屏滑动特效插件-移动端滑动特效-触屏焦点图-触屏tab切换-触屏多图切换等&#34;&gt;可用于javascript触屏滑动特效插件，移动端滑动特效，触屏焦点图，触屏Tab切换，触屏多图切换等&lt;/h4&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>addLoadEvent自定义方法</title>
+      <link>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</guid>
+      <description>&lt;h1 id=&#34;自定义方法-addloadevent&#34;&gt;自定义方法 addLoadEvent&lt;/h1&gt;
+
+&lt;p&gt;假如我们希望某个函数在网页加载完毕之后就立即执行。网页加载完毕时会触发一个onload事件，所以我们可以利用onload事件来加载这个函数。Onload事件与window对象相关联。
+
+如：把myfunction函数绑定到这个事件上：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>arguments系列问题</title>
+      <link>https://driverzhang.github.io/post/arguments/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/arguments/</guid>
+      <description>arguments、arguments.callee、arguments.caller的关系和区别 JS高三教程（P177），一段代码中用到了arguments.callee来调用函数自生，书中介绍到 “是一个指向正在执行的函数的指针，可以用它来实现对函数的递归调用。”
+这段递归调用代码如下：
+function factorial (num) { if (num &amp;lt;= 1) { return 1; } else { return num * arguments.callee(num - 1); } } var num = factorial(10); console.log(num); // =&amp;gt; 3628800  很简单的一段代码。于是自己为了搞清楚知识点，加强自身JS基础，就自己查了下文档  arguments arguments.callee arguments.caller  三者的关系与区别： arguments:  在函数调用时， 会自动在该函数内部生成一个名为 arguments的隐藏对象。 该对象类似于数组， 但又不是数组。可以使用[]操作符获取函数调用时传递的实参。
+ arguments对象不是一个 Array 。它类似于数组，但除了 长度之外没有任何数组属性。 没错它是个对象！并且它存储的是实际传递给函数的参数
+function obj(){ //利用instanceof判断arguments  console.log( &amp;#39;arguments instanceof Array? &amp;#39; + (arguments instanceof Array) ); // =&amp;gt; false  console.</description>
+    </item>
+    
+    <item>
+      <title>面试总结一</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;面试总结一&#34;&gt;面试总结一&lt;/h1&gt;
+
+&lt;h2 id=&#34;box-sizing-常用的属性有哪些-分别什么作用&#34;&gt;box-sizing 常用的属性有哪些？分别什么作用？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。&lt;/p&gt;
+
+&lt;p&gt;那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结三</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</guid>
+      <description>&lt;h1 id=&#34;面试总结三&#34;&gt;面试总结三&lt;/h1&gt;
+
+&lt;h2 id=&#34;一道闭包经典面试题&#34;&gt;一道闭包经典面试题：&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这道题很经典，对于理解闭包很到位，并且还可以稳固js 的词法作用域。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结二</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id=&#34;面试总结二&#34;&gt;面试总结二&lt;/h1&gt;
+
+&lt;h1 id=&#34;css常见兼容问题&#34;&gt;css常见兼容问题&lt;/h1&gt;
+
+&lt;h3 id=&#34;1-浏览器默认的margin和padding不同&#34;&gt;1. 浏览器默认的margin和padding不同：&lt;/h3&gt;</description>
     </item>
     
   </channel>

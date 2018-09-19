@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>express、koa框架</title>
+  <meta property="og:title" content="express、koa框架" />
+  <meta name="twitter:title" content="express、koa框架" />
+  <meta name="description" content="expres、koa、egg框架
+
+express的中间件是什么？
+
+中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。
+
+">
+  <meta property="og:description" content="expres、koa、egg框架
+
+express的中间件是什么？
+
+中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。
+
+">
+  <meta name="twitter:description" content="expres、koa、egg框架
+
+express的中间件是什么？
+
+中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>express、koa框架</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 7, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="expres-koa-egg框架">expres、koa、egg框架</h1>
+
+<h2 id="express的中间件是什么">express的中间件是什么？</h2>
+
+<p>中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。</p>
+
+<p></p>
+
+<blockquote>
+<p>注意： 如果当前中间件没有终结请求-响应循环，则必须调用 next() 方法将控制权交给下一个中间件，否则请求就会挂起。使用可选则挂载路径，可在应用级别或路由级别装载中间件。可装载一系列中间件函数，在挂载点创建一个中间件系统栈。</p>
+</blockquote>
+
+<h4 id="关于next主要从三点来进行说明">关于next主要从三点来进行说明：</h4>
+
+<ol>
+<li>next的作用是什么？</li>
+<li>我们应该在何时使用next？</li>
+<li>next的内部实现机制是什么？</li>
+</ol>
+
+<h2 id="next-的作用">Next 的作用</h2>
+
+<blockquote>
+<p>我们在定义express中间件函数的时候都会将第三个参数定义为next，这个next就是我们今天的主角，next函数主要负责将控制权交给下一个中间件，如果当前中间件没有终结请求，并且next没有被调用，那么请求将被挂起，后边定义的中间件将得不到被执行的机会。</p>
+</blockquote>
+
+<h2 id="何时使用-next">何时使用 Next</h2>
+
+<blockquote>
+<p>next函数主要是用来确保所有注册的中间件被一个接一个的执行，那么我们就应该在所有的中间件中调用next函数，但有一个特例，如果我们定义的中间件终结了本次请求，那就不应该再调用next函数，否则就可能会出问题，我们来看段代码</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">app</span>.<span style="color:#268bd2">get</span>(<span style="color:#2aa198">&#39;/a&#39;</span>, <span style="color:#859900">function</span>(<span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+    <span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;sucess&#39;</span>);
+    <span style="color:#268bd2">next</span>(); <span style="color:#93a1a1;font-style:italic">// =&gt; 注意这里哦！！！
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+
+<span style="color:#93a1a1;font-style:italic">// catch 404 and forward to error handler
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">app</span>.<span style="color:#268bd2">use</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198;font-weight:bold">404</span>);
+  <span style="color:#859900">var</span> <span style="color:#268bd2">err</span> = <span style="color:#859900">new</span> <span style="color:#cb4b16">Error</span>(<span style="color:#2aa198">&#39;Not Found&#39;</span>);
+  <span style="color:#268bd2">err</span>.<span style="color:#268bd2">status</span> = <span style="color:#2aa198;font-weight:bold">404</span>;
+  <span style="color:#268bd2">next</span>(<span style="color:#268bd2">err</span>);
+});
+
+<span style="color:#268bd2">app</span>.<span style="color:#268bd2">use</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>, <span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+  <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#268bd2">err</span>.<span style="color:#268bd2">status</span> || <span style="color:#2aa198;font-weight:bold">500</span>);
+  <span style="color:#268bd2">res</span>.<span style="color:#268bd2">render</span>(<span style="color:#2aa198">&#39;error&#39;</span>, {
+    <span style="color:#268bd2">message</span>: <span style="color:#268bd2">err</span>.<span style="color:#268bd2">message</span>,
+    <span style="color:#268bd2">error</span>: {}
+  });
+});
+</code></pre></div>
+<p>发送请求&rdquo;/a&rdquo;，控制台打印日志如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#2aa198;font-weight:bold">404</span>
+<span style="color:#268bd2">GET</span> /a 500 6.837 ms - -
+<span style="color:#cb4b16">Error</span>: <span style="color:#268bd2">Can</span>&#39;<span style="color:#268bd2">t</span> <span style="color:#268bd2">set</span> <span style="color:#268bd2">headers</span> <span style="color:#268bd2">after</span> <span style="color:#268bd2">they</span> <span style="color:#268bd2">are</span> <span style="color:#268bd2">sent</span>.
+    <span style="color:#268bd2">at</span> <span style="color:#268bd2">ServerResponse</span>.<span style="color:#268bd2">OutgoingMessage</span>.<span style="color:#268bd2">setHeader</span> (<span style="color:#268bd2">_http_outgoing</span>.<span style="color:#268bd2">js</span>:<span style="color:#2aa198;font-weight:bold">345</span>:<span style="color:#2aa198;font-weight:bold">11</span>)
+</code></pre></div>
+<h4 id="why-error">why error?</h4>
+
+<p>=&gt; 因为我们在res.send之后调用了next函数，虽然我们本次的请求已经被终止，但后边的404中间件依旧会被执行，而后边的中间件试图去向res的headers中添加属性值，所以就会抛出上边的异常。</p>
+
+<hr />
+
+<h2 id="关于-koa">关于 koa</h2>
+
+<blockquote>
+<p>虽然Express的API很简单，但是它是基于ES5的语法，要实现异步代码，只有一个方法：回调。如果异步嵌套层次过多，代码写起来就非常难看：</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">app</span>.<span style="color:#268bd2">get</span>(<span style="color:#2aa198">&#39;/test&#39;</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>) {
+    <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;/file1&#39;</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+            <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">500</span>).<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;read file1 error&#39;</span>);
+        }
+        <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;/file2&#39;</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) {
+            <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+                <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">500</span>).<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;read file2 error&#39;</span>);
+            }
+            <span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;text/plain&#39;</span>);
+            <span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>(<span style="color:#268bd2">data</span>);
+        });
+    });
+});
+</code></pre></div>
+<p>随着新版Node.js开始支持ES6，Express的团队又基于ES6的generator重新编写了下一代web框架koa。和Express相比，koa 1.0使用generator实现异步，代码看起来像同步的：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">koa</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;koa&#39;</span>);
+<span style="color:#859900">var</span> <span style="color:#268bd2">app</span> = <span style="color:#268bd2">koa</span>();
+
+<span style="color:#268bd2">app</span>.<span style="color:#268bd2">use</span>(<span style="color:#2aa198">&#39;/test&#39;</span>, <span style="color:#859900">function</span> *() {
+    <span style="color:#859900">yield</span> <span style="color:#268bd2">doReadFile1</span>();
+    <span style="color:#859900">var</span> <span style="color:#268bd2">data</span> = <span style="color:#859900">yield</span> <span style="color:#268bd2">doReadFile2</span>();
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">body</span> = <span style="color:#268bd2">data</span>;
+});
+
+<span style="color:#268bd2">app</span>.<span style="color:#268bd2">listen</span>(<span style="color:#2aa198;font-weight:bold">3000</span>);
+</code></pre></div>
+<p>用generator实现异步比回调简单了不少，但是generator的本意并不是异步。Promise才是为异步设计的，但是Promise的写法……想想就复杂。为了简化异步代码，ES7（目前是草案，还没有发布）引入了新的关键字async和await，可以轻松地把一个function变为异步模式：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">async</span> <span style="color:#859900">function</span> () {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">data</span> = <span style="color:#859900">await</span> <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">read</span>(<span style="color:#2aa198">&#39;/file1&#39;</span>);
+}
+</code></pre></div>
+<h4 id="问题提出">问题提出：</h4>
+
+<ol>
+<li>异步回调问题：callback (es5) 和 promise (es6) 还有 async/await (es7)又是什么呢?</li>
+<li>promise 为主，如何将 callback 转化改成 promise?</li>
+</ol>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/node.js/">Node.js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/express.js/">express.js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/koa.js/">koa.js</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f&amp;text=express%e3%80%81koa%e6%a1%86%e6%9e%b6&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f&amp;title=express%e3%80%81koa%e6%a1%86%e6%9e%b6" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f&amp;title=express%e3%80%81koa%e6%a1%86%e6%9e%b6" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f&amp;title=express%e3%80%81koa%e6%a1%86%e6%9e%b6" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexpresskoa%25E6%25A1%2586%25E6%259E%25B6%2f&amp;description=express%e3%80%81koa%e6%a1%86%e6%9e%b6" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/node-js%E4%B9%8Bpath%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Node.js之path模块">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/" data-toggle="tooltip" data-placement="top" title="promise与callback hell">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

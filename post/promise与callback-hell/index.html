@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>promise与callback hell</title>
+  <meta property="og:title" content="promise与callback hell" />
+  <meta name="twitter:title" content="promise与callback hell" />
+  <meta name="description" content="callback hell 和 promise 异步执行
+
+
+nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。
+
+">
+  <meta property="og:description" content="callback hell 和 promise 异步执行
+
+
+nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。
+
+">
+  <meta name="twitter:description" content="callback hell 和 promise 异步执行
+
+
+nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>promise与callback hell</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 7, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="callback-hell-和-promise-异步执行">callback hell 和 promise 异步执行</h1>
+
+<blockquote>
+<p>nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。</p>
+
+<p></p>
+</blockquote>
+
+<h2 id="一-callback-hell">一. callback hell</h2>
+
+<p>首先我们来看看那 callback 机制著名的 ==callback hell（回调地狱）==：</p>
+
+<blockquote>
+<p>在实际的使用当中，有非常多的应用场景我们不能立即知道应该如何继续往下执行。必须要等到上一个函数返回一些状态值才能继续判断开始业务的下一步操作。</p>
+</blockquote>
+
+<h4 id="例如">例如：</h4>
+
+<p>在ajax的原生实现中，利用了onreadystatechange事件，当该事件触发并且符合一定条件时，才能拿到我们想要的数据，之后我们才能开始处理数据。代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 简单的ajax原生实现
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">url</span> = <span style="color:#2aa198">&#39;https://hq.tigerbrokers.com/fundamental/finance_calendar/getType/2017-02-26/2017-06-10&#39;</span>;
+<span style="color:#859900">var</span> <span style="color:#268bd2">result</span>;
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">XHR</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">XMLHttpRequest</span>();
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">open</span>(<span style="color:#2aa198">&#39;GET&#39;</span>, <span style="color:#268bd2">url</span>, <span style="color:#859900;font-weight:bold">true</span>);
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">send</span>();
+
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">onreadystatechange</span> = <span style="color:#859900">function</span>() {
+    <span style="color:#859900">if</span> (<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">readyState</span> == <span style="color:#2aa198;font-weight:bold">4</span> &amp;&amp; <span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">status</span> == <span style="color:#2aa198;font-weight:bold">200</span>) { <span style="color:#93a1a1;font-style:italic">//这里必须判断是否符合条件再往下写业务逻辑。
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">response</span>;
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">result</span>);
+    }
+}
+</code></pre></div>
+<p>如果这个时候，我们还需要做另外一个ajax请求，这个新的ajax请求的其中一个参数，得从上一个ajax请求中获取，这个时候我们就不得不如下这样做：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">url</span> = <span style="color:#2aa198">&#39;https://hq.tigerbrokers.com/fundamental/finance_calendar/getType/2017-02-26/2017-06-10&#39;</span>;
+<span style="color:#859900">var</span> <span style="color:#268bd2">result</span>;
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">XHR</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">XMLHttpRequest</span>();
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">open</span>(<span style="color:#2aa198">&#39;GET&#39;</span>, <span style="color:#268bd2">url</span>, <span style="color:#859900;font-weight:bold">true</span>);
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">send</span>();
+
+<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">onreadystatechange</span> = <span style="color:#859900">function</span>() {
+    <span style="color:#859900">if</span> (<span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">readyState</span> == <span style="color:#2aa198;font-weight:bold">4</span> &amp;&amp; <span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">status</span> == <span style="color:#2aa198;font-weight:bold">200</span>) {
+        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">XHR</span>.<span style="color:#268bd2">response</span>;
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">result</span>);
+
+        <span style="color:#93a1a1;font-style:italic">// 伪代码
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">var</span> <span style="color:#268bd2">url2</span> = <span style="color:#2aa198">&#39;http:xxx.yyy.com/zzz?ddd=&#39;</span> + <span style="color:#268bd2">result</span>.<span style="color:#268bd2">someParams</span>;
+        <span style="color:#859900">var</span> <span style="color:#268bd2">XHR2</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">XMLHttpRequest</span>();
+        <span style="color:#268bd2">XHR2</span>.<span style="color:#268bd2">open</span>(<span style="color:#2aa198">&#39;GET&#39;</span>, <span style="color:#268bd2">url</span>, <span style="color:#859900;font-weight:bold">true</span>);
+        <span style="color:#268bd2">XHR2</span>.<span style="color:#268bd2">send</span>();
+        <span style="color:#268bd2">XHR2</span>.<span style="color:#268bd2">onreadystatechange</span> = <span style="color:#859900">function</span>() {
+            ...
+        }
+    }
+}
+</code></pre></div>
+<p>当出现第三个ajax(甚至更多)仍然依赖上一个请求的时候，我们的代码就变成了一场灾难。这场灾难，往往也被称为 ==回调地狱==</p>
+
+<p>按照 Node.js 的模式如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"> <span style="color:#859900">var</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(“<span style="color:#268bd2">fs</span><span style="color:#2aa198">&#34;);
+</span><span style="color:#2aa198">2 fs.readFile(filename, &#34;</span><span style="color:#268bd2">binary</span>&#34;, <span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>, <span style="color:#268bd2">file</span>){
+<span style="color:#2aa198;font-weight:bold">3</span>     <span style="color:#859900">if</span>(<span style="color:#268bd2">err</span>){
+<span style="color:#2aa198;font-weight:bold">4</span>         <span style="color:#93a1a1;font-style:italic">//异常情况
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#2aa198;font-weight:bold">5</span>    }<span style="color:#859900">else</span>{
+<span style="color:#2aa198;font-weight:bold">6</span>        <span style="color:#93a1a1;font-style:italic">//正常情况
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#93a1a1;font-style:italic">// 接着在这里写你的业务代码，依次这样层层嵌套，越套越复杂。
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#2aa198;font-weight:bold">7</span>     }
+<span style="color:#2aa198;font-weight:bold">8</span> });            
+</code></pre></div>
+<hr />
+
+<h2 id="二-node-js-异步执行特征">二. Node.js 异步执行特征</h2>
+
+<p>node使用异步IO和事件驱动（回调函数）来解决高并发的问题。
+&gt; 一般来说，高并发解决方案会提供多线程模型，为每个业务逻辑提供一个线程，通过系统线程切换来来弥补同步I/O调用的时间开销。像apache，是一个请求一个线程。</p>
+
+<blockquote>
+<p>而node.js使用的是单线程模型，对所有I/O都采用异步的请求方式，避免频繁的上下文切换，在node.js执行的时候维护着一个事件队列；程序在执行时进入事件循环等待下一个事件到来，每个异步I/O请求完成后都会被推送到事件队列中的等待执行。</p>
+</blockquote>
+
+<h3 id="dome1">Dome1:</h3>
+
+<p>比如说：
+对于一个简单的数据库访问操作，传统方式是这样实现的</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">res = db.query(&#39;SELECT * from some_table&#39;);  
+res.output();   </pre></div>
+<p>代码执行到第一行的时候线程会阻塞，等待query返回结果，然后继续处理。由于数据库查询、磁盘读写、网络通信等原因（所谓的I/O）阻塞时间会非常大（相对于CPU始终频率）。对于高并发的访问，一方面线程长期阻塞等待，另一方面为了应付新情求而不断添加新线程，会浪费大量系统资源，同时线程的增加也会也会占用大量的CPU时间来处理内存上下文切换。看看node.js怎么处理:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">db.query(&#39;SELECT * from some_table&#39;, function(res) {   
+   res.output();  
+});  </pre></div>
+<p>query的第二个参数是一个回调函数，进程执行到db.query的时候不会等待结果返回，而是直接继续执行下面的语句，直到进入事件循环。当数据库执行结果返回的时候会将事件发送到事件队列，等到线程进入事件循环后才会调用之前的回调函数。</p>
+
+<blockquote>
+<h4 id="node-js的异步机制是基于事件的-所有的i-o-网络通信-数据库查询都以非阻塞的方式执行-返回结果由事件循环来处理-node-js在同一时刻只会处理一个事件-完成后立即进入事件循环检查后面事件-这样cpu和内存在同一时间集中处理一件事-同时尽量让耗时的i-o等操作并行执行">node.js的异步机制是基于事件的，所有的I/O、网络通信、数据库查询都以非阻塞的方式执行，返回结果由事件循环来处理。node.js在同一时刻只会处理一个事件，完成后立即进入事件循环检查后面事件。这样CPU和内存在同一时间集中处理一件事，同时尽量让耗时的I/O等操作并行执行。</h4>
+</blockquote>
+
+<h3 id="dome2">Dome2:</h3>
+
+<h4 id="关于-node-event-loop-的机制实例">关于 node event loop 的机制实例：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#2aa198;font-weight:bold">1.</span> <span style="color:#859900">var</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#34;fs&#34;</span>);
+
+<span style="color:#2aa198;font-weight:bold">2.</span> <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;input.txt&#39;</span>, <span style="color:#2aa198;font-weight:bold">4.</span> <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) {<span style="color:#93a1a1;font-style:italic">//异步执行，这个地方没有等待执行结束就已经打印了&#34;程序执行结束&#34;，然后打印data数据
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) <span style="color:#859900">return</span> <span style="color:#268bd2">console</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">err</span>);
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">data</span>.<span style="color:#268bd2">toString</span>());
+    });
+    
+<span style="color:#2aa198;font-weight:bold">3.</span> <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;程序执行结束!&#34;</span>);
+</code></pre></div>
+<p>如上的代码所示：</p>
+
+<ol>
+<li>程序运行到该处时候，引用完后继续往下走。</li>
+<li>到2处时，node 发现了一个异步的 I/O 操作，众所周知 I/O 操作十分耗费资源，node 是单线程的它真的很不想干这件该死的事情！所以它直接交给了 =&gt; libuv， 并给它一个回调函数，也就是标签 4 的地方，这个回调是在 c/c++ 底层处理完之后，libuv 就会去调用这个回调。 ===&gt; 但在交给 libuv 的过程中，程序会继续往下走，不会等你返回的信息。也就到了3的地方了。</li>
+<li>异步执行到了这里打印结果。所以你会先看到 “程序执行结束”，然后才会看见 读取的文件数据内容！</li>
+</ol>
+
+<h4 id="总之-node-一直把难搞的交给别人去搞-等别人搞完了-只执行一个回调而已-所以说node不适合做大量计算的工作-比如你写个while-true-整个程序就蹦了">总之 node 一直把难搞的交给别人去搞，等别人搞完了，只执行一个回调而已。所以说node不适合做大量计算的工作，比如你写个while(true){}整个程序就蹦了。</h4>
+
+<h4 id="node就是喜欢小计算多并发-它处理起来真的有优势-不服不行">node就是喜欢小计算多并发，它处理起来真的有优势，不服不行。</h4>
+
+<hr />
+
+<h2 id="三-promise">三. Promise</h2>
+
+<blockquote>
+<p>promise 主要用于解决 callback hell 回调地狱的问题，当然还可以为了我们的代码更加具有可读性和可维护性，我们需要将数据请求与数据处理明确的区分开来。</p>
+</blockquote>
+
+<p>当我们想要确保某代码在谁谁之后执行时，我们可以利用函数调用栈，将我们想要执行的代码放入回调函数中。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 一个简单的封装
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">function</span> <span style="color:#268bd2">want</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这是你想要执行的代码&#39;</span>);
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这里表示执行了一大堆各种代码&#39;</span>);
+
+    <span style="color:#93a1a1;font-style:italic">// 其他代码执行完毕，最后执行回调函数
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">want</span> &amp;&amp; <span style="color:#268bd2">want</span>();
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; 这里表示执行了一大堆各种代码
+</span><span style="color:#93a1a1;font-style:italic"></span>          <span style="color:#93a1a1;font-style:italic">// =&gt; 这是你想要执行的代码
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>我们还可以利用队列机制：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">want</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这是你想要执行的代码&#39;</span>);
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>) {
+    <span style="color:#93a1a1;font-style:italic">// 将想要执行的代码放入队列中，根据事件循环的机制，我们就不用非得将它放到最后面了，由你自由选择
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">want</span> &amp;&amp; <span style="color:#268bd2">setTimeout</span>(<span style="color:#268bd2">want</span>, <span style="color:#2aa198;font-weight:bold">0</span>);
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这里表示执行了一大堆各种代码&#39;</span>);
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>);
+</code></pre></div>
+<p>用 promise对象:</p>
+
+<p>这里是带参数传递的。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">want</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这是你想要执行的代码&#39;</span>);
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这里表示执行了一大堆各种代码&#39;</span>);
+
+    <span style="color:#93a1a1;font-style:italic">// 返回Promise对象
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#859900">typeof</span> <span style="color:#268bd2">want</span> == <span style="color:#2aa198">&#39;function&#39;</span>) {
+            <span style="color:#268bd2">resolve</span>(<span style="color:#268bd2">want</span>);
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">reject</span>(<span style="color:#2aa198">&#39;TypeError: &#39;</span>+ <span style="color:#268bd2">want</span> +<span style="color:#2aa198">&#39;不是一个函数&#39;</span>)
+        }
+    })
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>).<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">want</span>) {
+    <span style="color:#268bd2">want</span>();
+})
+
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198">&#39;1234&#39;</span>).<span style="color:#859900">catch</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>);
+})
+</code></pre></div>
+<p>等价于:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">want</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这是你想要执行的代码&#39;</span>);
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;这里表示执行了一大堆各种代码&#39;</span>);
+
+    <span style="color:#93a1a1;font-style:italic">// 返回Promise对象
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#859900">typeof</span> <span style="color:#268bd2">want</span> == <span style="color:#2aa198">&#39;function&#39;</span>) {
+            <span style="color:#268bd2">resolve</span>(<span style="color:#268bd2">want</span>);
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">reject</span>(<span style="color:#2aa198">&#39;TypeError: &#39;</span>+ <span style="color:#268bd2">want</span> +<span style="color:#2aa198">&#39;不是一个函数&#39;</span>)
+        }
+    }).<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">want</span>) {
+        <span style="color:#268bd2">want</span>();
+    }).<span style="color:#859900">catch</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>) {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>);
+    });
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#268bd2">want</span>);
+
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198">&#39;1234&#39;</span>);
+</code></pre></div>
+<p>打印结果：（仔细理解其中的异步执行特性）</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">这里表示执行了一大堆各种代码
+这里表示执行了一大堆各种代码
+这是你想要执行的代码
+TypeError: 1234不是一个函数</pre></div>
+<h3 id="关于-promise-的基础知识">关于 promise 的基础知识：</h3>
+
+<h4 id="1-promise对象有三种状态">1. Promise对象有三种状态:</h4>
+
+<ul>
+<li>pending: 等待中，或者进行中，表示还没有得到结果</li>
+<li>resolved(Fulfilled): 已经完成，表示得到了我们想要的结果，可以继续往下执行</li>
+<li>rejected: 也表示得到结果，但是由于结果并非我们所愿，因此拒绝执行</li>
+</ul>
+
+<p>这三种状态不受外界影响，而且状态只能从pending改变为resolved或者rejected，并且不可逆。</p>
+
+<p>在Promise对象的构造函数中，将一个函数作为第一个参数。而这个函数，就是用来处理Promise的状态变化。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+    <span style="color:#859900">if</span>(<span style="color:#859900;font-weight:bold">true</span>) { <span style="color:#268bd2">resolve</span>() };
+    <span style="color:#859900">if</span>(<span style="color:#859900;font-weight:bold">false</span>) { <span style="color:#268bd2">reject</span>() };
+})
+</code></pre></div>
+<p>上面的resolve和reject都为一个函数，他们的作用分别是将状态修改为resolved和rejected。</p>
+
+<h4 id="2-promise对象中的then方法">2. Promise对象中的then方法</h4>
+
+<blockquote>
+<p>以接收构造函数中处理的状态变化，并分别对应执行。then方法有2个参数，第一个函数接收resolved状态的执行，第二个参数接收reject状态的执行。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#859900">typeof</span> <span style="color:#268bd2">num</span> == <span style="color:#2aa198">&#39;number&#39;</span>) {
+            <span style="color:#268bd2">resolve</span>();
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">reject</span>();
+        }
+    }).<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>() {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;参数是一个number值&#39;</span>);
+    }, <span style="color:#859900">function</span>() {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;参数不是一个number值&#39;</span>);
+    })
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198">&#39;hahha&#39;</span>);
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198;font-weight:bold">1234</span>);
+</code></pre></div>
+<p>then方法的执行结果也会返回一个Promise对象。因此我们可以进行then的链式执行，这也是解决回调地狱的主要方式。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">fn</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#859900">typeof</span> <span style="color:#268bd2">num</span> == <span style="color:#2aa198">&#39;number&#39;</span>) {
+            <span style="color:#268bd2">resolve</span>();
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">reject</span>();
+        }
+    })
+    .<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>() {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;参数是一个number值&#39;</span>);
+    })
+    .<span style="color:#268bd2">then</span>(<span style="color:#859900;font-weight:bold">null</span>, <span style="color:#859900">function</span>() {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;参数不是一个number值&#39;</span>);
+    })
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198">&#39;hahha&#39;</span>);
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198;font-weight:bold">1234</span>);
+</code></pre></div>
+<blockquote>
+<p>then(null, function() {}) 就等同于catch(function() {})</p>
+</blockquote>
+
+<h3 id="3-promise中的数据传递">3. Promise中的数据传递</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">fn</span> = <span style="color:#859900">function</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#859900">return</span> <span style="color:#859900">new</span> <span style="color:#cb4b16">Promise</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">resolve</span>, <span style="color:#268bd2">reject</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#859900">typeof</span> <span style="color:#268bd2">num</span> == <span style="color:#2aa198">&#39;number&#39;</span>) {
+            <span style="color:#268bd2">resolve</span>(<span style="color:#268bd2">num</span>);
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">reject</span>(<span style="color:#2aa198">&#39;TypeError&#39;</span>);
+        }
+    })
+}
+
+<span style="color:#268bd2">fn</span>(<span style="color:#2aa198;font-weight:bold">2</span>).<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;first: &#39;</span> + <span style="color:#268bd2">num</span>);
+    <span style="color:#859900">return</span> <span style="color:#268bd2">num</span> + <span style="color:#2aa198;font-weight:bold">1</span>;
+})
+.<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;second: &#39;</span> + <span style="color:#268bd2">num</span>);
+    <span style="color:#859900">return</span> <span style="color:#268bd2">num</span> + <span style="color:#2aa198;font-weight:bold">1</span>;
+})
+.<span style="color:#268bd2">then</span>(<span style="color:#859900">function</span>(<span style="color:#268bd2">num</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;third: &#39;</span> + <span style="color:#268bd2">num</span>);
+    <span style="color:#859900">return</span> <span style="color:#268bd2">num</span> + <span style="color:#2aa198;font-weight:bold">1</span>;
+});
+
+<span style="color:#93a1a1;font-style:italic">// 输出结果
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">first</span>: <span style="color:#2aa198;font-weight:bold">2</span>
+<span style="color:#268bd2">second</span>: <span style="color:#2aa198;font-weight:bold">3</span>
+<span style="color:#268bd2">third</span>: <span style="color:#2aa198;font-weight:bold">4</span>
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/es6/">ES6</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/node.js/">Node.js</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f&amp;text=promise%e4%b8%8ecallback%20hell&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f&amp;title=promise%e4%b8%8ecallback%20hell" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f&amp;title=promise%e4%b8%8ecallback%20hell" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f&amp;title=promise%e4%b8%8ecallback%20hell" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fpromise%25E4%25B8%258Ecallback-hell%2f&amp;description=promise%e4%b8%8ecallback%20hell" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/" data-toggle="tooltip" data-placement="top" title="express、koa框架">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/void-0/" data-toggle="tooltip" data-placement="top" title="void 0">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

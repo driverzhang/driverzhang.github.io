@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Token on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/token/</link>
+    <description>Recent content in Token on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Fri, 24 Nov 2017 19:47:58 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/token/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>json web token</title>
+      <link>https://driverzhang.github.io/post/json-web-token/</link>
+      <pubDate>Fri, 24 Nov 2017 19:47:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/json-web-token/</guid>
+      <description>&lt;h1 id=&#34;json-web-token-前后端总结&#34;&gt;json web token 前后端总结&lt;/h1&gt;
+
+&lt;h2 id=&#34;一-关于-token-简介&#34;&gt;一. 关于 Token 简介&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-基于-token-的-web-后端认证机制&#34;&gt;1. 基于 Token 的 WEB 后端认证机制&lt;/h3&gt;
+
+&lt;p&gt;几种常见的认证机制
+&amp;gt;- HTTP Basic Auth&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

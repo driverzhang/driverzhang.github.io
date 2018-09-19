@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>封装 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E5%B0%81%E8%A3%85/</link>
+    <description>Recent content in 封装 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sat, 21 Oct 2017 21:02:17 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E5%B0%81%E8%A3%85/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>getQueryStringArgs</title>
+      <link>https://driverzhang.github.io/post/getquerystringargs/</link>
+      <pubDate>Sat, 21 Oct 2017 21:02:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/getquerystringargs/</guid>
+      <description>&lt;h1 id=&#34;getquerystringargs&#34;&gt;getQueryStringArgs&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

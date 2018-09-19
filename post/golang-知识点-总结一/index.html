@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>golang 知识点.总结一</title>
+  <meta property="og:title" content="golang 知识点.总结一" />
+  <meta name="twitter:title" content="golang 知识点.总结一" />
+  <meta name="description" content="golang 知识点总结
+
+
+此系列文档根据慕课网 golang视频总结的个模块知识点汇总。
+
+
+1.1  变量定义
+
+1.1.1 使用 var 关键字
+
+">
+  <meta property="og:description" content="golang 知识点总结
+
+
+此系列文档根据慕课网 golang视频总结的个模块知识点汇总。
+
+
+1.1  变量定义
+
+1.1.1 使用 var 关键字
+
+">
+  <meta name="twitter:description" content="golang 知识点总结
+
+
+此系列文档根据慕课网 golang视频总结的个模块知识点汇总。
+
+
+1.1  变量定义
+
+1.1.1 使用 var 关键字
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>golang 知识点.总结一</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on March 6, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="golang-知识点总结">golang 知识点总结</h1>
+
+<blockquote>
+<p>此系列文档根据慕课网 golang视频总结的个模块知识点汇总。</p>
+</blockquote>
+
+<h2 id="1-1-变量定义">1.1  变量定义</h2>
+
+<h3 id="1-1-1-使用-var-关键字">1.1.1 使用 var 关键字</h3>
+
+<p></p>
+
+<ul>
+<li>var a, b, c bool</li>
+<li>var s1, s2 string = &ldquo;hello&rdquo;, &ldquo;world&rdquo;</li>
+<li>可放在函数内，或直接放在包内</li>
+<li>使用 var() 集中定义变量</li>
+</ul>
+
+<h3 id="1-1-2-让编译器自动决定类型">1.1.2 让编译器自动决定类型</h3>
+
+<ul>
+<li>var a, b, i, s1, s2 = true, false, 3, &ldquo;hello&rdquo;, &ldquo;world&rdquo;</li>
+</ul>
+
+<h3 id="1-1-3-使用-定义变量-只能在函数内部">1.1.3 使用 := 定义变量（只能在函数内部）</h3>
+
+<ul>
+<li>a, b, i, s1, s2 := true, false, 3, &ldquo;hello&rdquo;, &ldquo;world&rdquo;</li>
+</ul>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-2-内建变量类型">1.2 内建变量类型</h2>
+
+<ul>
+<li>bool, string</li>
+<li>(u)int, (u)int8, (u)int16, (u)int32, (u)int64, uintptr</li>
+<li>byte, rune</li>
+<li>float32, float4, complex64, complex128</li>
+</ul>
+
+<h3 id="1-2-1-强制类型转换">1.2.1 强制类型转换</h3>
+
+<ul>
+<li>类型转换是强制的</li>
+<li>var a, b int =3 ,4</li>
+<li>var c int = math.Sqrt(a * a + b * b) X错误写法</li>
+<li>var c int = int(math.Sqrt(float63(a * a + b  * b)) √ 正确写法</li>
+<li>? 如果算出来是4.999 =&gt; int出来是变成 4</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;math&#34;</span>
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">triangle</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span> = <span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>
+    <span style="color:#859900">var</span> <span style="color:#268bd2">c</span> <span style="color:#859900;font-weight:bold">int</span>
+
+    <span style="color:#93a1a1;font-style:italic">// 这里 go 不能隐式的转换类型，所以要在显示转换加入int()
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">c</span> = <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">math</span>.<span style="color:#268bd2">Sqrt</span>(<span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">a</span>*<span style="color:#268bd2">a</span> + <span style="color:#268bd2">b</span>*<span style="color:#268bd2">b</span>)))
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">c</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">triangle</span>()
+}
+// =&gt; <span style="color:#2aa198;font-weight:bold">5</span></code></pre></div>
+<h3 id="变量定义要点回顾">变量定义要点回顾</h3>
+
+<ul>
+<li>变量类型写在变量名之后</li>
+<li>编译器可推测变量类型</li>
+<li>没有 char 只有 rune</li>
+<li>原生支持复数类型 complex</li>
+</ul>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-3-常亮与枚举">1.3 常亮与枚举</h2>
+
+<h3 id="1-3-1-常量">1.3.1 常量</h3>
+
+<ul>
+<li>const filename = &ldquo;abc.txt&rdquo;</li>
+<li>const 数值可作为各种类型使用（不用转换）</li>
+<li>const a, b =3, 5</li>
+<li>var c int = int(math.Sqrt(a * a + b * b)) 这里就不用将a ,b 转化为float64.</li>
+</ul>
+
+<h3 id="1-3-2-枚举类型的常量">1.3.2 枚举类型的常量</h3>
+
+<ul>
+<li><p>普通枚举类型</p></li>
+
+<li><p>自增值枚举类型</p></li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">/*
+</span><span style="color:#93a1a1;font-style:italic"> *  枚举类型的常量
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+<span style="color:#859900">func</span> <span style="color:#268bd2">enums</span>() {
+    <span style="color:#859900">const</span> (
+        <span style="color:#268bd2">cpp</span> = <span style="color:#859900;font-weight:bold">iota</span>
+        <span style="color:#268bd2">_</span>  <span style="color:#93a1a1;font-style:italic">// 这里的 _ 表示不用次常量，但要占位置。
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">python</span>
+        <span style="color:#268bd2">golang</span>
+        <span style="color:#268bd2">javascript</span>
+    )
+
+    <span style="color:#93a1a1;font-style:italic">// b , kb, mb, gb, tb ,pb
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">const</span> (
+        <span style="color:#268bd2">b</span> = <span style="color:#2aa198;font-weight:bold">1</span> &lt;&lt; (<span style="color:#2aa198;font-weight:bold">10</span> * <span style="color:#859900;font-weight:bold">iota</span>)  <span style="color:#93a1a1;font-style:italic">// 二进制为1 左移 多少位
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">kb</span>
+        <span style="color:#268bd2">mb</span>
+        <span style="color:#268bd2">gb</span>
+        <span style="color:#268bd2">tb</span>
+        <span style="color:#268bd2">pb</span>
+
+    )
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">cpp</span>, <span style="color:#268bd2">javascript</span>, <span style="color:#268bd2">python</span>, <span style="color:#268bd2">golang</span>)
+    <span style="color:#93a1a1;font-style:italic">// =&gt; 0 4 2 3
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">b</span> , <span style="color:#268bd2">kb</span>, <span style="color:#268bd2">mb</span>, <span style="color:#268bd2">gb</span>, <span style="color:#268bd2">tb</span> ,<span style="color:#268bd2">pb</span>)
+}</code></pre></div>
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-4-条件语句">1.4 条件语句</h2>
+
+<h3 id="1-4-1-if-条件判断">1.4.1   <em>if 条件判断</em></h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span>(
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+    <span style="color:#2aa198">&#34;io/ioutil&#34;</span>
+)
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>(){
+    <span style="color:#859900">const</span> <span style="color:#268bd2">filename</span> = <span style="color:#2aa198">&#34;abc.txt&#34;</span>
+    <span style="color:#859900">if</span> <span style="color:#268bd2">contents</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">ioutil</span>.<span style="color:#268bd2">ReadFile</span>(<span style="color:#268bd2">filename</span>); <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+    } <span style="color:#859900">else</span> {
+        <span style="color:#93a1a1;font-style:italic">// fmt.Println(contents)
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%s\n&#34;</span>, <span style="color:#268bd2">contents</span>)
+    }
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">consts</span>) <span style="color:#93a1a1;font-style:italic">// =&gt; undefined: consts
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<ul>
+<li>if 的条件里可以赋值</li>
+<li>if 的条件里赋值的变量作用域只能在这个 if 语句里</li>
+</ul>
+
+<h3 id="1-4-2-switch-条件判断">1.4.2 <em>switch 条件判断</em></h3>
+
+<ul>
+<li>switch 会自动break,除非你不break 则用 fallthrough</li>
+<li>switch 后可以没有表达式</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">eval</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">op</span> <span style="color:#859900;font-weight:bold">string</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">result</span> <span style="color:#859900;font-weight:bold">int</span>
+    <span style="color:#859900">switch</span> <span style="color:#268bd2">op</span> {
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;+&#34;</span>:
+        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">a</span> + <span style="color:#268bd2">b</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;-&#34;</span>:
+        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">a</span> - <span style="color:#268bd2">b</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;*&#34;</span>:
+        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">a</span> * <span style="color:#268bd2">b</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;/&#34;</span>:
+        <span style="color:#268bd2">result</span> = <span style="color:#268bd2">a</span> / <span style="color:#268bd2">b</span>
+    <span style="color:#859900">default</span>:
+        <span style="color:#cb4b16">panic</span>(<span style="color:#2aa198">&#34;unsupported operator:&#34;</span> + <span style="color:#268bd2">op</span>)
+    }
+    <span style="color:#859900">return</span> <span style="color:#268bd2">result</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">grade</span>(<span style="color:#268bd2">score</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">string</span> {
+    <span style="color:#268bd2">g</span> := <span style="color:#2aa198">&#34;&#34;</span>
+    <span style="color:#859900">switch</span> {
+    <span style="color:#859900">case</span> <span style="color:#268bd2">score</span> &lt; <span style="color:#2aa198;font-weight:bold">0</span> || <span style="color:#268bd2">score</span> &gt; <span style="color:#2aa198;font-weight:bold">100</span>:
+        <span style="color:#cb4b16">panic</span>(<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Sprintf</span>(
+            <span style="color:#2aa198">&#34;Wrong scor: %d&#34;</span>, <span style="color:#268bd2">score</span>))
+    <span style="color:#859900">case</span> <span style="color:#268bd2">score</span> &lt; <span style="color:#2aa198;font-weight:bold">60</span>:
+        <span style="color:#268bd2">g</span> = <span style="color:#2aa198">&#34;F&#34;</span>
+    <span style="color:#859900">case</span> <span style="color:#268bd2">score</span> &lt; <span style="color:#2aa198;font-weight:bold">80</span>:
+        <span style="color:#268bd2">g</span> = <span style="color:#2aa198">&#34;C&#34;</span>
+    <span style="color:#859900">case</span> <span style="color:#268bd2">score</span> &lt; <span style="color:#2aa198;font-weight:bold">90</span>:
+        <span style="color:#268bd2">g</span> = <span style="color:#2aa198">&#34;B&#34;</span>
+    <span style="color:#859900">case</span> <span style="color:#268bd2">score</span> &lt;= <span style="color:#2aa198;font-weight:bold">100</span>:
+        <span style="color:#268bd2">g</span> = <span style="color:#2aa198">&#34;A&#34;</span>
+    }
+    <span style="color:#859900">return</span> <span style="color:#268bd2">g</span>
+}
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(
+        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">0</span>),   <span style="color:#93a1a1;font-style:italic">// F
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">59</span>),  <span style="color:#93a1a1;font-style:italic">// F
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">60</span>),  <span style="color:#93a1a1;font-style:italic">// C
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">82</span>),  <span style="color:#93a1a1;font-style:italic">// B
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">99</span>),  <span style="color:#93a1a1;font-style:italic">// A
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">grade</span>(<span style="color:#2aa198;font-weight:bold">100</span>), <span style="color:#93a1a1;font-style:italic">// A
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#93a1a1;font-style:italic">// grade(101),
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#93a1a1;font-style:italic">// grade(-3),
+</span><span style="color:#93a1a1;font-style:italic"></span>    )
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(
+        <span style="color:#268bd2">eval</span>(<span style="color:#2aa198;font-weight:bold">10</span>, <span style="color:#2aa198;font-weight:bold">90</span>, <span style="color:#2aa198">&#34;+&#34;</span>), <span style="color:#93a1a1;font-style:italic">// 100
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">eval</span>(<span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198;font-weight:bold">10</span>, <span style="color:#2aa198">&#34;-&#34;</span>),  <span style="color:#93a1a1;font-style:italic">// 5
+</span><span style="color:#93a1a1;font-style:italic"></span>    )
+}</code></pre></div>
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-5-循环">1.5 循环</h2>
+
+<ul>
+<li>for 的条件里不需要括号</li>
+<li>for 的条件里可以省略初试条件，结束条件，递增表达式</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// printFile(&#34;abc.txt&#34;)
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">printFile</span>(<span style="color:#268bd2">filename</span> <span style="color:#859900;font-weight:bold">string</span>) {
+    <span style="color:#268bd2">file</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Open</span>(<span style="color:#268bd2">filename</span>) 
+    <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#cb4b16">panic</span>(<span style="color:#268bd2">err</span>)
+    }
+    <span style="color:#268bd2">scanner</span> := <span style="color:#268bd2">bufio</span>.<span style="color:#268bd2">NewScanner</span>(<span style="color:#268bd2">file</span>)
+
+    <span style="color:#859900">for</span> <span style="color:#268bd2">scanner</span>.<span style="color:#268bd2">Scan</span>() {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">scanner</span>.<span style="color:#268bd2">Text</span>()) 
+        <span style="color:#93a1a1;font-style:italic">/* =&gt; aaaa
+</span><span style="color:#93a1a1;font-style:italic">            golang no.1
+</span><span style="color:#93a1a1;font-style:italic">            javascript
+</span><span style="color:#93a1a1;font-style:italic">            node.js
+</span><span style="color:#93a1a1;font-style:italic">        */</span>
+        
+    }
+    
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">forever</span>() {
+    <span style="color:#93a1a1;font-style:italic">// go 语言的死循环
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">for</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;abc&#34;</span>)
+    }
+}</code></pre></div>
+<ul>
+<li>省略初试条件，相当于while</li>
+<li>全部省略，死循环</li>
+</ul>
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-6-函数">1.6 函数</h2>
+
+<ul>
+<li>函数可返回多个值</li>
+<li>函数返回多个值时可以起名字（不要乱用，仅用于非常简单的函数， 对于调用者而言没有区别）</li>
+<li>可变参数列表（没有默认参数，可选参数）</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;math&#34;</span>
+    <span style="color:#2aa198">&#34;runtime&#34;</span>
+    <span style="color:#2aa198">&#34;reflect&#34;</span>
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">eval</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">op</span> <span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#859900;font-weight:bold">error</span>) {
+ 
+    <span style="color:#859900">switch</span> <span style="color:#268bd2">op</span> {
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;+&#34;</span>:
+        <span style="color:#859900">return</span> <span style="color:#268bd2">a</span> + <span style="color:#268bd2">b</span>, <span style="color:#859900;font-weight:bold">nil</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;-&#34;</span>:
+        <span style="color:#859900">return</span> <span style="color:#268bd2">a</span> - <span style="color:#268bd2">b</span>, <span style="color:#859900;font-weight:bold">nil</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;*&#34;</span>:
+        <span style="color:#859900">return</span> <span style="color:#268bd2">a</span> * <span style="color:#268bd2">b</span>, <span style="color:#859900;font-weight:bold">nil</span>
+    <span style="color:#859900">case</span> <span style="color:#2aa198">&#34;/&#34;</span>:
+        <span style="color:#268bd2">q</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">div</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span>) <span style="color:#93a1a1;font-style:italic">// 这里用不到返回值r，如果加上会报错，因为没有用到
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">return</span> <span style="color:#268bd2">q</span>, <span style="color:#859900;font-weight:bold">nil</span>
+    <span style="color:#859900">default</span>:
+        <span style="color:#859900">return</span> <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;unsupported operation: %s&#34;</span>, <span style="color:#268bd2">op</span>)
+    }
+}
+
+
+<span style="color:#93a1a1;font-style:italic">// 可返回多值
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">div</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>) (<span style="color:#268bd2">q</span>, <span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+    <span style="color:#859900">return</span> <span style="color:#268bd2">a</span> / <span style="color:#268bd2">b</span>, <span style="color:#268bd2">a</span> % <span style="color:#268bd2">b</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">apply</span>(<span style="color:#268bd2">op</span> <span style="color:#859900">func</span>(<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#268bd2">p</span> := <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">ValueOf</span>(<span style="color:#268bd2">op</span>).<span style="color:#268bd2">Pointer</span>()    <span style="color:#93a1a1;font-style:italic">// 反射，拿到函数的指针
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">opName</span> := <span style="color:#268bd2">runtime</span>.<span style="color:#268bd2">FuncForPC</span>(<span style="color:#268bd2">p</span>).<span style="color:#268bd2">Name</span>() <span style="color:#93a1a1;font-style:italic">// 为了拿到传入的函数名称
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;Calling function %s with args &#34;</span> + <span style="color:#2aa198">&#34;(%d, %d)\n&#34;</span>,
+     <span style="color:#268bd2">opName</span>, <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span>)
+
+     <span style="color:#859900">return</span> <span style="color:#268bd2">op</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// 可变参数列表
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">sum</span>(<span style="color:#268bd2">numbers</span> ...<span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#268bd2">s</span> := <span style="color:#2aa198;font-weight:bold">0</span>
+    <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">numbers</span> {
+        <span style="color:#268bd2">s</span> += <span style="color:#268bd2">numbers</span>[<span style="color:#268bd2">i</span>]
+    }
+    
+    <span style="color:#859900">return</span> <span style="color:#268bd2">s</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// func Pow(a, b int) int {
+</span><span style="color:#93a1a1;font-style:italic">//  return int(math.Pow(float64(a), float64(b)))
+</span><span style="color:#93a1a1;font-style:italic">// }
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">eval</span>(<span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>, <span style="color:#2aa198">&#34;*&#34;</span>)) 
+
+    <span style="color:#859900">if</span> <span style="color:#268bd2">result</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">eval</span>(<span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>, <span style="color:#2aa198">&#34;x&#34;</span>); <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;Error:&#34;</span>, <span style="color:#268bd2">err</span>)
+    } <span style="color:#859900">else</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">result</span>)
+    }
+
+    <span style="color:#268bd2">q</span>, <span style="color:#268bd2">r</span> := <span style="color:#268bd2">div</span>(<span style="color:#2aa198;font-weight:bold">13</span>, <span style="color:#2aa198;font-weight:bold">3</span>)
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">q</span>, <span style="color:#268bd2">r</span>)
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">apply</span>(  <span style="color:#93a1a1;font-style:italic">// 函数式编程
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">func</span> (<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+            <span style="color:#859900">return</span> <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">math</span>.<span style="color:#268bd2">Pow</span>(<span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">a</span>), <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">b</span>)))
+        },<span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>))
+    
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">sum</span>(<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198;font-weight:bold">2</span>, <span style="color:#2aa198;font-weight:bold">3</span>))
+
+}</code></pre></div>
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="1-7-指针-重要">1.7 ++<strong><em>指针</em></strong>++（重要）</h2>
+
+<blockquote>
+<p>go 语音的指针比较 C 语音更为简单：</p>
+</blockquote>
+
+<ul>
+<li>指针不能运算</li>
+</ul>
+
+<h3 id="1-7-1-参数传递">1.7.1 参数传递</h3>
+
+<blockquote>
+<p>许多语言如： Java Python JavaScript 都是引用传递参数（就是直接调用自身底层数据，它会改变）
+- go 语言只有 值传递一种方式(调用的是复制的值，不会改变底层数据，除非用指针)</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// 指针
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">swap</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> *<span style="color:#859900;font-weight:bold">int</span>) {
+    *<span style="color:#268bd2">b</span>, *<span style="color:#268bd2">a</span> = *<span style="color:#268bd2">a</span>, *<span style="color:#268bd2">b</span>
+}
+
+<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> := <span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>
+    <span style="color:#268bd2">swap</span>(&amp;<span style="color:#268bd2">a</span>, &amp;<span style="color:#268bd2">b</span>)
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span>) // =&gt; <span style="color:#2aa198;font-weight:bold">4</span>, <span style="color:#2aa198;font-weight:bold">3</span></code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/go/">Go</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;text=golang%20%e7%9f%a5%e8%af%86%e7%82%b9.%e6%80%bb%e7%bb%93%e4%b8%80&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=golang%20%e7%9f%a5%e8%af%86%e7%82%b9.%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=golang%20%e7%9f%a5%e8%af%86%e7%82%b9.%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=golang%20%e7%9f%a5%e8%af%86%e7%82%b9.%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9-%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;description=golang%20%e7%9f%a5%e8%af%86%e7%82%b9.%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/git-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/" data-toggle="tooltip" data-placement="top" title="Git 本地分支与远程分支">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" data-toggle="tooltip" data-placement="top" title="iota实例情况">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

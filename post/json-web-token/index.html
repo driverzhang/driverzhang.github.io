@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>json web token</title>
+  <meta property="og:title" content="json web token" />
+  <meta name="twitter:title" content="json web token" />
+  <meta name="description" content="json web token 前后端总结
+
+一. 关于 Token 简介
+
+1. 基于 Token 的 WEB 后端认证机制
+
+几种常见的认证机制
+&gt;- HTTP Basic Auth
+
+">
+  <meta property="og:description" content="json web token 前后端总结
+
+一. 关于 Token 简介
+
+1. 基于 Token 的 WEB 后端认证机制
+
+几种常见的认证机制
+&gt;- HTTP Basic Auth
+
+">
+  <meta name="twitter:description" content="json web token 前后端总结
+
+一. 关于 Token 简介
+
+1. 基于 Token 的 WEB 后端认证机制
+
+几种常见的认证机制
+&gt;- HTTP Basic Auth
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/json-web-token/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/json-web-token/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>json web token</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 24, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="json-web-token-前后端总结">json web token 前后端总结</h1>
+
+<h2 id="一-关于-token-简介">一. 关于 Token 简介</h2>
+
+<h3 id="1-基于-token-的-web-后端认证机制">1. 基于 Token 的 WEB 后端认证机制</h3>
+
+<p>几种常见的认证机制
+&gt;- HTTP Basic Auth</p>
+
+<p></p>
+
+<p>HTTP Basic Auth简单点说明就是每次请求API时都提供用户的username和password，简言之，Basic Auth是配合RESTful API 使用的最简单的认证方式，只需提供用户名密码即可，但由于有把用户名密码暴露给第三方客户端的风险，在生产环境下被使用的越来越少。</p>
+
+<blockquote>
+<ul>
+<li>OAuth（开放授权）</li>
+</ul>
+</blockquote>
+
+<p>OAuth（开放授权）是一个开放的授权标准，允许用户让第三方应用访问该用户在某一web服务上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用。这种基于OAuth的认证机制适用于个人消费者类的互联网产品，如社交类APP等应用，但是不太适合拥有自有认证权限管理的企业应用；</p>
+
+<blockquote>
+<ul>
+<li>Cookie Auth</li>
+</ul>
+</blockquote>
+
+<p>Cookie认证机制就是为一次请求认证在服务端创建一个Session对象，同时在客户端的浏览器端创建了一个Cookie对象；通过客户端带上来Cookie对象来与服务器端的session对象匹配来实现状态管理的。默认的，当我们关闭浏览器的时候，cookie会被删除。但可以通过修改cookie 的expire time使cookie在一定时间内有效</p>
+
+<ul>
+<li>Token Auth</li>
+</ul>
+
+<p><img src="http://images2015.cnblogs.com/blog/34831/201606/34831-20160622150124531-1416052185.png" alt="image" /></p>
+
+<h3 id="2-token-auth的优点">2. Token Auth的优点</h3>
+
+<p>Token机制相对于Cookie机制又有什么好处呢？</p>
+
+<ul>
+<li><p>支持跨域访问:</p>
+
+<ul>
+<li>Cookie是不允许垮域访问的，这一点对Token机制是不存在的，前提是传输的用户认证信息通过HTTP头传输.
+<br /></li>
+</ul></li>
+
+<li><p>无状态(也称：服务端可扩展行):</p>
+
+<ul>
+<li>Token机制在服务端不需要存储session信息，因为Token 自身包含了所有登录用户的信息，只需要在客户端的cookie或本地介质存储状态信息.</li>
+</ul></li>
+
+<li><p>更适用CDN:</p>
+
+<ul>
+<li>可以通过内容分发网络请求你服务端的所有资料（如：javascript，HTML,图片等），而你的服务端只要提供API即可.</li>
+</ul></li>
+
+<li><p>去耦:</p>
+
+<ul>
+<li>不需要绑定到一个特定的身份验证方案。Token可以在任何地方生成，只要在你的API被调用的时候，你可以进行Token生成调用即可.</li>
+</ul></li>
+
+<li><p>更适用于移动应用:</p>
+
+<ul>
+<li>当你的客户端是一个原生平台（iOS, Android，Windows 8等）时，Cookie是不被支持的（你需要通过Cookie容器进行处理），这时采用Token认证机制就会简单得多。</li>
+</ul></li>
+
+<li><p>CSRF:</p>
+
+<ul>
+<li>因为不再依赖于Cookie，所以你就不需要考虑对CSRF（跨站请求伪造）的防范。</li>
+</ul></li>
+
+<li><p>性能：</p>
+
+<ul>
+<li>一次网络往返时间（通过数据库查询session信息）总比做一次HMACSHA256计算 的Token验证和解析要费时得多.</li>
+</ul></li>
+
+<li><p>不需要为登录页面做特殊处理:</p>
+
+<ul>
+<li>如果你使用Protractor 做功能测试的时候，不再需要为登录页面做特殊处理.</li>
+</ul></li>
+
+<li><p>基于标准化:</p>
+
+<ul>
+<li>你的API可以采用标准化的 JSON Web Token (JWT). 这个标准已经存在多个后端库（.NET, Ruby, Java,Python, PHP）和多家公司的支持（如：Firebase,Google, Microsoft）.</li>
+</ul></li>
+</ul>
+
+<hr />
+
+<h2 id="二-关于-jwt-三段原理理解">二. 关于 JWT 三段原理理解</h2>
+
+<h3 id="1-jwt的组成">1. JWT的组成</h3>
+
+<h5 id="一个jwt实际上就是一个字符串-它由三部分组成-头部-载荷与签名">一个JWT实际上就是一个字符串，它由三部分组成，头部、载荷与签名。</h5>
+
+<ul>
+<li>####  头部（Header）
+JWT需要一个头部，头部用于描述关于该JWT的最基本的信息，例如其类型以及签名所用的算法等。这也可以被表示成一个JSON对象。</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">{
+  <span style="color:#2aa198">&#34;typ&#34;</span>: <span style="color:#2aa198">&#34;JWT&#34;</span>,
+  <span style="color:#2aa198">&#34;alg&#34;</span>: <span style="color:#2aa198">&#34;HS256&#34;</span>
+}
+</code></pre></div>
+<p>在这里，我们说明了这是一个JWT，并且我们所用的签名算法（后面会提到）是HS256算法。</p>
+
+<p>对它也要进行Base64编码，之后的字符串就成了JWT的Header（头部）。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9</span>
+</code></pre></div>
+<ul>
+<li>#### 载荷（Payload）
+我们可以把一些业务需求操作描述成一个JSON对象。其中添加了一些其他的信息，帮助今后收到这个JWT的服务器理解这个JWT。</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript">{
+    <span style="color:#2aa198">&#34;iss&#34;</span>: <span style="color:#2aa198">&#34;John Wu JWT&#34;</span>,
+    <span style="color:#2aa198">&#34;iat&#34;</span>: <span style="color:#2aa198;font-weight:bold">1441593502</span>,
+    <span style="color:#2aa198">&#34;exp&#34;</span>: <span style="color:#2aa198;font-weight:bold">1441594722</span>,
+    <span style="color:#2aa198">&#34;aud&#34;</span>: <span style="color:#2aa198">&#34;www.example.com&#34;</span>,
+    <span style="color:#2aa198">&#34;sub&#34;</span>: <span style="color:#2aa198">&#34;jrocket@example.com&#34;</span>,
+    <span style="color:#2aa198">&#34;from_user&#34;</span>: <span style="color:#2aa198">&#34;B&#34;</span>,
+    <span style="color:#2aa198">&#34;target_user&#34;</span>: <span style="color:#2aa198">&#34;A&#34;</span>
+}
+</code></pre></div>
+<p>这五个字段都是由JWT的标准所定义的：
+- iss: 该JWT的签发者
+- sub: 该JWT所面向的用户
+- aud: 接收该JWT的一方
+- exp(expires): 什么时候过期，这里是一个Unix时间戳
+iat(issued at): 在什么时候签发的</p>
+
+<p>将上面的JSON对象进行[base64编码]可以得到下面的字符串。这个字符串我们将它称作JWT的Payload（载荷）。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">eyJpc3MiOiJKb2huIFd1IEpXVCIsImlhdCI6MTQ0MTU5MzUwMiwiZXhwIjoxNDQxNTk0NzIyLCJhdWQiOiJ3d3cuZXhhbXBsZS5jb20iLCJzdWIiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwiZnJvbV91c2VyIjoiQiIsInRhcmdldF91c2VyIjoiQSJ9</span>
+</code></pre></div>
+<ul>
+<li>#### 签名（签名）</li>
+</ul>
+
+<p>将上面的两个编码后的字符串都用句号.连接在一起（头部在前），就形成了</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcm9tX3VzZXIiOiJCIiwidGFyZ2V0X3VzZXIiOiJBIn0</pre></div>
+<blockquote>
+<p>这一部分的过程在node-jws的源码中有体现</p>
+</blockquote>
+
+<p>最后，我们将上面拼接完的字符串用HS256算法进行加密。</p>
+
+<p>在加密的时候，我们还需要提供一个密钥（secret）。如果我们用mystar作为密钥的话，那么就可以得到我们加密后的内容</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rSWamyAYwuHCo7IFAgd1oRpSP7nzL7BF5t7ItqpKViM</pre></div>
+<h4 id="这一部分又叫做签名">这一部分又叫做签名。</h4>
+
+<p><img src="http://blog.leapoahead.com/2015/09/06/understanding-jwt/sig1.png" alt="image" /></p>
+
+<p>最后将这一部分签名也拼接在被签名的字符串后面，我们就得到了完整的JWT</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcm9tX3VzZXIiOiJCIiwidGFyZ2V0X3VzZXIiOiJBIn0.rSWamyAYwuHCo7IFAgd1oRpSP7nzL7BF5t7ItqpKViM</pre></div>
+<hr />
+
+<h2 id="三-前后端传递出来-token-流程原理">三. 前后端传递出来 Token 流程原理</h2>
+
+<h3 id="用户认证八步走">用户认证八步走</h3>
+
+<p>所谓用户认证（Authentication），就是让用户登录，并且在接下来的一段时间内让用户访问网站时可以使用其账户，而不需要再次登录的机制。</p>
+
+<blockquote>
+<p><strong>小知识</strong>: 可别把用户认证和用户授权（Authorization）搞混了。用户授权指的是规定并允许用户使用自己的权限，例如发布帖子、管理站点等。</p>
+</blockquote>
+
+<p>首先，服务器应用（下面简称“应用”）让用户通过Web表单将自己的用户名和密码发送到服务器的接口。这一过程一般是一个HTTP POST请求。建议的方式是通过SSL加密的传输（https协议），从而避免敏感信息被嗅探。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth1.png" alt="image" /></p>
+
+<p>接下来，应用和数据库核对用户名和密码。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth2.png" alt="image" /></p>
+
+<p>核对用户名和密码成功后，应用将用户的id（图中的user_id）作为JWT Payload的一个属性，将其与头部分别进行Base64编码拼接后签名，形成一个JWT。这里的JWT就是一个形同lll.zzz.xxx的字符串。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth3.png" alt="image" /></p>
+
+<p>应用将JWT字符串作为该请求Cookie的一部分返回给用户。注意，在这里必须使用HttpOnly属性来防止Cookie被JavaScript读取，从而避免跨站脚本攻击（XSS攻击）。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth4.png" alt="image" /></p>
+
+<p>在Cookie失效或者被删除前，用户每次访问应用，应用都会接受到含有jwt的Cookie。从而应用就可以将JWT从请求中提取出来。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth5.png" alt="image" /></p>
+
+<p>应用通过一系列任务检查JWT的有效性。例如，检查签名是否正确；检查Token是否过期；检查Token的接收方是否是自己（可选）。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth6.png" alt="image" /></p>
+
+<p>应用在确认JWT有效之后，JWT进行Base64解码（可能在上一步中已经完成），然后在Payload中读取用户的id值，也就是user_id属性。这里用户的id为1025。</p>
+
+<p><img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth7.png" alt="image" /></p>
+
+<p>应用根据用户请求进行响应。
+<img src="http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/jwtauth9.png" alt="image" /></p>
+
+<h2 id="四-代码-demo-实现">四. 代码 demo 实现</h2>
+
+<p>首先我先建立一个 jwt.js 文件来专门生产token。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic"> * @function    jwtProducer
+</span><span style="color:#93a1a1;font-style:italic"> * @description jwt的统一生产方法
+</span><span style="color:#93a1a1;font-style:italic"> * @returns     {{username: *, token: *}}
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+<span style="color:#859900">const</span> <span style="color:#268bd2">jwt</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;jsonwebtoken&#39;</span>);
+
+<span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> =  {
+
+    <span style="color:#93a1a1;font-style:italic">/*这里的 username 是 用户的账号+密码*/</span>
+    <span style="color:#268bd2">jwtProducer</span>: <span style="color:#859900">function</span> (<span style="color:#268bd2">username</span>, <span style="color:#268bd2">dbName</span>, <span style="color:#268bd2">userId</span>) {
+        <span style="color:#93a1a1;font-style:italic">// JWT Id
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">jti</span> = (<span style="color:#cb4b16">Math</span>.<span style="color:#268bd2">random</span>() * <span style="color:#2aa198;font-weight:bold">100000000000000000</span>).<span style="color:#268bd2">toString</span>();
+        <span style="color:#93a1a1;font-style:italic">// JWT 的签发者
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">iss</span> = <span style="color:#2aa198">&#39;localhost&#39;</span>;
+        <span style="color:#93a1a1;font-style:italic">// 签发时间
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">iat</span> = <span style="color:#cb4b16">Date</span>.<span style="color:#268bd2">now</span>() / 1000;
+        <span style="color:#93a1a1;font-style:italic">// 失效时间
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">exp</span> = <span style="color:#268bd2">iat</span> + <span style="color:#2aa198;font-weight:bold">7200</span>;
+        <span style="color:#93a1a1;font-style:italic">// 用户 ID
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">sub</span> = <span style="color:#268bd2">userId</span>;
+        <span style="color:#93a1a1;font-style:italic">// 数据库名称
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">const</span> <span style="color:#268bd2">location</span> = <span style="color:#268bd2">dbName</span>;
+
+        <span style="color:#859900">const</span> <span style="color:#268bd2">payload</span> = {
+            <span style="color:#268bd2">jti</span>: <span style="color:#268bd2">jti</span>,
+            <span style="color:#268bd2">iss</span>: <span style="color:#268bd2">iss</span>,
+            <span style="color:#268bd2">iat</span>: <span style="color:#268bd2">iat</span>,
+            <span style="color:#268bd2">exp</span>: <span style="color:#268bd2">exp</span>,
+            <span style="color:#268bd2">sub</span>: <span style="color:#268bd2">sub</span>,
+            <span style="color:#268bd2">location</span>: <span style="color:#268bd2">location</span>
+        };
+
+        <span style="color:#859900">var</span> <span style="color:#268bd2">token</span> = <span style="color:#268bd2">jwt</span>.<span style="color:#268bd2">sign</span>(<span style="color:#268bd2">payload</span>, <span style="color:#2aa198">&#39;Nodezhang&#39;</span>); <span style="color:#93a1a1;font-style:italic">// &#39;Nodezhang&#39;是自定义的校验码。
+</span><span style="color:#93a1a1;font-style:italic"></span>
+        <span style="color:#859900">return</span> {
+            <span style="color:#268bd2">operatorUsername</span>: <span style="color:#268bd2">username</span>,
+            <span style="color:#268bd2">token</span>: <span style="color:#268bd2">token</span>
+        };
+
+    }
+
+
+};
+</code></pre></div>
+<p>然后你可以 在你的 login.js 中开始业务代码处理了</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">jwtP</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;../model/jwt&#39;</span>);
+<span style="color:#859900">const</span> <span style="color:#268bd2">jwt</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;jsonwebtoken&#39;</span>);
+
+<span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic"> * @function lookToken
+</span><span style="color:#93a1a1;font-style:italic"> * @description 检查 jwt token 密码
+</span><span style="color:#93a1a1;font-style:italic"> * @param token
+</span><span style="color:#93a1a1;font-style:italic"> * @param callback
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+<span style="color:#859900">function</span> <span style="color:#268bd2">lookToken</span>(<span style="color:#268bd2">token</span>, <span style="color:#268bd2">callback</span>) {
+    <span style="color:#268bd2">jwt</span>.<span style="color:#268bd2">verify</span>(<span style="color:#268bd2">token</span>, <span style="color:#2aa198">&#39;Nodezhang&#39;</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">error</span>, <span style="color:#268bd2">payload</span>) { <span style="color:#93a1a1;font-style:italic">// 检验Token的合法性 用到 检验码
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">if</span> (<span style="color:#268bd2">error</span>) {
+            <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">error</span>);
+            <span style="color:#859900">return</span> <span style="color:#268bd2">callback</span>;
+        }
+        <span style="color:#268bd2">callback</span>(<span style="color:#859900;font-weight:bold">null</span>, <span style="color:#268bd2">payload</span>);
+
+    });
+}
+......<span style="color:#93a1a1;font-style:italic">//省略代码处
+</span><span style="color:#93a1a1;font-style:italic"></span>
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">token</span> = <span style="color:#268bd2">req</span>.<span style="color:#268bd2">body</span>.<span style="color:#268bd2">token</span>;
+    <span style="color:#93a1a1;font-style:italic">// console.log(&#39;This is :&#39;+token);
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">if</span> (<span style="color:#268bd2">token</span> === <span style="color:#859900;font-weight:bold">undefined</span> || !<span style="color:#268bd2">token</span>) {
+        <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">401</span>).<span style="color:#268bd2">end</span>(<span style="color:#2aa198">&#39;invalid token&#39;</span>);
+    }
+
+    <span style="color:#93a1a1;font-style:italic">// 检查 jwt token 密码
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">lookToken</span>(<span style="color:#268bd2">token</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">error</span>, <span style="color:#268bd2">payload</span>) {
+        <span style="color:#859900">if</span> (<span style="color:#268bd2">error</span>) {
+            <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">402</span>)
+                .<span style="color:#268bd2">end</span>(<span style="color:#2aa198">&#39;invalid token&#39;</span>);
+        }
+
+        <span style="color:#859900">if</span> (<span style="color:#268bd2">payload</span>.<span style="color:#268bd2">exp</span> &lt; <span style="color:#cb4b16">Date</span>.<span style="color:#268bd2">now</span>() / 1000) {
+            <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">405</span>)
+                .<span style="color:#268bd2">end</span>(<span style="color:#2aa198">&#39;expired token&#39;</span>);
+        }
+        <span style="color:#859900">return</span> <span style="color:#268bd2">payload</span>;
+
+    });
+    
+    
+    
+<span style="color:#93a1a1;font-style:italic">/*后端验证登录密码正确后调用生产token*/</span>
+ <span style="color:#859900">var</span> <span style="color:#268bd2">tokenData</span> = <span style="color:#268bd2">jwtP</span>.<span style="color:#268bd2">jwtProducer</span>(<span style="color:#268bd2">loginData</span>, <span style="color:#2aa198">&#39;nodezhang&#39;</span>, <span style="color:#268bd2">result</span>[<span style="color:#2aa198;font-weight:bold">0</span>].<span style="color:#268bd2">id</span>);
+ <span style="color:#268bd2">result</span> = {
+                            <span style="color:#268bd2">code</span>: <span style="color:#2aa198;font-weight:bold">200</span>,
+                            <span style="color:#268bd2">msg</span>: <span style="color:#2aa198">&#39;密码正确&#39;</span>,
+                            <span style="color:#268bd2">tokenData</span>: <span style="color:#268bd2">tokenData</span>,
+                        };
+</code></pre></div>
+<p>前端部分</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span>.<span style="color:#268bd2">ajax</span>({
+                      <span style="color:#268bd2">url</span>: <span style="color:#2aa198">&#34;/login/userLogin&#34;</span>,
+                      <span style="color:#268bd2">data</span>: {
+                        <span style="color:#268bd2">username</span>: <span style="color:#268bd2">$</span>(<span style="color:#2aa198">&#34;#username&#34;</span>).<span style="color:#268bd2">val</span>(),
+                        <span style="color:#268bd2">password</span>: <span style="color:#268bd2">$</span>(<span style="color:#2aa198">&#34;#password&#34;</span>).<span style="color:#268bd2">val</span>(),
+                           <span style="color:#268bd2">token</span>: <span style="color:#268bd2">tokenCook</span>
+                      },
+                      <span style="color:#268bd2">type</span>: <span style="color:#2aa198">&#34;POST&#34;</span>,
+                      <span style="color:#268bd2">timeout</span>: <span style="color:#2aa198;font-weight:bold">36000</span>,
+                      <span style="color:#268bd2">dataType</span>: <span style="color:#2aa198">&#34;text&#34;</span>,
+                      <span style="color:#268bd2">success</span>: <span style="color:#859900">function</span> (<span style="color:#268bd2">data</span>, <span style="color:#268bd2">textStatus</span>) {
+                        <span style="color:#93a1a1;font-style:italic">//alert(data);
+</span><span style="color:#93a1a1;font-style:italic"></span>                        <span style="color:#859900">var</span> <span style="color:#268bd2">dataJson</span> = <span style="color:#cb4b16">eval</span>(<span style="color:#2aa198">&#34;(&#34;</span> + <span style="color:#268bd2">data</span> + <span style="color:#2aa198">&#34;)&#34;</span>);
+                        <span style="color:#859900">if</span> (<span style="color:#268bd2">dataJson</span>.<span style="color:#268bd2">code</span> === <span style="color:#2aa198;font-weight:bold">200</span>) {
+                          <span style="color:#268bd2">alert</span>(<span style="color:#2aa198">&#34;登录成功&#34;</span>);
+                          <span style="color:#859900">var</span> <span style="color:#268bd2">toke</span> = <span style="color:#268bd2">dataJson</span>.<span style="color:#268bd2">tokenData</span>.<span style="color:#268bd2">token</span>;
+                          <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">toke</span>);
+                          <span style="color:#cb4b16">document</span>.<span style="color:#268bd2">cookie</span> = <span style="color:#268bd2">toke</span>;
+                          <span style="color:#268bd2">alert</span>(<span style="color:#cb4b16">document</span>.<span style="color:#268bd2">cookie</span>);
+                          <span style="color:#859900">debugger</span>;
+                          <span style="color:#cb4b16">window</span>.<span style="color:#268bd2">location</span>.<span style="color:#268bd2">href</span> = <span style="color:#2aa198">&#34;/&#34;</span>;
+                        } <span style="color:#859900">else</span> <span style="color:#859900">if</span> (<span style="color:#268bd2">dataJson</span>.<span style="color:#268bd2">code</span> === <span style="color:#2aa198;font-weight:bold">300</span>) {
+                          <span style="color:#268bd2">popup</span>.<span style="color:#268bd2">show</span>();
+                          <span style="color:#268bd2">popupContent</span>.<span style="color:#268bd2">html</span>(<span style="color:#2aa198">&#34;账号不存在，请重新输入！&#34;</span>);
+                        } <span style="color:#859900">else</span> <span style="color:#859900">if</span> (<span style="color:#268bd2">dataJson</span>.<span style="color:#268bd2">code</span> === <span style="color:#2aa198;font-weight:bold">400</span>) {
+                          <span style="color:#268bd2">popup</span>.<span style="color:#268bd2">show</span>();
+                          <span style="color:#268bd2">popupContent</span>.<span style="color:#268bd2">html</span>(<span style="color:#2aa198">&#34;密码有误，请重新输入！&#34;</span>);
+                        } <span style="color:#859900">else</span> {
+                          <span style="color:#268bd2">popup</span>.<span style="color:#268bd2">show</span>();
+                          <span style="color:#268bd2">popupContent</span>.<span style="color:#268bd2">html</span>(<span style="color:#2aa198">&#34;登录出错！&#34;</span>);
+                        }
+                      },
+                      <span style="color:#268bd2">error</span>: <span style="color:#859900">function</span> (<span style="color:#268bd2">XMLHttpRequest</span>, <span style="color:#268bd2">textStatus</span>, <span style="color:#268bd2">errorThrown</span>) {
+                        <span style="color:#268bd2">alert</span>(<span style="color:#2aa198">&#34;error:&#34;</span> + <span style="color:#268bd2">textStatus</span>);
+                      }
+                    }
+            );
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/token/">token</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f&amp;text=json%20web%20token&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f&amp;title=json%20web%20token" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f&amp;title=json%20web%20token" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f&amp;title=json%20web%20token" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjson-web-token%2f&amp;description=json%20web%20token" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/" data-toggle="tooltip" data-placement="top" title="expressjs4.0之路由Router">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/nodejs-%E4%B9%8B-file-system-%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Nodejs 之 File System 模块">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

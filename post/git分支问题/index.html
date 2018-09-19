@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Git分支问题</title>
+  <meta property="og:title" content="Git分支问题" />
+  <meta name="twitter:title" content="Git分支问题" />
+  <meta name="description" content="Git 分支问题
+
+前瞻技能
+
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch 
+
+创建&#43;切换分支：git checkout -b 
+
+
+">
+  <meta property="og:description" content="Git 分支问题
+
+前瞻技能
+
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch 
+
+创建&#43;切换分支：git checkout -b 
+
+
+">
+  <meta name="twitter:description" content="Git 分支问题
+
+前瞻技能
+
+
+Git鼓励大量使用分支：
+
+查看分支：git branch
+
+创建分支：git branch 
+
+创建&#43;切换分支：git checkout -b 
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Git分支问题</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 31, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="git-分支问题">Git 分支问题</h1>
+
+<h2 id="前瞻技能">前瞻技能</h2>
+
+<blockquote>
+<h3 id="git鼓励大量使用分支">Git鼓励大量使用分支：</h3>
+
+<p>查看分支：git branch</p>
+
+<p>创建分支：git branch <name></p>
+
+<p>创建+切换分支：git checkout -b <name></p>
+</blockquote>
+
+<p></p>
+
+<blockquote>
+<p>切换分支：git checkout <name></p>
+
+<p>合并某分支到当前分支：git merge <name></p>
+
+<p>合并某分支到当前分支：git merge &ndash;no-ff -m &ldquo;描述&rdquo; <name>;
+&ndash;no-ff参数，表示禁用Fast forward,合并分支时，加上&ndash;no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。</p>
+
+<p>删除分支：git branch -d <name></p>
+</blockquote>
+
+<hr />
+
+<h2 id="正文开始">正文开始：</h2>
+
+<h3 id="开始实战">开始实战:</h3>
+
+<p>创建dev分支，然后切换到dev分支：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">checkout</span> -<span style="color:#268bd2">b</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">Switched</span> <span style="color:#268bd2">to</span> <span style="color:#268bd2">a</span> <span style="color:#859900">new</span> <span style="color:#268bd2">branch</span> <span style="color:#2aa198">&#39;dev&#39;</span>
+</code></pre></div>
+<p>git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">branch</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">checkout</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">Switched</span> <span style="color:#268bd2">to</span> <span style="color:#268bd2">branch</span> <span style="color:#2aa198">&#39;dev&#39;</span>
+</code></pre></div>
+<p>然后，用git branch命令查看当前分支：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">branch</span>
+* <span style="color:#268bd2">dev</span>
+  <span style="color:#268bd2">master</span>
+</code></pre></div>
+<p>以在dev分支上正常提交，比如对readme.txt做个修改，加上一行：</p>
+
+<blockquote>
+<p>Creating a new branch is quick.</p>
+</blockquote>
+
+<p>然后提交：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">add</span> <span style="color:#268bd2">readme</span>.<span style="color:#268bd2">txt</span> 
+<span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">commit</span> -<span style="color:#268bd2">m</span> <span style="color:#2aa198">&#34;branch test&#34;</span>
+[<span style="color:#268bd2">dev</span> <span style="color:#268bd2">fec145a</span>] <span style="color:#268bd2">branch</span> <span style="color:#268bd2">test</span>
+ <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">file</span> <span style="color:#268bd2">changed</span>, <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">insertion</span>(+)
+</code></pre></div>
+<p>，dev分支的工作完成，我们就可以切换回master分支：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ git checkout master
+Switched to branch &#39;master&#39;</pre></div>
+<p>把dev分支的工作成果合并到master分支上：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">merge</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">Updating</span> <span style="color:#268bd2">d17efd8</span>..<span style="color:#268bd2">fec145a</span>
+<span style="color:#268bd2">Fast</span>-<span style="color:#268bd2">forward</span>
+ <span style="color:#268bd2">readme</span>.<span style="color:#268bd2">txt</span> |    <span style="color:#2aa198;font-weight:bold">1</span> +
+ <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">file</span> <span style="color:#268bd2">changed</span>, <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">insertion</span>(+)
+</code></pre></div>
+<p>合并完成后，就可以放心地删除dev分支了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">branch</span> -<span style="color:#268bd2">d</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">Deleted</span> <span style="color:#268bd2">branch</span> <span style="color:#268bd2">dev</span> (<span style="color:#268bd2">was</span> <span style="color:#268bd2">fec145a</span>).
+</code></pre></div>
+<p>删除后，查看branch，就只剩下master分支了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">branch</span>
+* <span style="color:#268bd2">master</span>
+</code></pre></div>
+<h4 id="因为创建-合并和删除分支非常快-所以git鼓励你使用分支完成某个任务-合并后再删掉分支-这和直接在master分支上工作效果是一样的-但过程更安全">因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在master分支上工作效果是一样的，但过程更安全。</h4>
+
+<hr />
+
+<h3 id="关于分支管理策略">关于分支管理策略</h3>
+
+<blockquote>
+<h4 id="no-ff方式的git-merge">&ndash;no-ff方式的git merge</h4>
+
+<p>前面创建分支步骤和上面一样，关键在于合并分支的一步：</p>
+</blockquote>
+
+<p>准备合并dev分支，请注意&ndash;no-ff参数，表示禁用Fast forward：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">merge</span> --<span style="color:#268bd2">no</span>-<span style="color:#268bd2">ff</span> -<span style="color:#268bd2">m</span> <span style="color:#2aa198">&#34;merge with no-ff&#34;</span> <span style="color:#268bd2">dev</span>
+<span style="color:#268bd2">Merge</span> <span style="color:#268bd2">made</span> <span style="color:#268bd2">by</span> <span style="color:#268bd2">the</span> <span style="color:#2aa198">&#39;recursive&#39;</span> <span style="color:#268bd2">strategy</span>.
+ <span style="color:#268bd2">readme</span>.<span style="color:#268bd2">txt</span> |    <span style="color:#2aa198;font-weight:bold">1</span> +
+ <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">file</span> <span style="color:#268bd2">changed</span>, <span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#268bd2">insertion</span>(+)
+</code></pre></div>
+<p>因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去。</p>
+
+<p>合并后，我们用git log看看分支历史：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">log</span> --<span style="color:#268bd2">graph</span> --<span style="color:#268bd2">pretty</span>=<span style="color:#268bd2">oneline</span> --<span style="color:#268bd2">abbrev</span>-<span style="color:#268bd2">commit</span>
+*   <span style="color:#2aa198;font-weight:bold">7825</span><span style="color:#268bd2">a50</span> <span style="color:#268bd2">merge</span> <span style="color:#859900">with</span> <span style="color:#268bd2">no</span>-<span style="color:#268bd2">ff</span>
+|\
+| * <span style="color:#2aa198;font-weight:bold">6224937</span> <span style="color:#268bd2">add</span> <span style="color:#268bd2">merge</span>
+|/
+*   <span style="color:#2aa198;font-weight:bold">59</span><span style="color:#268bd2">bc1cb</span> <span style="color:#268bd2">conflict</span> <span style="color:#268bd2">fixed</span>
+...
+</code></pre></div>
+<hr />
+
+<h3 id="stash-储存-功能">stash（储存）功能</h3>
+
+<blockquote>
+<p>Git提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：</p>
+</blockquote>
+
+<p>软件开发中，bug就像家常便饭一样。有了bug就需要修复，在Git中，由于分支是如此的强大，所以，每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。</p>
+
+<p>当你接到一个修复一个代号101的bug的任务时，很自然地，你想创建一个分支issue-101来修复它，但是!!当前正在dev上进行的工作还没有提交;</p>
+
+<p>是工作只进行到一半，还没法提交，预计完成还需1天时间。但是，必须在两个小时内修复该bug，怎么办？</p>
+
+<p>这个是时候就是 stash 登场了！</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ git stash
+Saved working directory and index state WIP on dev: 6224937 add merge
+HEAD is now at 6224937 add merge</pre></div>
+<p>现在，用git status查看工作区，就是干净的（除非有没有被Git管理的文件），因此可以放心地创建分支来修复bug。</p>
+
+<h4 id="用git-stash-list命令可以查看刚才你储存的工作现场">用git stash list命令可以查看刚才你储存的工作现场：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">stash</span> <span style="color:#268bd2">list</span>
+<span style="color:#268bd2">stash</span>@{<span style="color:#2aa198;font-weight:bold">0</span>}: <span style="color:#268bd2">WIP</span> <span style="color:#268bd2">on</span> <span style="color:#268bd2">dev</span>: <span style="color:#2aa198;font-weight:bold">6224937</span> <span style="color:#268bd2">add</span> <span style="color:#268bd2">merge</span>
+</code></pre></div>
+<p>然后我们要恢复现场有两个方法：
+1. git stash apply恢复
+&gt; 但是恢复后，stash内容并不删除，你需要用git stash drop来删除；
+2. git stash pop，恢复的同时把stash内容也删了</p>
+
+<p>再用git stash list查看，就看不到任何stash内容了.</p>
+
+<p>你可以多次stash，恢复的时候，先用git stash list查看，然后恢复指定的stash，用命令：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">$</span> <span style="color:#268bd2">git</span> <span style="color:#268bd2">stash</span> <span style="color:#268bd2">apply</span> <span style="color:#268bd2">stash</span>@{<span style="color:#2aa198;font-weight:bold">0</span>}
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/git/">Git</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f&amp;text=Git%e5%88%86%e6%94%af%e9%97%ae%e9%a2%98&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f&amp;title=Git%e5%88%86%e6%94%af%e9%97%ae%e9%a2%98" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f&amp;title=Git%e5%88%86%e6%94%af%e9%97%ae%e9%a2%98" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f&amp;title=Git%e5%88%86%e6%94%af%e9%97%ae%e9%a2%98" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%2588%2586%25E6%2594%25AF%25E9%2597%25AE%25E9%25A2%2598%2f&amp;description=Git%e5%88%86%e6%94%af%e9%97%ae%e9%a2%98" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/" data-toggle="tooltip" data-placement="top" title="JS原型和继承">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/" data-toggle="tooltip" data-placement="top" title="端口使用">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

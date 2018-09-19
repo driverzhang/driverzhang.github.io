@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>服务器 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+    <description>Recent content in 服务器 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sun, 08 Jul 2018 13:30:38 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>本地配置SSH 登录服务商</title>
+      <link>https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/</link>
+      <pubDate>Sun, 08 Jul 2018 13:30:38 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/</guid>
+      <description>&lt;h1 id=&#34;本地配置ssh-登录服务商&#34;&gt;本地配置SSH 登录服务商&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-创建ssh公钥和私钥&#34;&gt;1. 创建ssh公钥和私钥&lt;/h2&gt;
+
+&lt;p&gt;在你的终端输入：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;ssh-keygen
+
+cd .ssh/
+
+open ./&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;你就会看见 有两个文件：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;### id_rsa (这是用于你本地登录服务器的秘钥)&lt;/li&gt;
+&lt;li&gt;### id_rsa.pub (这就是要给服务器配置你的公钥)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

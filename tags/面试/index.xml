@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>面试 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E9%9D%A2%E8%AF%95/</link>
+    <description>Recent content in 面试 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sat, 21 Oct 2017 21:22:21 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E9%9D%A2%E8%AF%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>面试总结四</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</link>
+      <pubDate>Sat, 21 Oct 2017 21:22:21 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</guid>
+      <description>&lt;h1 id=&#34;面试总结四&#34;&gt;面试总结四&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结一</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;面试总结一&#34;&gt;面试总结一&lt;/h1&gt;
+
+&lt;h2 id=&#34;box-sizing-常用的属性有哪些-分别什么作用&#34;&gt;box-sizing 常用的属性有哪些？分别什么作用？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。&lt;/p&gt;
+
+&lt;p&gt;那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结三</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</guid>
+      <description>&lt;h1 id=&#34;面试总结三&#34;&gt;面试总结三&lt;/h1&gt;
+
+&lt;h2 id=&#34;一道闭包经典面试题&#34;&gt;一道闭包经典面试题：&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这道题很经典，对于理解闭包很到位，并且还可以稳固js 的词法作用域。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结二</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id=&#34;面试总结二&#34;&gt;面试总结二&lt;/h1&gt;
+
+&lt;h1 id=&#34;css常见兼容问题&#34;&gt;css常见兼容问题&lt;/h1&gt;
+
+&lt;h3 id=&#34;1-浏览器默认的margin和padding不同&#34;&gt;1. 浏览器默认的margin和padding不同：&lt;/h3&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

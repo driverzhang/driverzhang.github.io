@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Http on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/http/</link>
+    <description>Recent content in Http on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Tue, 07 Nov 2017 22:00:30 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/http/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>端口使用</title>
+      <link>https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Tue, 07 Nov 2017 22:00:30 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;h1 id=&#34;端口的使用&#34;&gt;端口的使用&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;讲个场景，银行当做服务器，银行里每一个窗口当做一个服务，每个窗口的服务内容不一样。你我他可以当做客户端，需要到窗口办事，但是我们每个人办的事情不一样，如果每个窗口服务没有一个编号表示对应的服务，你我他怎么知道要去哪个窗口办理业务。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Node.js之node-xlsx模块</title>
+  <meta property="og:title" content="Node.js之node-xlsx模块" />
+  <meta name="twitter:title" content="Node.js之node-xlsx模块" />
+  <meta name="description" content="Nodejs包之node-xlsx
+
+
+支持读写Excel的node.js模块
+1. node-xlsx: 基于Node.js解析excel文件数据及生成excel文件，仅支持xlsx格式文件；
+2. excel-parser: 基于Node.js解析excel文件数据，支持xls及xlsx格式文件；
+3. excel-export : 基于Node.js将数据生成导出excel文件，生成文件格式为xlsx；
+4. node-xlrd: 基于node.js从excel文件中提取数据，仅支持xls格式文件。
+
+
+">
+  <meta property="og:description" content="Nodejs包之node-xlsx
+
+
+支持读写Excel的node.js模块
+1. node-xlsx: 基于Node.js解析excel文件数据及生成excel文件，仅支持xlsx格式文件；
+2. excel-parser: 基于Node.js解析excel文件数据，支持xls及xlsx格式文件；
+3. excel-export : 基于Node.js将数据生成导出excel文件，生成文件格式为xlsx；
+4. node-xlrd: 基于node.js从excel文件中提取数据，仅支持xls格式文件。
+
+
+">
+  <meta name="twitter:description" content="Nodejs包之node-xlsx
+
+
+支持读写Excel的node.js模块
+1. node-xlsx: 基于Node.js解析excel文件数据及生成excel文件，仅支持xlsx格式文件；
+2. excel-parser: 基于Node.js解析excel文件数据，支持xls及xlsx格式文件；
+3. excel-export : 基于Node.js将数据生成导出excel文件，生成文件格式 …">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/node-js%E4%B9%8Bnode-xlsx%E6%A8%A1%E5%9D%97/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/node-js%E4%B9%8Bnode-xlsx%E6%A8%A1%E5%9D%97/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Node.js之node-xlsx模块</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on February 7, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="nodejs包之node-xlsx">Nodejs包之node-xlsx</h1>
+
+<blockquote>
+<p>支持读写Excel的node.js模块
+1. node-xlsx: 基于Node.js解析excel文件数据及生成excel文件，仅支持xlsx格式文件；
+2. excel-parser: 基于Node.js解析excel文件数据，支持xls及xlsx格式文件；
+3. excel-export : 基于Node.js将数据生成导出excel文件，生成文件格式为xlsx；
+4. node-xlrd: 基于node.js从excel文件中提取数据，仅支持xls格式文件。</p>
+</blockquote>
+
+<p></p>
+
+<h3 id="我们先来个简单小demo吧">我们先来个简单小demo吧：</h3>
+
+<p>首先要安装这个包依赖： npm install -save nodejs-xlsx</p>
+
+<p>然后就是看下面代码了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">xlsx</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;node-xlsx&#39;</span>);
+<span style="color:#859900">var</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;fs&#39;</span>);
+<span style="color:#93a1a1;font-style:italic">//读取文件内容
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">obj</span> = <span style="color:#268bd2">xlsx</span>.<span style="color:#268bd2">parse</span>(<span style="color:#268bd2">__dirname</span>+<span style="color:#2aa198">&#39;/test.xlsx&#39;</span>);
+<span style="color:#859900">var</span> <span style="color:#268bd2">excelObj</span>=<span style="color:#268bd2">obj</span>[<span style="color:#2aa198;font-weight:bold">0</span>].<span style="color:#268bd2">data</span>;
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">excelObj</span>);
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">data</span> = [];
+<span style="color:#859900">for</span>(<span style="color:#859900">var</span> <span style="color:#268bd2">i</span> <span style="color:#859900">in</span> <span style="color:#268bd2">excelObj</span>){
+    <span style="color:#859900">var</span> <span style="color:#268bd2">arr</span>=[];
+    <span style="color:#859900">var</span> <span style="color:#268bd2">value</span>=<span style="color:#268bd2">excelObj</span>[<span style="color:#268bd2">i</span>];
+    <span style="color:#859900">for</span>(<span style="color:#859900">var</span> <span style="color:#268bd2">j</span> <span style="color:#859900">in</span> <span style="color:#268bd2">value</span>){
+        <span style="color:#268bd2">arr</span>.<span style="color:#268bd2">push</span>(<span style="color:#268bd2">value</span>[<span style="color:#268bd2">j</span>]);
+    }
+    <span style="color:#268bd2">data</span>.<span style="color:#268bd2">push</span>(<span style="color:#268bd2">arr</span>);
+}
+<span style="color:#859900">var</span> <span style="color:#268bd2">buffer</span> = <span style="color:#268bd2">xlsx</span>.<span style="color:#268bd2">build</span>([
+    {
+        <span style="color:#268bd2">name</span>:<span style="color:#2aa198">&#39;sheet1&#39;</span>,
+        <span style="color:#268bd2">data</span>:<span style="color:#268bd2">data</span>
+    }        
+]);
+
+<span style="color:#93a1a1;font-style:italic">//将文件内容插入新的文件中
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFileSync</span>(<span style="color:#2aa198">&#39;test1.xlsx&#39;</span>,<span style="color:#268bd2">buffer</span>,{<span style="color:#2aa198">&#39;flag&#39;</span>:<span style="color:#2aa198">&#39;w&#39;</span>});
+</code></pre></div>
+<hr />
+
+<h3 id="实际项目中通常用-buffer-流传递数据表进行解析">实际项目中通常用 buffer 流传递数据表进行解析：</h3>
+
+<h4 id="实际场景-1-为-客服端上传规定格式的模板表格数据-这里只有一列为-编号">实际场景 1 为：客服端上传规定格式的模板表格数据（这里只有一列为【编号】）</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">exports</span>.<span style="color:#268bd2">uploadExcel</span> = <span style="color:#859900">function</span> (<span style="color:#268bd2">args</span>, <span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+  <span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic">   * uploadExcel 批量上传商品 Excel
+</span><span style="color:#93a1a1;font-style:italic">   **/</span>
+  <span style="color:#859900">const</span> <span style="color:#268bd2">params</span> = {
+  
+      <span style="color:#268bd2">clusterCode</span>: <span style="color:#268bd2">args</span>.<span style="color:#268bd2">clusterCode</span>.<span style="color:#268bd2">value</span>,
+      
+      <span style="color:#268bd2">excel</span>: <span style="color:#268bd2">args</span>.<span style="color:#268bd2">excel</span>.<span style="color:#268bd2">value</span>.<span style="color:#268bd2">buffer</span>   <span style="color:#93a1a1;font-style:italic">// 接受 buffer流表格  
+</span><span style="color:#93a1a1;font-style:italic"></span>  }
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">xlsxHead</span> = [<span style="color:#2aa198">&#39;商品编号&#39;</span>] <span style="color:#93a1a1;font-style:italic">// 设置规定一个你想要的表头内容
+</span><span style="color:#93a1a1;font-style:italic"></span>  <span style="color:#859900">let</span> <span style="color:#268bd2">excel</span> = <span style="color:#859900;font-weight:bold">null</span>
+
+  <span style="color:#859900">try</span> {
+  
+    <span style="color:#268bd2">excel</span> = <span style="color:#268bd2">xlsx</span>.<span style="color:#268bd2">parse</span>(<span style="color:#268bd2">params</span>.<span style="color:#268bd2">excel</span>) <span style="color:#93a1a1;font-style:italic">// 解析上传的表格内容 以行为单位
+</span><span style="color:#93a1a1;font-style:italic"></span>  } <span style="color:#859900">catch</span> (<span style="color:#268bd2">e</span>) {
+  
+    <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">e</span>.<span style="color:#268bd2">stack</span>)
+    <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">e</span>.<span style="color:#268bd2">message</span>)
+    
+    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: -<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;excel解析错误,请确认是正确的excel文件&#39;</span>}).<span style="color:#268bd2">end</span>()
+  }
+
+  <span style="color:#859900">if</span> (!<span style="color:#268bd2">excel</span> || <span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEmpty</span>(<span style="color:#268bd2">excel</span>[<span style="color:#2aa198;font-weight:bold">0</span>].<span style="color:#268bd2">data</span>)) {
+  
+    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: -<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;上传文件不合法,请重新上传!&#39;</span>}).<span style="color:#268bd2">end</span>()
+  }
+
+  <span style="color:#859900">const</span> <span style="color:#268bd2">theHead</span> = <span style="color:#268bd2">excel</span>[<span style="color:#2aa198;font-weight:bold">0</span>].<span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">0</span>]  <span style="color:#93a1a1;font-style:italic">// 解析并取出表格的表头
+</span><span style="color:#93a1a1;font-style:italic"></span>  
+  <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">trace</span>(<span style="color:#2aa198">&#39;excel表头&#39;</span>, <span style="color:#268bd2">theHead</span>)
+  
+  <span style="color:#859900">if</span> (!<span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEqual</span>(<span style="color:#268bd2">theHead</span>, <span style="color:#268bd2">xlsxHead</span>)) { <span style="color:#93a1a1;font-style:italic">// 此处是为了判断并防止客服端随意乱吃不符合模板要求的表格。
+</span><span style="color:#93a1a1;font-style:italic"></span>  
+    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({ <span style="color:#268bd2">code</span>: -<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;该excel不符合格式要求,请下载模板填充数据!&#39;</span> }).<span style="color:#268bd2">end</span>()
+  } 
+
+  <span style="color:#859900">const</span> <span style="color:#268bd2">rows</span> = <span style="color:#268bd2">excel</span>[<span style="color:#2aa198;font-weight:bold">0</span>].<span style="color:#268bd2">data</span>.<span style="color:#268bd2">slice</span>(<span style="color:#2aa198;font-weight:bold">1</span>) <span style="color:#93a1a1;font-style:italic">// 截取填入的数据部分 按照 行 截取
+</span><span style="color:#93a1a1;font-style:italic"></span>
+  <span style="color:#859900">if</span> (<span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEmpty</span>(<span style="color:#268bd2">rows</span>)) {
+  
+    <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: -<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;您还未填完内容呢！&#39;</span>}).<span style="color:#268bd2">end</span>()
+  }
+  <span style="color:#93a1a1;font-style:italic">// excel中 商品编号集合  
+</span><span style="color:#93a1a1;font-style:italic"></span>  <span style="color:#859900">let</span> <span style="color:#268bd2">productionNos</span> = <span style="color:#268bd2">rows</span>.<span style="color:#268bd2">map</span>(<span style="color:#268bd2">row</span> =&gt;  <span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEmpty</span>(<span style="color:#268bd2">row</span>) ? <span style="color:#2aa198">&#39;&#39;</span> : <span style="color:#268bd2">row</span>[<span style="color:#2aa198;font-weight:bold">0</span>])
+  
+  <span style="color:#93a1a1;font-style:italic">// 去除空行
+</span><span style="color:#93a1a1;font-style:italic"></span>  <span style="color:#268bd2">productionNos</span> = <span style="color:#268bd2">_</span>.<span style="color:#268bd2">compact</span>(<span style="color:#268bd2">productionNos</span>)
+  
+  <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">trace</span>(<span style="color:#2aa198">&#39;上传的商品编号集合&#39;</span>, <span style="color:#268bd2">productionNos</span>)
+
+  <span style="color:#859900">const</span> <span style="color:#268bd2">user</span> = <span style="color:#268bd2">pickUser</span>(<span style="color:#268bd2">req</span>)
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">ProductionModel</span> = <span style="color:#268bd2">initProductionModel</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>)
+
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">fn</span> = <span style="color:#268bd2">co</span>.<span style="color:#268bd2">wrap</span>(<span style="color:#859900">function</span>* () {
+  
+    <span style="color:#859900">const</span> <span style="color:#268bd2">products</span> = <span style="color:#859900">yield</span> <span style="color:#268bd2">ProductionModel</span>.<span style="color:#268bd2">_selectProductsNo</span>(<span style="color:#268bd2">productionNos</span>)
+    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">selectProductionNos</span> = <span style="color:#268bd2">products</span>.<span style="color:#268bd2">map</span>(<span style="color:#268bd2">item</span> =&gt; <span style="color:#cb4b16">Number</span>(<span style="color:#268bd2">item</span>.<span style="color:#268bd2">productionNo</span>))
+    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">errProductionNos</span> = <span style="color:#268bd2">_</span>.<span style="color:#268bd2">difference</span>(<span style="color:#268bd2">productionNos</span>, <span style="color:#268bd2">selectProductionNos</span>) <span style="color:#93a1a1;font-style:italic">// 放入不合法的 商品编号
+</span><span style="color:#93a1a1;font-style:italic"></span>    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">errArr</span> = <span style="color:#268bd2">errProductionNos</span>.<span style="color:#268bd2">map</span>(<span style="color:#268bd2">num</span> =&gt; ({<span style="color:#268bd2">productionNo</span>: <span style="color:#268bd2">num</span>, <span style="color:#268bd2">errMsg</span>: <span style="color:#268bd2">_</span>.<span style="color:#268bd2">isNumber</span>(<span style="color:#268bd2">num</span>) ? <span style="color:#2aa198">&#39;【商品编号】不存在!&#39;</span> : <span style="color:#2aa198">&#39;【商品编号】不是数字!&#39;</span>}))
+
+    <span style="color:#859900">if</span> (<span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEmpty</span>(<span style="color:#268bd2">errArr</span>)) {
+    
+      <span style="color:#859900">const</span> <span style="color:#268bd2">obj</span> = {<span style="color:#268bd2">productionNos</span>, <span style="color:#268bd2">clusterCodes</span>:[<span style="color:#268bd2">params</span>.<span style="color:#268bd2">clusterCode</span>]}
+      <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">trace</span>(<span style="color:#2aa198">&#39;上传商品加入集群参数&#39;</span>, <span style="color:#268bd2">obj</span>)
+      
+      <span style="color:#859900">if</span>(<span style="color:#268bd2">_</span>.<span style="color:#268bd2">isEmpty</span>(<span style="color:#268bd2">obj</span>.<span style="color:#268bd2">productionNos</span>)) <span style="color:#859900">return</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: -<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;您填写的内容有误，请检查！&#39;</span>}).<span style="color:#268bd2">end</span>()
+      
+      <span style="color:#859900">return</span> <span style="color:#859900">yield</span> <span style="color:#268bd2">ProductionModel</span>.<span style="color:#268bd2">_insertProductionClusterMap</span>(<span style="color:#268bd2">obj</span>)
+      
+    } <span style="color:#859900">else</span> {
+    
+      <span style="color:#859900">return</span> <span style="color:#cb4b16">Promise</span>.<span style="color:#268bd2">reject</span>(<span style="color:#268bd2">Utils</span>.<span style="color:#268bd2">cError</span>(-<span style="color:#2aa198;font-weight:bold">2</span>, <span style="color:#2aa198">&#39;excel数据存在错误,请检查以下数据！&#39;</span>, {<span style="color:#268bd2">products</span>: <span style="color:#268bd2">errArr</span>}))
+    }
+  })
+
+  <span style="color:#268bd2">fn</span>()
+    .<span style="color:#268bd2">then</span>(<span style="color:#268bd2">data</span> =&gt; {
+    
+      <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;添加成功!&#39;</span>, <span style="color:#268bd2">data</span>}).<span style="color:#268bd2">end</span>()
+      
+      <span style="color:#268bd2">addLog</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>, <span style="color:#268bd2">user</span>.<span style="color:#268bd2">userId</span>, <span style="color:#268bd2">user</span>.<span style="color:#268bd2">ip</span>, <span style="color:#2aa198">&#39;TAGS&#39;</span>, <span style="color:#268bd2">params</span>.<span style="color:#268bd2">clusterCode</span>, <span style="color:#2aa198">&#39;已成功从集群中批量上传商品 Excel！&#39;</span>)
+      
+    })
+    .<span style="color:#859900">catch</span>(<span style="color:#268bd2">err</span> =&gt; {
+    
+      <span style="color:#859900">return</span> <span style="color:#268bd2">Utils</span>.<span style="color:#268bd2">handleErr</span>(<span style="color:#268bd2">res</span>, <span style="color:#268bd2">err</span>)
+    })
+}
+</code></pre></div>
+<h4 id="实际场景-2-为-客户端上传表格时-需要下载后台给出的模板表格">实际场景 2 为：客户端上传表格时，需要下载后台给出的模板表格。</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">exports</span>.<span style="color:#268bd2">getExcel</span> = <span style="color:#859900">function</span> (<span style="color:#268bd2">args</span>, <span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+  <span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic">   * getPromotionTaskExcel excel下载
+</span><span style="color:#93a1a1;font-style:italic">   **/</span>
+  <span style="color:#859900">const</span> <span style="color:#268bd2">params</span> = {
+  
+    <span style="color:#268bd2">campaignId</span>: <span style="color:#268bd2">args</span>.<span style="color:#268bd2">promotionCampaignId</span>.<span style="color:#268bd2">value</span>,
+    
+    <span style="color:#268bd2">fileName</span>: <span style="color:#268bd2">args</span>.<span style="color:#268bd2">fileName</span>.<span style="color:#268bd2">value</span> || <span style="color:#2aa198">&#39;任务表&#39;</span>  <span style="color:#93a1a1;font-style:italic">// 这里可以自定义下载的文件名称
+</span><span style="color:#93a1a1;font-style:italic"></span>  }
+  <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">trace</span>(<span style="color:#2aa198">&#39;下载任务列表参数&#39;</span>, <span style="color:#268bd2">params</span>)
+
+  <span style="color:#859900">const</span> <span style="color:#268bd2">user</span> = <span style="color:#268bd2">pickUser</span>(<span style="color:#268bd2">req</span>)
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">PromotionTaskModel</span> = <span style="color:#268bd2">initializeTaskModel</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>)
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">PromotionMaterialModel</span> = <span style="color:#268bd2">initializeMaterialModel</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>)
+  
+  <span style="color:#859900">const</span> <span style="color:#268bd2">PromotionAllotMaterialModel</span> = <span style="color:#268bd2">initializeAllotMaterialModel</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>)
+
+  <span style="color:#859900">const</span> <span style="color:#268bd2">fn</span> = <span style="color:#268bd2">co</span>.<span style="color:#268bd2">wrap</span>(<span style="color:#859900">function</span> * () { <span style="color:#93a1a1;font-style:italic">// 将已经加入页面的数据添到要下载的表格中，再继续再表格中添加数据
+</span><span style="color:#93a1a1;font-style:italic"></span>  
+    <span style="color:#859900">const</span> <span style="color:#268bd2">tasks</span> = <span style="color:#859900">yield</span> <span style="color:#268bd2">PromotionTaskModel</span>.<span style="color:#268bd2">_selectTaskList</span>(<span style="color:#268bd2">params</span>)
+    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">materials</span> = <span style="color:#859900">yield</span> <span style="color:#268bd2">PromotionMaterialModel</span>.<span style="color:#268bd2">_selectMaterials</span>(<span style="color:#268bd2">params</span>)
+    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">allotRecords</span> = <span style="color:#859900">yield</span> <span style="color:#268bd2">PromotionAllotMaterialModel</span>.<span style="color:#268bd2">selectAllotRecord</span>(<span style="color:#268bd2">params</span>.<span style="color:#268bd2">campaignId</span>)
+    
+    <span style="color:#93a1a1;font-style:italic">// 按任务分组
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">const</span> <span style="color:#268bd2">groupAllotRecords</span> = <span style="color:#268bd2">_</span>.<span style="color:#268bd2">groupBy</span>(<span style="color:#268bd2">allotRecords</span>, <span style="color:#2aa198">&#39;taskId&#39;</span>)
+    
+    <span style="color:#93a1a1;font-style:italic">// 组合数据
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">const</span> <span style="color:#268bd2">thead</span> = [<span style="color:#2aa198">&#39;门店编号&#39;</span>, <span style="color:#2aa198">&#39;门店名称&#39;</span>, <span style="color:#2aa198">&#39;销售额(元)&#39;</span>, <span style="color:#2aa198">&#39;毛利(元)&#39;</span>, <span style="color:#2aa198">&#39;新增会员(人)&#39;</span>]
+    
+    <span style="color:#268bd2">materials</span>.<span style="color:#268bd2">forEach</span>(<span style="color:#268bd2">material</span> =&gt; {
+      <span style="color:#268bd2">thead</span>.<span style="color:#268bd2">push</span>(<span style="color:#268bd2">material</span>.<span style="color:#268bd2">materialName</span>)
+    })
+    
+    <span style="color:#859900">const</span> <span style="color:#268bd2">tbody</span> = <span style="color:#268bd2">tasks</span>.<span style="color:#268bd2">map</span>(<span style="color:#268bd2">task</span> =&gt; {
+    
+      <span style="color:#859900">const</span> <span style="color:#268bd2">row</span> = [<span style="color:#268bd2">task</span>.<span style="color:#268bd2">organizationId</span>, <span style="color:#268bd2">task</span>.<span style="color:#268bd2">organizationName</span>, <span style="color:#268bd2">task</span>.<span style="color:#268bd2">sales</span>, <span style="color:#268bd2">task</span>.<span style="color:#268bd2">grossProfit</span>, <span style="color:#268bd2">task</span>.<span style="color:#268bd2">newCustomers</span>]
+      
+      <span style="color:#859900">const</span> <span style="color:#268bd2">allotRecord</span> = <span style="color:#268bd2">groupAllotRecords</span>[<span style="color:#268bd2">task</span>.<span style="color:#268bd2">taskId</span>] || []
+      
+      <span style="color:#268bd2">materials</span>.<span style="color:#268bd2">forEach</span>(<span style="color:#268bd2">material</span> =&gt; {
+        <span style="color:#859900">const</span> <span style="color:#268bd2">allot</span> = <span style="color:#268bd2">_</span>.<span style="color:#268bd2">find</span>(<span style="color:#268bd2">allotRecord</span>, [<span style="color:#2aa198">&#39;materialId&#39;</span>, <span style="color:#268bd2">material</span>.<span style="color:#268bd2">materialId</span>])
+        
+        <span style="color:#859900">const</span> <span style="color:#268bd2">count</span> = <span style="color:#268bd2">allot</span> ? <span style="color:#268bd2">allot</span>.<span style="color:#268bd2">count</span> : <span style="color:#2aa198;font-weight:bold">0</span>
+        
+        <span style="color:#268bd2">row</span>.<span style="color:#268bd2">push</span>(<span style="color:#268bd2">count</span>)
+      })
+      
+      <span style="color:#859900">return</span> <span style="color:#268bd2">row</span>
+    })
+
+    <span style="color:#93a1a1;font-style:italic">// build excel buffer
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">tbody</span>.<span style="color:#268bd2">unshift</span>(<span style="color:#268bd2">thead</span>)
+    
+    <span style="color:#859900">let</span> <span style="color:#268bd2">excelBuffer</span> = <span style="color:#268bd2">Buffer</span>.<span style="color:#268bd2">from</span>(<span style="color:#2aa198">&#39;&#39;</span>)
+    
+    <span style="color:#859900">try</span> {
+    
+      <span style="color:#268bd2">excelBuffer</span> = <span style="color:#268bd2">xlsx</span>.<span style="color:#268bd2">build</span>([{<span style="color:#268bd2">name</span>: <span style="color:#2aa198">&#39;任务表&#39;</span>, <span style="color:#268bd2">data</span>: <span style="color:#268bd2">tbody</span>}])
+      
+      <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFileSync</span>(<span style="color:#268bd2">cwd</span> + <span style="color:#2aa198">`/public/download/temp/</span><span style="color:#2aa198">${</span><span style="color:#268bd2">params</span>.<span style="color:#268bd2">fileName</span><span style="color:#2aa198">}</span><span style="color:#2aa198">.xlsx`</span>, <span style="color:#268bd2">excelBuffer</span>, {<span style="color:#268bd2">encoding</span>: <span style="color:#2aa198">&#39;utf8&#39;</span>})
+    } <span style="color:#859900">catch</span> (<span style="color:#268bd2">e</span>) {
+    
+      <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">e</span>.<span style="color:#268bd2">stack</span>)
+      <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">e</span>.<span style="color:#268bd2">message</span>)
+      
+      <span style="color:#859900">return</span> <span style="color:#cb4b16">Promise</span>.<span style="color:#268bd2">reject</span>(<span style="color:#268bd2">cError</span>(-<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198">&#39;Excel 创建失败，请稍候再试!&#39;</span>))
+    }
+    
+    <span style="color:#859900">return</span> {<span style="color:#268bd2">downloadLink</span>: <span style="color:#2aa198">`/download/temp/</span><span style="color:#2aa198">${</span><span style="color:#268bd2">params</span>.<span style="color:#268bd2">fileName</span><span style="color:#2aa198">}</span><span style="color:#2aa198">.xlsx`</span>} <span style="color:#93a1a1;font-style:italic">// 返回下载相对服务器文件路径
+</span><span style="color:#93a1a1;font-style:italic"></span>  })
+
+  <span style="color:#268bd2">fn</span>()
+    .<span style="color:#268bd2">then</span>(<span style="color:#268bd2">data</span> =&gt; {
+    
+      <span style="color:#268bd2">res</span>.<span style="color:#268bd2">json</span>({<span style="color:#268bd2">code</span>: <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">message</span>: <span style="color:#2aa198">&#39;操作成功!&#39;</span>, <span style="color:#268bd2">data</span>}).<span style="color:#268bd2">end</span>()
+      
+      <span style="color:#268bd2">addLog</span>(<span style="color:#268bd2">user</span>.<span style="color:#268bd2">customerDB</span>, <span style="color:#268bd2">user</span>.<span style="color:#268bd2">userId</span>, <span style="color:#268bd2">user</span>.<span style="color:#268bd2">ip</span>, <span style="color:#2aa198">&#39;PROMOTION&#39;</span>, <span style="color:#268bd2">params</span>.<span style="color:#268bd2">campaignId</span>, <span style="color:#2aa198">&#39;已成功下载营销活动任务列表(excel)&#39;</span>)
+    })
+    
+    .<span style="color:#859900">catch</span>(<span style="color:#268bd2">e</span> =&gt; <span style="color:#268bd2">handleErr</span>(<span style="color:#268bd2">res</span>, <span style="color:#268bd2">e</span>))
+}
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/node.js/">Node.js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f&amp;text=Node.js%e4%b9%8bnode-xlsx%e6%a8%a1%e5%9d%97&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Node.js%e4%b9%8bnode-xlsx%e6%a8%a1%e5%9d%97" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Node.js%e4%b9%8bnode-xlsx%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Node.js%e4%b9%8bnode-xlsx%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnode-js%25E4%25B9%258Bnode-xlsx%25E6%25A8%25A1%25E5%259D%2597%2f&amp;description=Node.js%e4%b9%8bnode-xlsx%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="Web工作方式">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/node-js%E4%B9%8B%E6%B7%B1%E5%85%A5%E5%9B%9B%E4%B8%AA%E5%AE%9A%E6%97%B6%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="Node.js之深入四个定时器">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

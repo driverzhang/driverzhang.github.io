@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Es6 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/es6/</link>
+    <description>Recent content in Es6 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Tue, 07 Nov 2017 22:13:51 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/es6/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>promise与callback hell</title>
+      <link>https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/</link>
+      <pubDate>Tue, 07 Nov 2017 22:13:51 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/promise%E4%B8%8Ecallback-hell/</guid>
+      <description>&lt;h1 id=&#34;callback-hell-和-promise-异步执行&#34;&gt;callback hell 和 promise 异步执行&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;nodejs的callback机制是比较烦人的，里面大部分方法是异步的，这个对于不熟悉的同学是非常麻烦的。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

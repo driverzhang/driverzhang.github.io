@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mysql on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/mysql/</link>
+    <description>Recent content in Mysql on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Mon, 29 Jan 2018 20:03:12 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SQL之inner  join 和 left join、right join区别立</title>
+      <link>https://driverzhang.github.io/post/sql%E4%B9%8Binner-join-%E5%92%8C-left-joinright-join%E5%8C%BA%E5%88%AB%E7%AB%8B/</link>
+      <pubDate>Mon, 29 Jan 2018 20:03:12 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/sql%E4%B9%8Binner-join-%E5%92%8C-left-joinright-join%E5%8C%BA%E5%88%AB%E7%AB%8B/</guid>
+      <description>&lt;h1 id=&#34;inner-join-和-left-join-right-join区别&#34;&gt;inner join 和 left join、right join区别&lt;/h1&gt;
+
+&lt;h3 id=&#34;简单一句话先总结-inner-join-只返回两表条件相同的数据行-其余两个分别以左-右表为基准返回各自基准表的全部数据行-未满足条件部分以-null-返回填入&#34;&gt;简单一句话先总结：inner join 只返回两表条件相同的数据行，其余两个分别以左、右表为基准返回各自基准表的全部数据行，未满足条件部分以 null 返回填入！&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

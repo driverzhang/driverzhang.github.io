@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>标准库 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E6%A0%87%E5%87%86%E5%BA%93/</link>
+    <description>Recent content in 标准库 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Thu, 16 Aug 2018 18:38:58 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E6%A0%87%E5%87%86%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang 中对请求超时设置时间</title>
+      <link>https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/</link>
+      <pubDate>Thu, 16 Aug 2018 18:38:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/</guid>
+      <description>&lt;h1 id=&#34;golang-中对请求超时设置时间&#34;&gt;Golang 中对请求超时设置时间&lt;/h1&gt;
+
+&lt;p&gt;http中有Get/Post/PostForm方法&lt;/p&gt;
+
+&lt;p&gt;可以通过http包中设置client 请求配置 ，然后通过client.Do方法实现请求&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

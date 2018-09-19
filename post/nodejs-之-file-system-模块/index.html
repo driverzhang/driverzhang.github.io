@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Nodejs 之 File System 模块</title>
+  <meta property="og:title" content="Nodejs 之 File System 模块" />
+  <meta name="twitter:title" content="Nodejs 之 File System 模块" />
+  <meta name="description" content="Nodejs 之 File System 模块
+
+
+fs模块为nodejs的核心模块之一，主要处理文件的读写、复制、s删除、重命名等操作。当需要使用该模块时，需要先导入该文件
+
+
+">
+  <meta property="og:description" content="Nodejs 之 File System 模块
+
+
+fs模块为nodejs的核心模块之一，主要处理文件的读写、复制、s删除、重命名等操作。当需要使用该模块时，需要先导入该文件
+
+
+">
+  <meta name="twitter:description" content="Nodejs 之 File System 模块
+
+
+fs模块为nodejs的核心模块之一，主要处理文件的读写、复制、s删除、重命名等操作。当需要使用该模块时，需要先导入该文件
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/nodejs-%E4%B9%8B-file-system-%E6%A8%A1%E5%9D%97/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/nodejs-%E4%B9%8B-file-system-%E6%A8%A1%E5%9D%97/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Nodejs 之 File System 模块</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on December 13, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="nodejs-之-file-system-模块">Nodejs 之 File System 模块</h1>
+
+<blockquote>
+<p>fs模块为nodejs的核心模块之一，主要处理文件的读写、复制、s删除、重命名等操作。当需要使用该模块时，需要先导入该文件</p>
+</blockquote>
+
+<p></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;fs&#39;</span>);
+</code></pre></div>
+<p>要注意的是 fs 是属于 nodejs 的内置模块所以不用特意的去 npm install 。</p>
+
+<p>其次它的所有方法都有对应的异步和同步的模式；</p>
+
+<blockquote>
+<p>All the methods have asynchronous and synchronous forms.</p>
+</blockquote>
+
+<p>Here is an example of the asynchronous version:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;fs&#39;</span>);
+
+<span style="color:#268bd2">fs</span>.<span style="color:#268bd2">unlink</span>(<span style="color:#2aa198">&#39;/tmp/hello&#39;</span>, (<span style="color:#268bd2">err</span>) =&gt; {
+  <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) <span style="color:#859900">throw</span> <span style="color:#268bd2">err</span>;
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;successfully deleted /tmp/hello&#39;</span>);
+});
+</code></pre></div>
+<p>Here is the synchronous version:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">fs</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;fs&#39;</span>);
+
+<span style="color:#268bd2">fs</span>.<span style="color:#268bd2">unlinkSync</span>(<span style="color:#2aa198">&#39;/tmp/hello&#39;</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;successfully deleted /tmp/hello&#39;</span>);
+</code></pre></div>
+<hr />
+
+<h2 id="一-fs-中的读写操作">一. fs 中的读写操作</h2>
+
+<blockquote>
+<p>文件模块中提供了基本的读写操作、buffer二进制操作和流操作。</p>
+</blockquote>
+
+<p>wirte()和read()方法提供读写操作时，需要执行:</p>
+
+<p>fs.open(path,flags,[mode],[callback(err,fd)])先打开文件。</p>
+
+<h3 id="fs-open-path-flags-mode-callback">fs.open(path, flags[, mode], callback)</h3>
+
+<p>flags can be:
+- #### &lsquo;r&rsquo; - Open file for reading. An exception occurs if the file does not exist.
+- #### &lsquo;r+&rsquo; - Open file for reading and writing. An exception occurs if the file does not exist.</p>
+
+<h2 id="rs-open-file-for-reading-and-writing-in-synchronous-mode-instructs-the-operating-system-to-bypass-the-local-file-system-cache">- #### &lsquo;rs+&rsquo; - Open file for reading and writing in synchronous mode. Instructs the operating system to bypass the local file system cache.</h2>
+
+<ul>
+<li>#### &lsquo;w&rsquo; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).</li>
+
+<li><h4 id="wx-like-w-but-fails-if-path-exists">&lsquo;wx&rsquo; - Like &lsquo;w&rsquo; but fails if path exists.</h4></li>
+
+<li><h4 id="w-open-file-for-reading-and-writing-the-file-is-created-if-it-does-not-exist-or-truncated-if-it-exists">&lsquo;w+&rsquo; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).</h4></li>
+
+<li><h4 id="wx-like-w-but-fails-if-path-exists-1">&lsquo;wx+&rsquo; - Like &lsquo;w+&rsquo; but fails if path exists.</h4></li>
+
+<li></li>
+
+<li><h4 id="a-open-file-for-appending-the-file-is-created-if-it-does-not-exist">&lsquo;a&rsquo; - Open file for appending. The file is created if it does not exist.</h4></li>
+
+<li><h4 id="ax-like-a-but-fails-if-path-exists">&lsquo;ax&rsquo; - Like &lsquo;a&rsquo; but fails if path exists.</h4></li>
+
+<li><h4 id="a-open-file-for-reading-and-appending-the-file-is-created-if-it-does-not-exist">&lsquo;a+&rsquo; - Open file for reading and appending. The file is created if it does not exist.</h4></li>
+
+<li><h4 id="ax-like-a-but-fails-if-path-exists-1">&lsquo;ax+&rsquo; - Like &lsquo;a+&rsquo; but fails if path exists.</h4></li>
+</ul>
+
+<hr />
+
+<h3 id="fs-read-fd-buffer-offset-length-position-callback">fs.read(fd, buffer, offset, length, position, callback)</h3>
+
+<blockquote>
+<p>其功能为从指定的文件描述符 fd 中读取数据并写入 buffer 指向的缓冲区对象。</p>
+
+<p>offset 是buffer 的写入偏移量。</p>
+
+<p>length 是要从文件中读取的字节数。</p>
+
+<p>position 是文件读取的起始位置，如果 position 的值为 null，则会从当前文件指针的位置读取。</p>
+
+<p>回调函数传递bytesRead 和 buffer，分别表示读取的字节数和缓冲区对象。</p>
+</blockquote>
+
+<h3 id="fs-write-fd-buffer-offset-length-position-callback">fs.write(fd, buffer[, offset[, length[, position]]], callback)</h3>
+
+<blockquote>
+<p>功能为将buffer内容写入fd中。</p>
+</blockquote>
+
+<h3 id="fs-readfile-path-options-callback">fs.readFile(path[, options], callback)</h3>
+
+<blockquote>
+<p>读取文件。其中file可以为文件名或文件路径，options可以为对象或字符串。包括读取文件时的编码、文件的读取方式（默认为‘r’）；</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;/etc/passwd&#39;</span>, (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) =&gt; {
+  <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) <span style="color:#859900">throw</span> <span style="color:#268bd2">err</span>;
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">data</span>);
+});
+</code></pre></div>
+<p>If options is a string, then it specifies the encoding. Example:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;/etc/passwd&#39;</span>, <span style="color:#2aa198">&#39;utf8&#39;</span>, <span style="color:#268bd2">callback</span>);
+</code></pre></div>
+<p>注意：如果fd 是文件夹目录的形式则会报错！</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// macOS, Linux and Windows
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;&lt;directory&gt;&#39;</span>, (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) =&gt; {
+  <span style="color:#93a1a1;font-style:italic">// =&gt; [Error: EISDIR: illegal operation on a directory, read &lt;directory&gt;]
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+
+<span style="color:#93a1a1;font-style:italic">//  FreeBSD
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;&lt;directory&gt;&#39;</span>, (<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) =&gt; {
+  <span style="color:#93a1a1;font-style:italic">// =&gt; null, &lt;data&gt;
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+</code></pre></div>
+<h3 id="fs-writefile-file-data-options-callback">fs.writeFile(file, data[, options], callback)</h3>
+
+<blockquote>
+<p>Asynchronously writes data to a file, replacing the file if it already exists. data can be a string or a buffer.</p>
+
+<p>The encoding option is ignored if data is a buffer. It defaults to &lsquo;utf8&rsquo;.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFile</span>(<span style="color:#2aa198">&#39;message.txt&#39;</span>, <span style="color:#2aa198">&#39;Hello Node.js&#39;</span>, (<span style="color:#268bd2">err</span>) =&gt; {
+  <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) <span style="color:#859900">throw</span> <span style="color:#268bd2">err</span>;
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;The file has been saved!&#39;</span>);
+}); 
+</code></pre></div>
+<p>If options is a string, then it specifies the encoding. Example:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFile</span>(<span style="color:#2aa198">&#39;message.txt&#39;</span>, <span style="color:#2aa198">&#39;Hello Node.js&#39;</span>, <span style="color:#2aa198">&#39;utf8&#39;</span>, <span style="color:#268bd2">callback</span>);
+</code></pre></div>
+<h5 id="通过readfile和writefile实现读取一个文件-并把该文件写入另一个文件中">通过readFile和writeFile实现读取一个文件，并把该文件写入另一个文件中</h5>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#2aa198">&#39;test.txt&#39;</span>,(<span style="color:#268bd2">err</span>,<span style="color:#268bd2">data</span>) =&gt; {
+    <span style="color:#859900">if</span>(<span style="color:#268bd2">err</span>){
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>)
+    }
+    <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFile</span>(<span style="color:#2aa198">&#39;test1.txt&#39;</span>,<span style="color:#268bd2">data</span>,<span style="color:#2aa198;font-weight:bold">0</span>,<span style="color:#2aa198">&#39;utf8&#39;</span>,(<span style="color:#268bd2">err</span>)  =&gt; {
+        <span style="color:#859900">if</span>(<span style="color:#268bd2">err</span>){
+            <span style="color:#859900">throw</span> <span style="color:#268bd2">err</span>;
+        }
+    })
+})
+</code></pre></div>
+<hr />
+
+<h2 id="二-fs-检查文件是否存在的方法">二. fs 检查文件是否存在的方法</h2>
+
+<h3 id="fs-stat-path-callback">fs.stat(path, callback)</h3>
+
+<blockquote>
+<p>用于查询文件信息，其回调函数有两个参数（err, stats）。stats是一个fs.Stats对象，该对象中包含一个stats.isFile()方法。如果stats对象存在且stats.isFile()为true，才能确认要修改或删除的文件存在</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">stat</span>(<span style="color:#2aa198">&#39;test.txt&#39;</span>,<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>,<span style="color:#268bd2">stat</span>){
+    <span style="color:#859900">if</span>(<span style="color:#268bd2">stat</span> &amp;&amp; <span style="color:#268bd2">stat</span>.<span style="color:#268bd2">isFile</span>()){
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;文件存在&#34;</span>);
+    }<span style="color:#859900">else</span>{
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;文件不存在或不是标准文件&#39;</span>);
+    }
+})
+</code></pre></div>
+<h3 id="fs-access-path-mode-callback">fs.access(path[, mode], callback)</h3>
+
+<blockquote>
+<p>Tests a user&rsquo;s permissions for the file or directory specified by path.</p>
+
+<p>用于检查到指定path路径的目录或文件的访问权限，其回调函数中有一个参数（Err), 如果检查失败则会出现错误参数的响应。mode为要检查的权限掩码，它可以是以下的值</p>
+</blockquote>
+
+<ul>
+<li>#### fs.constants.F_OK  - path is visible to the calling process. This is useful for determining if a file exists, but says nothing about rwx permissions. Default if no mode is specified.文件是对于进程是否可见，可以用来检查文件是否存在。也是mode 的默认值</li>
+<li>#### fs.constants.R_OK - path can be read by the calling process.</li>
+<li>#### fs.constants.W_OK - path can be written by the calling process.</li>
+<li>#### fs.constants.X_OK - path can be executed by the calling process. This has no effect on Windows (will behave like fs.constants.F_OK).文件对于进程是否可执行。（Windows系统不可用，执行效果等同fs.F_OK）</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">access</span>(<span style="color:#2aa198">&#39;/etc/passwd&#39;</span>, <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">constants</span>.<span style="color:#268bd2">R_OK</span> | <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">constants</span>.<span style="color:#268bd2">W_OK</span>, (<span style="color:#268bd2">err</span>) =&gt; {
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span> ? <span style="color:#2aa198">&#39;no access!&#39;</span> : <span style="color:#2aa198">&#39;can read/write&#39;</span>);
+});
+</code></pre></div>
+<p>使用fs.acess()方法检查文件是否存在，可以使用以下方法</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">access</span>(<span style="color:#2aa198">&#39;test4.txt&#39;</span>,<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>){
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>?<span style="color:#2aa198">&#39;文件不存在&#39;</span>:<span style="color:#2aa198">&#39;文件存在&#39;</span>);
+})
+</code></pre></div>
+<p>使用fs.access方法检查对文件时候有读写权限，可以使用如下方法：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">access</span>(<span style="color:#2aa198">&#34;test.txt&#34;</span>,<span style="color:#268bd2">fs</span>.<span style="color:#268bd2">R_OK</span> | <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">W_OK</span>,<span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>){
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>?<span style="color:#2aa198">&#39;不可读写&#39;</span>:<span style="color:#2aa198">&#39;可读写&#39;</span>);
+});
+</code></pre></div>
+<hr />
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"> <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">access</span>(<span style="color:#268bd2">savePath</span>, <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">W_OK</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>) {
+                    <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+                        <span style="color:#93a1a1;font-style:italic">// todo
+</span><span style="color:#93a1a1;font-style:italic"></span>                    }
+                    <span style="color:#93a1a1;font-style:italic">// 确认目录存在且有写权限，开始保存文件
+</span><span style="color:#93a1a1;font-style:italic"></span>                    <span style="color:#268bd2">fs</span>.<span style="color:#268bd2">writeFile</span>(<span style="color:#268bd2">filePath</span>, <span style="color:#268bd2">file</span>.<span style="color:#268bd2">buffer</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>) {
+                        <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+                            <span style="color:#268bd2">logger</span>.<span style="color:#268bd2">error</span>(<span style="color:#268bd2">err</span>);
+                            <span style="color:#268bd2">reject</span>(<span style="color:#2aa198">&#39;保存文件错误：&#39;</span> + <span style="color:#268bd2">err</span>);
+                        }
+                        <span style="color:#859900">var</span> <span style="color:#268bd2">URL</span> = <span style="color:#2aa198">&#39;/upload/&#39;</span> + <span style="color:#268bd2">fileName</span>;
+                        <span style="color:#268bd2">resolve</span>(<span style="color:#268bd2">URL</span>);
+                    });
+                });
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/node.js/">Node.js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f&amp;text=Nodejs%20%e4%b9%8b%20File%20System%20%e6%a8%a1%e5%9d%97&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Nodejs%20%e4%b9%8b%20File%20System%20%e6%a8%a1%e5%9d%97" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Nodejs%20%e4%b9%8b%20File%20System%20%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f&amp;title=Nodejs%20%e4%b9%8b%20File%20System%20%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fnodejs-%25E4%25B9%258B-file-system-%25E6%25A8%25A1%25E5%259D%2597%2f&amp;description=Nodejs%20%e4%b9%8b%20File%20System%20%e6%a8%a1%e5%9d%97" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/json-web-token/" data-toggle="tooltip" data-placement="top" title="json web token">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/git%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%BB%BA%E7%AB%8B/" data-toggle="tooltip" data-placement="top" title="Git本地分支与远程分支切换建立">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

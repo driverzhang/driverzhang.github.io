@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Express on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/express/</link>
+    <description>Recent content in Express on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Fri, 24 Nov 2017 19:45:24 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/express/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>expressjs4.0之路由Router</title>
+      <link>https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/</link>
+      <pubDate>Fri, 24 Nov 2017 19:45:24 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/</guid>
+      <description>&lt;h1 id=&#34;express-router&#34;&gt;express.Router&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Express.js 4.0 有加入一個新的 Router 功能，它就像一個迷你的应用程序，可以让内部的路由改写更为方便，更具备弹性。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;首先来看下express3-0版本的旧版路由定义的写法&#34;&gt;首先来看下express3.0版本的旧版路由定义的写法：&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

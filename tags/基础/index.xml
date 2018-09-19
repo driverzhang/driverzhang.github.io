@@ -2,21 +2,120 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>基础 on Gopherzhang</title>
-    <link>http://example.org/tags/%E5%9F%BA%E7%A1%80/</link>
+    <link>https://driverzhang.github.io/tags/%E5%9F%BA%E7%A1%80/</link>
     <description>Recent content in 基础 on Gopherzhang</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 18 Jun 2018 14:03:56 +0000</lastBuildDate>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sat, 08 Sep 2018 14:37:53 +0000</lastBuildDate>
     
-	<atom:link href="http://example.org/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://driverzhang.github.io/tags/%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Go语言核心36讲-040606程序实体</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</link>
+      <pubDate>Sat, 08 Sep 2018 14:37:53 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</guid>
+      <description>04.05.06 | 程序实体知识点汇总 04 程序实体哪些事（上） 问题1： 声明变量有几种方式  var :=  问题解析： 考点：  #### 1. 类型推断   简单地说，类型推断是一种编程语言在编译期自动解释表达式类型的能力。
+ var name = &amp;#34;zhang&amp;#34; 这里利用了 Go 语言自身的类型推断省去了 string 它只能用于对变量或常量的初始化。
+ #### 2. 短变量声明用法  知识扩展 1. ==Go 语言的类型推断可以带来哪些好处==？  通过使用 Go 语言的类型推断，而节省下来的键盘敲击次数几乎可以忽略不计。但它真正的好处往往体现在我们写代码之后的事情上， 比如代码的 重构。
+ 重构： 通常把“不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。 重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。
+package main import ( &amp;#34;flag&amp;#34; &amp;#34;fmt&amp;#34; ) func main() { var name = getTheFlag() flag.Parse() fmt.Printf(&amp;#34;Hello, %v!\n&amp;#34;, *name) } func getTheFlag() *string { return flag.</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-02工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Fri, 24 Aug 2018 11:15:02 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;02-命令源码文件&#34;&gt;02 | 命令源码文件&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们已经知道，环境变量 GOPATH 指向的是一个或多个工作区，而每个工作区中都会有以代码包为基本组织形式的源码文件。&lt;/p&gt;
+
+&lt;p&gt;这里的源码文件又分为三种，即：命令源码文件、库源码文件和测试源码文件，它们都有着不同的用途和编写规则。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-什么是命令源码文件-用途是什么-如何编写它&#34;&gt;1. 什么是命令源码文件，用途是什么？如何编写它&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-命令源码文件&#34;&gt;1.1 命令源码文件：&lt;/h3&gt;
+
+&lt;p&gt;==命令源码文件是程序的运行入口，是每个可独立运行的程序必须拥有的。==&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-01工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Tue, 21 Aug 2018 16:27:56 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;01-工作区和gopath&#34;&gt;01 | 工作区和GOPATH&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了&lt;/p&gt;
+
+&lt;p&gt;然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：&lt;/p&gt;
+
+&lt;p&gt;命令行运行下面命令：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Golang 关于 nil 的认识</title>
+      <link>https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/</link>
+      <pubDate>Fri, 17 Aug 2018 16:21:09 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/</guid>
+      <description>&lt;h1 id=&#34;golang-关于-nil-的认识&#34;&gt;Golang 关于 nil 的认识&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-什么是-nil&#34;&gt;1. 什么是 nil ？&lt;/h2&gt;
+
+&lt;p&gt;大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;bool      -&amp;gt; false                              
+numbers -&amp;gt; 0                                 
+string    -&amp;gt; &amp;#34;&amp;#34;      
+
+pointers -&amp;gt; nil
+slices -&amp;gt; nil
+maps -&amp;gt; nil
+channels -&amp;gt; nil
+functions -&amp;gt; nil
+interfaces -&amp;gt; nil&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>域名解析cname和A记录</title>
+      <link>https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Mon, 06 Aug 2018 21:25:51 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;h1 id=&#34;域名解析cname和a记录&#34;&gt;域名解析cname和A记录&lt;/h1&gt;
+
+&lt;h2 id=&#34;什么是-cname&#34;&gt;什么是 cname？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;CNAME 被称为规范名字。这种记录允许您将多个名字映射到同一台计算机。 通常用于同时提供WWW和MAIL服务的计算机。例如，有一台计算机名为“r0WSPFSx58.”（A记录）。 它同时提供WWW和MAIL服务，为了便于用户访问服务。可以为该计算机设置两个别名（CNAME）：WWW和MAIL。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>架构理论学习之分布式系统理论CAP</title>
-      <link>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
+      <link>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</link>
       <pubDate>Mon, 18 Jun 2018 14:03:56 +0000</pubDate>
       
-      <guid>http://example.org/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
+      <guid>https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/</guid>
       <description>&lt;h1 id=&#34;分布式系统理论cap&#34;&gt;分布式系统理论CAP&lt;/h1&gt;
 
 &lt;blockquote&gt;
@@ -26,6 +125,237 @@
 &lt;h3 id=&#34;对于设计分布式系统的架构师来说-cap-是必须掌握的理论&#34;&gt;==对于设计分布式系统的架构师来说，CAP 是必须掌握的理论==。&lt;/h3&gt;
 
 &lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>iota实例情况</title>
+      <link>https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/</link>
+      <pubDate>Tue, 24 Apr 2018 11:48:05 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/</guid>
+      <description>&lt;h1 id=&#34;iota-的一个实例&#34;&gt;iota 的一个实例&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;iota是golang语言的常量计数器,只能在常量的表达式中使用。&lt;/p&gt;
+
+&lt;p&gt;iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;使用iota能简化定义，在定义枚举时很有用。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>golang 知识点.总结一</title>
+      <link>https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Tue, 06 Mar 2018 00:16:33 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-%E7%9F%A5%E8%AF%86%E7%82%B9-%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;golang-知识点总结&#34;&gt;golang 知识点总结&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;此系列文档根据慕课网 golang视频总结的个模块知识点汇总。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-1-变量定义&#34;&gt;1.1  变量定义&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-1-使用-var-关键字&#34;&gt;1.1.1 使用 var 关键字&lt;/h3&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Web工作方式</title>
+      <link>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Wed, 07 Feb 2018 22:51:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</guid>
+      <description>&lt;h2 id=&#34;一-web工作方式&#34;&gt;一. Web工作方式&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时浏览网页的时候,会打开浏览器，输入网址后按下回车键，然后就会显示出你想要浏览的内容。在这个看似简单的用户行为背后，到底隐藏了些什么呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>javascript事件循环解析</title>
+      <link>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 22 Nov 2017 14:00:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</guid>
+      <description>&lt;h1 id=&#34;javascript-事件循环解析&#34;&gt;javascript 事件循环解析&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;用几张图来示意了解一下 事件循环和异步调用&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;先来个简单的-ajax-异步&#34;&gt;先来个简单的 ajax 异步&lt;/h2&gt;
+
+&lt;p&gt;让我们来看看下面的例子:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>void 0</title>
+      <link>https://driverzhang.github.io/post/void-0/</link>
+      <pubDate>Fri, 17 Nov 2017 14:20:37 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/void-0/</guid>
+      <description>&lt;h1 id=&#34;void-0-代替-undefined&#34;&gt;void 0 代替 undefined&lt;/h1&gt;
+
+&lt;h2 id=&#34;why&#34;&gt;why?&lt;/h2&gt;
+
+&lt;p&gt;首先说下 undefined 的一些不好的地方：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>JS原型和继承</title>
+      <link>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Sat, 21 Oct 2017 21:25:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</guid>
+      <description>&lt;h1 id=&#34;js原型与继承&#34;&gt;JS原型与继承&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-开篇&#34;&gt;1. 开篇&lt;/h2&gt;
+
+&lt;p&gt;先看如下代码出自 JavaScript 高级程序设计第三版 P163：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>getQueryStringArgs</title>
+      <link>https://driverzhang.github.io/post/getquerystringargs/</link>
+      <pubDate>Sat, 21 Oct 2017 21:02:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/getquerystringargs/</guid>
+      <description>&lt;h1 id=&#34;getquerystringargs&#34;&gt;getQueryStringArgs&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>this 豁然开朗！</title>
+      <link>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</link>
+      <pubDate>Mon, 16 Oct 2017 13:33:07 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</guid>
+      <description>&lt;h1 id=&#34;this-豁然开朗的四种规则&#34;&gt;this 豁然开朗的四种规则&lt;/h1&gt;
+
+&lt;h3 id=&#34;调用点-call-site&#34;&gt;调用点（call-site）&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;h4 id=&#34;调用点-找到一个函数是在哪里被调用的-但不总是那么简单-比如某些特定的编码模式会使-真正的-调用点变得不那么明确&#34;&gt;调用点：“找到一个函数是在哪里被调用的”，但不总是那么简单，比如某些特定的编码模式会使 真正的 调用点变得不那么明确。&lt;/h4&gt;
+
+&lt;h3 id=&#34;调用栈-call-stack&#34;&gt;调用栈（call-stack）&lt;/h3&gt;
+
+&lt;h4 id=&#34;调用栈-使我们到达当前执行位置而被调用的所有方法的堆栈&#34;&gt;调用栈：使我们到达当前执行位置而被调用的所有方法的堆栈。&lt;/h4&gt;
+
+&lt;p&gt;我们来展示一下调用栈和调用点：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TJS转化大写</title>
+      <link>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</guid>
+      <description>&lt;h1 id=&#34;用js转化大写-98-的都前端同学都没作出来&#34;&gt;用JS转化大写，98%的都前端同学都没作出来！&lt;/h1&gt;
+
+&lt;h3 id=&#34;题目-使用javascript-将字符串中由空格隔开的每个单词-首字-母大写-写出通用方法&#34;&gt;题目：使用JavaScript 将字符串中由空格隔开的每个单词 &lt;strong&gt;首字&lt;/strong&gt; 母大写，写出通用方法。&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;题目解释：&lt;/p&gt;
+
+&lt;p&gt;原始字符串: var string =”I believe I am the best”&lt;br /&gt;
+通过您的方法得到后的结果:string 的值为”I Believe I Am The Best”.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>addLoadEvent自定义方法</title>
+      <link>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</guid>
+      <description>&lt;h1 id=&#34;自定义方法-addloadevent&#34;&gt;自定义方法 addLoadEvent&lt;/h1&gt;
+
+&lt;p&gt;假如我们希望某个函数在网页加载完毕之后就立即执行。网页加载完毕时会触发一个onload事件，所以我们可以利用onload事件来加载这个函数。Onload事件与window对象相关联。
+
+如：把myfunction函数绑定到这个事件上：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>arguments系列问题</title>
+      <link>https://driverzhang.github.io/post/arguments/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/arguments/</guid>
+      <description>arguments、arguments.callee、arguments.caller的关系和区别 JS高三教程（P177），一段代码中用到了arguments.callee来调用函数自生，书中介绍到 “是一个指向正在执行的函数的指针，可以用它来实现对函数的递归调用。”
+这段递归调用代码如下：
+function factorial (num) { if (num &amp;lt;= 1) { return 1; } else { return num * arguments.callee(num - 1); } } var num = factorial(10); console.log(num); // =&amp;gt; 3628800  很简单的一段代码。于是自己为了搞清楚知识点，加强自身JS基础，就自己查了下文档  arguments arguments.callee arguments.caller  三者的关系与区别： arguments:  在函数调用时， 会自动在该函数内部生成一个名为 arguments的隐藏对象。 该对象类似于数组， 但又不是数组。可以使用[]操作符获取函数调用时传递的实参。
+ arguments对象不是一个 Array 。它类似于数组，但除了 长度之外没有任何数组属性。 没错它是个对象！并且它存储的是实际传递给函数的参数
+function obj(){ //利用instanceof判断arguments  console.log( &amp;#39;arguments instanceof Array? &amp;#39; + (arguments instanceof Array) ); // =&amp;gt; false  console.</description>
+    </item>
+    
+    <item>
+      <title>面试总结一</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;面试总结一&#34;&gt;面试总结一&lt;/h1&gt;
+
+&lt;h2 id=&#34;box-sizing-常用的属性有哪些-分别什么作用&#34;&gt;box-sizing 常用的属性有哪些？分别什么作用？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。&lt;/p&gt;
+
+&lt;p&gt;那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结三</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</guid>
+      <description>&lt;h1 id=&#34;面试总结三&#34;&gt;面试总结三&lt;/h1&gt;
+
+&lt;h2 id=&#34;一道闭包经典面试题&#34;&gt;一道闭包经典面试题：&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这道题很经典，对于理解闭包很到位，并且还可以稳固js 的词法作用域。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结二</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id=&#34;面试总结二&#34;&gt;面试总结二&lt;/h1&gt;
+
+&lt;h1 id=&#34;css常见兼容问题&#34;&gt;css常见兼容问题&lt;/h1&gt;
+
+&lt;h3 id=&#34;1-浏览器默认的margin和padding不同&#34;&gt;1. 浏览器默认的margin和padding不同：&lt;/h3&gt;</description>
     </item>
     
   </channel>

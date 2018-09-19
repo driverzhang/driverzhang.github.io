@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/git/</link>
+    <description>Recent content in Git on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Thu, 01 Mar 2018 19:24:43 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Git 本地分支与远程分支</title>
+      <link>https://driverzhang.github.io/post/git-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</link>
+      <pubDate>Thu, 01 Mar 2018 19:24:43 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF/</guid>
+      <description>&lt;h1 id=&#34;关于本地分支和远程分支的切换建立问题&#34;&gt;关于本地分支和远程分支的切换建立问题&lt;/h1&gt;
+
+&lt;p&gt;首先我们应该从以前得分支返回到主分支master上面来
+&amp;gt; git checkout master&lt;/p&gt;
+
+&lt;p&gt;然后我们执行下&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;git pull  // 拉取一下主分支的代码才能看见哪些新分支更新了！
+
+git remote update origin  // 或者执行此代码 直接可以更新远程分支名。
+
+
+git remote update origin --prune  // 表示更新远程分支名同时，删除掉没有被跟踪的无用分支名
+
+git remote show origin // 查看具体哪些远程分支的跟踪信息等等！
+
+git branch -r  // 再查看下 目前主分支下的所有远程分支！&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git本地分支与远程分支切换建立</title>
+      <link>https://driverzhang.github.io/post/git%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%BB%BA%E7%AB%8B/</link>
+      <pubDate>Mon, 29 Jan 2018 20:01:36 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%87%E6%8D%A2%E5%BB%BA%E7%AB%8B/</guid>
+      <description>&lt;h1 id=&#34;关于本地分支和远程分支的切换建立问题&#34;&gt;关于本地分支和远程分支的切换建立问题&lt;/h1&gt;
+
+&lt;h2 id=&#34;一-如果远程仓库没有-abc-分支&#34;&gt;一. 如果远程仓库没有 abc 分支&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;如果远程没有 abc 分支， 那么你想本地建立这个分支并推上远程再关联跟踪这个分支。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git分支问题</title>
+      <link>https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 31 Oct 2017 22:42:10 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;h1 id=&#34;git-分支问题&#34;&gt;Git 分支问题&lt;/h1&gt;
+
+&lt;h2 id=&#34;前瞻技能&#34;&gt;前瞻技能&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;h3 id=&#34;git鼓励大量使用分支&#34;&gt;Git鼓励大量使用分支：&lt;/h3&gt;
+
+&lt;p&gt;查看分支：git branch&lt;/p&gt;
+
+&lt;p&gt;创建分支：git branch &lt;name&gt;&lt;/p&gt;
+
+&lt;p&gt;创建+切换分支：git checkout -b &lt;name&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Git常用命令及用法</title>
+      <link>https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/</guid>
+      <description>&lt;h1 id=&#34;git-常用命令&#34;&gt;Git 常用命令：&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;git init 创库初始化。&lt;/p&gt;
+
+&lt;p&gt;git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。&lt;/p&gt;
+
+&lt;p&gt;git commit 提交你所有添加的文件&lt;/p&gt;
+
+&lt;p&gt;git push origin master提交本地仓库到远处链接仓库。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>javascript事件循环解析</title>
+  <meta property="og:title" content="javascript事件循环解析" />
+  <meta name="twitter:title" content="javascript事件循环解析" />
+  <meta name="description" content="javascript 事件循环解析
+
+
+用几张图来示意了解一下 事件循环和异步调用
+
+
+先来个简单的 ajax 异步
+
+让我们来看看下面的例子:
+
+">
+  <meta property="og:description" content="javascript 事件循环解析
+
+
+用几张图来示意了解一下 事件循环和异步调用
+
+
+先来个简单的 ajax 异步
+
+让我们来看看下面的例子:
+
+">
+  <meta name="twitter:description" content="javascript 事件循环解析
+
+
+用几张图来示意了解一下 事件循环和异步调用
+
+
+先来个简单的 ajax 异步
+
+让我们来看看下面的例子:
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>javascript事件循环解析</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 22, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="javascript-事件循环解析">javascript 事件循环解析</h1>
+
+<blockquote>
+<p>用几张图来示意了解一下 事件循环和异步调用</p>
+</blockquote>
+
+<h2 id="先来个简单的-ajax-异步">先来个简单的 ajax 异步</h2>
+
+<p>让我们来看看下面的例子:</p>
+
+<p></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// ajax(..) is some arbitrary Ajax function given by a library
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">response</span> = <span style="color:#268bd2">ajax</span>(<span style="color:#2aa198">&#39;https://example.com/api&#39;</span>);
+
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">response</span>);  <span style="color:#93a1a1;font-style:italic">// =&gt; undefined
+</span><span style="color:#93a1a1;font-style:italic">// `response` won&#39;t have the response
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>以上代码中 ajax 是异步调用的，所以你会看见
+代码执行的时候Ajax(..)函数没法给response变量赋予真正的返回值。</p>
+
+<p>如果你想让它正常运行如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">ajax</span>(<span style="color:#2aa198">&#39;https://example.com/api&#39;</span>, <span style="color:#859900">function</span>(<span style="color:#268bd2">response</span>) {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">response</span>); <span style="color:#93a1a1;font-style:italic">// `response` is now available
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+</code></pre></div>
+<hr />
+
+<h2 id="开始我们的事件循环解析吧">开始我们的事件循环解析吧：</h2>
+
+<blockquote>
+<p>setTimeout(callback, milliseconds)<br />
+方法也可以实现异步。setTimeout函数所做的是设置一个事件(超时)，以便稍后发生。让我们来看看:</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">first</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;first&#39;</span>);
+}
+<span style="color:#859900">function</span> <span style="color:#268bd2">second</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;second&#39;</span>);
+}
+<span style="color:#859900">function</span> <span style="color:#268bd2">third</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;third&#39;</span>);
+}
+<span style="color:#268bd2">first</span>();
+<span style="color:#268bd2">setTimeout</span>(<span style="color:#268bd2">second</span>, <span style="color:#2aa198;font-weight:bold">1000</span>); <span style="color:#93a1a1;font-style:italic">// Invoke `second` after 1000ms
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">third</span>();
+</code></pre></div>
+<p>输出如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">first</span>
+<span style="color:#268bd2">third</span>
+<span style="color:#268bd2">second</span>
+</code></pre></div>
+<hr />
+
+<h3 id="解析事件循环">解析事件循环</h3>
+
+<p>先看一张图吧：
+<img src="http://img.colabug.com/2017/11/e99c3672de721e56d29f3d3ed6bef6fd.png" alt="image" />
+这些Web API是什么? 本质上，它们是您无法访问的线程，你可以对它们进行调用。它们是并行启动的浏览器的一部分。如果你是一个 Node.jS开发者，这些是C++API。</p>
+
+<p>那什么又是事件循环呢？</p>
+
+<p><img src="http://img.colabug.com/2017/11/99b86f819ca55c46a3bfc3363ca4aecb.png" alt="image" /></p>
+
+<p>事件循环有一个简单的工作——监视调用堆栈和回调队列。如果调用堆栈是空的，它将从队列中取出第一个事件，并将其推到调用堆栈，该堆栈有效地运行它。 这样的迭代被称为事件循环中的 <strong>一个标记</strong> 。每个事件都只是一个函数回调。</p>
+
+<p>上面一堆废话后！让我们来具体看看到底里面 发生了什么鬼吧！</p>
+
+<h4 id="1-状态是很清晰的-浏览器控制台显示-调用堆栈是空的">1. 状态是很清晰的. 浏览器控制台显示，调用堆栈是空的.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/fc2d79c7e41cfe73103cdfacb6126237.png" alt="image" /></p>
+
+<h4 id="2-console-log-hi-被添加到调用堆栈中">2. console.log(&lsquo;Hi&rsquo;) 被添加到调用堆栈中.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/671bdfeb27c8afde4d69565c09e8431a.png" alt="image" /></p>
+
+<h4 id="3-console-log-hi-执行">3. console.log(&lsquo;Hi&rsquo;) 执行.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/751ae337b18b246127fa520a565e2ea8.png" alt="image" /></p>
+
+<h4 id="4-console-log-hi-从调用堆栈中删除">4. console.log(&lsquo;Hi&rsquo;) 从调用堆栈中删除.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/163b29dc58a9bcbfdbd612211652d82c.png" alt="image" /></p>
+
+<p>#### 5. setTimeout(function cb1() { &hellip; }) 被添加到调用堆栈中.
+ <img src="http://img.colabug.com/2017/11/f0cf5e353181ef282f3dbd0a6b9a3ced.png" alt="image" /></p>
+
+<p>#### 6. setTimeout(function cb1() { &hellip; }) 执行。浏览器将作为Web api的一部分创建一个计时器。它将为你处理倒计时。
+ <img src="http://img.colabug.com/2017/11/2ff328cbacc3cdebd190aca6fefa0a72.png" alt="image" /></p>
+
+<p>#### 7. The setTimeout(function cb1() { &hellip; }) 它本身是完整的，并且从调用堆栈中删除。</p>
+
+<p><img src="http://img.colabug.com/2017/11/14b3e6c89e097106c0fdad7ad85ddaaa.png" alt="image" /></p>
+
+<p>#### 8. console.log(&lsquo;Bye&rsquo;) 被添加到调用堆栈中.</p>
+
+<p><img src="http://img.colabug.com/2017/11/fba7ffda286110fd864e201d50a9e114.png" alt="image" /></p>
+
+<p>#### 9. console.log(&lsquo;Bye&rsquo;) 执行.</p>
+
+<p><img src="http://img.colabug.com/2017/11/edbd783623b1747f07b57b3e2789c931.png" alt="image" /></p>
+
+<p>#### 10. console.log(&lsquo;Bye&rsquo;) 从调用堆栈中删除.</p>
+
+<p><img src="http://img.colabug.com/2017/11/3fa2f3c722f37408f154e37c0ea8fe8a.png" alt="image" /></p>
+
+<h4 id="11-在至少-5000-ms-后-计时器完成并将cb1回调推到回调队列">11. 在至少 5000 ms 后, 计时器完成并将cb1回调推到回调队列。</h4>
+
+<p><img src="http://img.colabug.com/2017/11/df874df7d9dd9a28a5367e7abc1c6259.png" alt="image" /></p>
+
+<h4 id="12-事件循环从回调队列中获取cb1-并将其推到调用堆栈">12. 事件循环从回调队列中获取cb1，并将其推到调用堆栈。</h4>
+
+<p><img src="http://img.colabug.com/2017/11/9480fe1d1a7ad9bdbccb2e085f658ed2.png" alt="image" /></p>
+
+<h4 id="13-cb1-执行-和添加-console-log-cb1-到调用堆栈">13. cb1 执行 和添加 console.log(&lsquo;cb1&rsquo;) 到调用堆栈.</h4>
+
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*hpyVeL1zsaeHaqS7mU4Qfw.png" alt="image" /></p>
+
+<h4 id="14-console-log-cb1-执行">14. console.log(&lsquo;cb1&rsquo;) 执行.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/11ea8ece549776b1c889e1a0bc2f70da.png" alt="image" /></p>
+
+<h4 id="15-console-log-cb1-从调用堆栈中删除">15. console.log(&lsquo;cb1&rsquo;) 从调用堆栈中删除.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/5fe8071cd474c0a9d1c614877ca6290d.png" alt="image" /></p>
+
+<h4 id="16-cb1-从调用堆栈中删除">16. cb1 从调用堆栈中删除.</h4>
+
+<p><img src="http://img.colabug.com/2017/11/c0838d66ba848da5100833bd88081783.png" alt="image" /></p>
+
+<h3 id="最后来个快速回顾吧">最后来个快速回顾吧：</h3>
+
+<p><img src="http://img.colabug.com/2017/11/a516c14a856a1e3ff4b39cfaf42db7af.gif" alt="image" /></p>
+
+<p>值得注意的是，ES6指定了事件循环应该如何工作，这意味着从技术上讲，它被加入到JS引擎的职责范围内，不再只是托管环境中的一部分。造成这种变化的一个主要原因是在ES6中引入了Promise，因为后者需要对事件循环队列的调度操作进行直接的、细粒度的控制。</p>
+
+<hr />
+
+<h2 id="settimeout-是怎么样工作的">setTimeout(…) 是怎么样工作的</h2>
+
+<blockquote>
+<p>需要注意的是setTimeout(…)不会自动将您的回调放到事件循环队列中。它设置了一个计时器。</p>
+
+<p>托管环境将您的回调放入事件循环中，以便将来的某个时间点将会接收并执行它。看看这段代码:</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">setTimeout</span>(<span style="color:#268bd2">myCallback</span>, <span style="color:#2aa198;font-weight:bold">1000</span>);
+</code></pre></div>
+<p>这并不意味着myCallback 将在1000毫秒时执行，而是在1000毫秒时，myCallback将被添加到队列中。不过，队列可能会有其他之前添加的事件——你的回调将不得不等待。</p>
+
+<h3 id="那么-settimeout-callback-0-的工作是什么呢">那么 <strong>setTimeout(callback, 0)</strong>的工作是什么呢？</h3>
+
+<blockquote>
+<p>现在你知道事件循环做了什么事情，以及setTimeout是如何工作的：调用setTimeout，并将0作为第二个参数只是推迟回调，直到调用堆栈为空。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;Hi&#39;</span>);
+<span style="color:#268bd2">setTimeout</span>(<span style="color:#859900">function</span>() {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;callback&#39;</span>);
+}, <span style="color:#2aa198;font-weight:bold">0</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;Bye&#39;</span>);
+</code></pre></div>
+<p>尽管等待时间设置为0毫秒，但浏览器控制台的结果如下:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">Hi</span>
+<span style="color:#268bd2">Bye</span>
+<span style="color:#268bd2">callback</span>
+</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/javascript/">javascript</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%8E%9F%E7%90%86/">原理</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f&amp;text=javascript%e4%ba%8b%e4%bb%b6%e5%be%aa%e7%8e%af%e8%a7%a3%e6%9e%90&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=javascript%e4%ba%8b%e4%bb%b6%e5%be%aa%e7%8e%af%e8%a7%a3%e6%9e%90" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=javascript%e4%ba%8b%e4%bb%b6%e5%be%aa%e7%8e%af%e8%a7%a3%e6%9e%90" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=javascript%e4%ba%8b%e4%bb%b6%e5%be%aa%e7%8e%af%e8%a7%a3%e6%9e%90" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjavascript%25E4%25BA%258B%25E4%25BB%25B6%25E5%25BE%25AA%25E7%258E%25AF%25E8%25A7%25A3%25E6%259E%2590%2f&amp;description=javascript%e4%ba%8b%e4%bb%b6%e5%be%aa%e7%8e%af%e8%a7%a3%e6%9e%90" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C/" data-toggle="tooltip" data-placement="top" title="并发与并行">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/expressjs4-0%E4%B9%8B%E8%B7%AF%E7%94%B1router/" data-toggle="tooltip" data-placement="top" title="expressjs4.0之路由Router">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

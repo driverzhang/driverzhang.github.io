@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Js on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/js/</link>
+    <description>Recent content in Js on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sat, 21 Oct 2017 21:25:17 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>JS原型和继承</title>
+      <link>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Sat, 21 Oct 2017 21:25:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/</guid>
+      <description>&lt;h1 id=&#34;js原型与继承&#34;&gt;JS原型与继承&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-开篇&#34;&gt;1. 开篇&lt;/h2&gt;
+
+&lt;p&gt;先看如下代码出自 JavaScript 高级程序设计第三版 P163：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结四</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</link>
+      <pubDate>Sat, 21 Oct 2017 21:22:21 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/</guid>
+      <description>&lt;h1 id=&#34;面试总结四&#34;&gt;面试总结四&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>getQueryStringArgs</title>
+      <link>https://driverzhang.github.io/post/getquerystringargs/</link>
+      <pubDate>Sat, 21 Oct 2017 21:02:17 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/getquerystringargs/</guid>
+      <description>&lt;h1 id=&#34;getquerystringargs&#34;&gt;getQueryStringArgs&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>this 豁然开朗！</title>
+      <link>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</link>
+      <pubDate>Mon, 16 Oct 2017 13:33:07 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/this-%E8%B1%81%E7%84%B6%E5%BC%80%E6%9C%97/</guid>
+      <description>&lt;h1 id=&#34;this-豁然开朗的四种规则&#34;&gt;this 豁然开朗的四种规则&lt;/h1&gt;
+
+&lt;h3 id=&#34;调用点-call-site&#34;&gt;调用点（call-site）&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;h4 id=&#34;调用点-找到一个函数是在哪里被调用的-但不总是那么简单-比如某些特定的编码模式会使-真正的-调用点变得不那么明确&#34;&gt;调用点：“找到一个函数是在哪里被调用的”，但不总是那么简单，比如某些特定的编码模式会使 真正的 调用点变得不那么明确。&lt;/h4&gt;
+
+&lt;h3 id=&#34;调用栈-call-stack&#34;&gt;调用栈（call-stack）&lt;/h3&gt;
+
+&lt;h4 id=&#34;调用栈-使我们到达当前执行位置而被调用的所有方法的堆栈&#34;&gt;调用栈：使我们到达当前执行位置而被调用的所有方法的堆栈。&lt;/h4&gt;
+
+&lt;p&gt;我们来展示一下调用栈和调用点：&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>TJS转化大写</title>
+      <link>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/</guid>
+      <description>&lt;h1 id=&#34;用js转化大写-98-的都前端同学都没作出来&#34;&gt;用JS转化大写，98%的都前端同学都没作出来！&lt;/h1&gt;
+
+&lt;h3 id=&#34;题目-使用javascript-将字符串中由空格隔开的每个单词-首字-母大写-写出通用方法&#34;&gt;题目：使用JavaScript 将字符串中由空格隔开的每个单词 &lt;strong&gt;首字&lt;/strong&gt; 母大写，写出通用方法。&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;题目解释：&lt;/p&gt;
+
+&lt;p&gt;原始字符串: var string =”I believe I am the best”&lt;br /&gt;
+通过您的方法得到后的结果:string 的值为”I Believe I Am The Best”.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>addLoadEvent自定义方法</title>
+      <link>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/onload%E4%BA%8B%E4%BB%B6-----addloadevent%E5%87%BD%E6%95%B0/</guid>
+      <description>&lt;h1 id=&#34;自定义方法-addloadevent&#34;&gt;自定义方法 addLoadEvent&lt;/h1&gt;
+
+&lt;p&gt;假如我们希望某个函数在网页加载完毕之后就立即执行。网页加载完毕时会触发一个onload事件，所以我们可以利用onload事件来加载这个函数。Onload事件与window对象相关联。
+
+如：把myfunction函数绑定到这个事件上：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>arguments系列问题</title>
+      <link>https://driverzhang.github.io/post/arguments/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/arguments/</guid>
+      <description>arguments、arguments.callee、arguments.caller的关系和区别 JS高三教程（P177），一段代码中用到了arguments.callee来调用函数自生，书中介绍到 “是一个指向正在执行的函数的指针，可以用它来实现对函数的递归调用。”
+这段递归调用代码如下：
+function factorial (num) { if (num &amp;lt;= 1) { return 1; } else { return num * arguments.callee(num - 1); } } var num = factorial(10); console.log(num); // =&amp;gt; 3628800  很简单的一段代码。于是自己为了搞清楚知识点，加强自身JS基础，就自己查了下文档  arguments arguments.callee arguments.caller  三者的关系与区别： arguments:  在函数调用时， 会自动在该函数内部生成一个名为 arguments的隐藏对象。 该对象类似于数组， 但又不是数组。可以使用[]操作符获取函数调用时传递的实参。
+ arguments对象不是一个 Array 。它类似于数组，但除了 长度之外没有任何数组属性。 没错它是个对象！并且它存储的是实际传递给函数的参数
+function obj(){ //利用instanceof判断arguments  console.log( &amp;#39;arguments instanceof Array? &amp;#39; + (arguments instanceof Array) ); // =&amp;gt; false  console.</description>
+    </item>
+    
+    <item>
+      <title>面试总结一</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/</guid>
+      <description>&lt;h1 id=&#34;面试总结一&#34;&gt;面试总结一&lt;/h1&gt;
+
+&lt;h2 id=&#34;box-sizing-常用的属性有哪些-分别什么作用&#34;&gt;box-sizing 常用的属性有哪些？分别什么作用？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。&lt;/p&gt;
+
+&lt;p&gt;那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结三</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/</guid>
+      <description>&lt;h1 id=&#34;面试总结三&#34;&gt;面试总结三&lt;/h1&gt;
+
+&lt;h2 id=&#34;一道闭包经典面试题&#34;&gt;一道闭包经典面试题：&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这道题很经典，对于理解闭包很到位，并且还可以稳固js 的词法作用域。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>面试总结二</title>
+      <link>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/</guid>
+      <description>&lt;h1 id=&#34;面试总结二&#34;&gt;面试总结二&lt;/h1&gt;
+
+&lt;h1 id=&#34;css常见兼容问题&#34;&gt;css常见兼容问题&lt;/h1&gt;
+
+&lt;h3 id=&#34;1-浏览器默认的margin和padding不同&#34;&gt;1. 浏览器默认的margin和padding不同：&lt;/h3&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

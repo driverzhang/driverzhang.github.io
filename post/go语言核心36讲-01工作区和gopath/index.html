@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Go语言核心36讲-01工作区和GOPATH</title>
+  <meta property="og:title" content="Go语言核心36讲-01工作区和GOPATH" />
+  <meta name="twitter:title" content="Go语言核心36讲-01工作区和GOPATH" />
+  <meta name="description" content="01 | 工作区和GOPATH
+
+
+说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。
+
+
+首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了
+
+然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：
+
+命令行运行下面命令：
+
+">
+  <meta property="og:description" content="01 | 工作区和GOPATH
+
+
+说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。
+
+
+首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了
+
+然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：
+
+命令行运行下面命令：
+
+">
+  <meta name="twitter:description" content="01 | 工作区和GOPATH
+
+
+说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。
+
+
+首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了
+
+然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：
+
+命 …">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Go语言核心36讲-01工作区和GOPATH</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 21, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="01-工作区和gopath">01 | 工作区和GOPATH</h1>
+
+<blockquote>
+<p>说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。</p>
+</blockquote>
+
+<p>首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了</p>
+
+<p>然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：</p>
+
+<p>命令行运行下面命令：</p>
+
+<p></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">go</span> <span style="color:#268bd2">version</span></code></pre></div>
+<p>终端会输出：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go version go1.10 darwin/amd64</pre></div>
+<p>一般情况下，我们应该配置 3 个环境变量，即 GOROOT、GOPATH 和 GOBIN。其中，GOPATH 背后的概念是最多的，也是最重要的。</p>
+
+<hr />
+
+<h2 id="一-设置-gopath-有什么意义">一. 设置 GOPATH 有什么意义？</h2>
+
+<p>环境变量 GOPATH 的值可以是一个目录的路径，也可以包含多个目录路径，每个目录都代表 Go 语言的一个工作区（workspace）。</p>
+
+<p>这些工作区用于放置 Go 语言的源码文件(src目录)，以及安装（install）后的归档文件(pkg目录)和可执行文件(bin目录)。</p>
+
+<blockquote>
+<p>Go 语言项目在其生命周期内的所有操作（编码、依赖管理、构建、测试、安装等）基本上都是围绕着 GOPATH 和工作区进行的。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="二-知识扩展-干货">二. 知识扩展（干货）</h2>
+
+<h3 id="1-go-语言源码的组织方式">1. Go 语言源码的组织方式</h3>
+
+<p>与许多编程语言一样，Go 语言的源码是以代码包为基本组织单位的。在文件系统中，这些代码包其实是与目录一一对应的。目录可以有子目录，所以代码包也可以有子包。</p>
+
+<p>一个代码包中可以包含任意个以.go 为扩展名的源码文件，这些源码文件都需要被声明为属于同一个代码包。代码包的名称一般会与这些源码文件所在的目录同名。如果不同名，那么在构建、安装的过程中会以代码包名称为准。</p>
+
+<p>看下面的目录结构：</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwgy1fu912hm56xj30jb049aai.jpg" alt="" /></p>
+
+<p>图中 三处红线标记处名称都是一样的，对应上面的解释即为：</p>
+
+<h4 id="翻译图文对应-说人话">翻译图文对应（说人话）</h4>
+
+<p>一个代码包目录 api 下有子目录 captcha，即代码包 api 也可以有 captcha 子包。</p>
+
+<p>一个代码包 captcha 中包含 captcha.go 的源码文件，它声明属于代码包名为（右上角 package 处就是声明此包名） captcha。</p>
+
+<h4 id="当然你可以不同名去声明-package-但是你要保证该目录下所有的源码文件的包声明必须一致-最终包名以你声明的为准">当然你可以不同名去声明 package，但是你要保证该目录下所有的源码文件的包声明必须一致。最终包名以你声明的为准！</h4>
+
+<h3 id="2-源码安装后的结果">2. 源码安装后的结果</h3>
+
+<p>源码文件以及安装后的结果文件都会放到哪里呢？我们都知道，源码文件通常会被放在某个工作区的 src 子目录下。</p>
+
+<p>那么在安装后如果产生了归档文件，就会放进该工作区的 pkg 子目录；如果产生了可执行文件，就可能会放进该工作区的 bin 子目录。</p>
+
+<h4 id="所以这里就应该有-说人话-环节">所以这里就应该有 说人话 环节：</h4>
+
+<ul>
+<li>#### src 目录：
+用于以代码包的形式组织并保存Go 源码文件的。</li>
+<li>#### pkg 目录：
+用于存放通过 go install 安装后的代码包的归档文件（指 “.a” 结尾的文件）。</li>
+<li>#### bin 目录：
+与 pkg 目录相似，通过 go install 命令安装后，保存有Go命令源码文件生成的可执行文件。</li>
+</ul>
+
+<h4 id="来看下面的一个例子">来看下面的一个例子：</h4>
+
+<p>一个已存在的代码包的导入路径是：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">github.com/labstack/echo</pre></div>
+<p>然后执行命令是这样的：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go install github.com/labstack/echo</pre></div>
+<p>那么生成的归档文件的相对目录就是 github.com/labstack/，文件名为 echo.a</p>
+
+<blockquote>
+<p>by the way, 上面这个代码导入路径另外含义有：该代码的源码文件存在于 GitHub 网站的 labstack 组的代码仓库 echo  中。</p>
+</blockquote>
+
+<p>再说回来，归档文件的相对目录与 pkg 目录之间还有一级目录，叫做平台相关目录。平台相关目录的名称是由 build（也称“构建”）的目标操作系统、下划线和目标计算架构的代号组成的。</p>
+
+<p>比如，构建某个代码包时的目标操作系统是 Linux，目标计算架构是 64 位的，那么对应的平台相关目录就是 linux_amd64。（mac 就应该是 darwin_amd64）</p>
+
+<p>因此，上述代码包的归档文件就会被放置在当前工作区的子目录 pkg/linux_amd64/github.com/labstack 中。</p>
+
+<h3 id="3-理解构建和安装-go-程序的过程">3. 理解构建和安装 Go 程序的过程</h3>
+
+<ul>
+<li>go build 用于构建</li>
+<li>go install 用于安装</li>
+</ul>
+
+<p>构建和安装代码包的时候都会执行编译、打包等操作，并且这些操作生成的任何文件都会先被保存到某个临时的目录中。</p>
+
+<ul>
+<li>1. 如果构建（build）的是库源码文件,那么操作的结果文件只会存在于临时目录中。</li>
+<li>2. 如果构建（build）的是命令源码文件（main.go），那么操作的结果文件会被搬运到那个源码文件文件所在的目录中。</li>
+<li>3. 安装操作（install）会先执行构建，然后还会进行链接操作，并且把结果文件搬运到指定目录。</li>
+</ul>
+
+<p>进一步说，如果安装（install）的是库源码文件，那么结果文件会被搬运到它所在工作区的 pkg 目录下的某个子目录中。</p>
+
+<p>如果安装（install）的是命令源码文件（main.go），那么结果文件会被搬运到它所在工作区的 bin 目录中，或者环境变量。</p>
+
+<h3 id="4-go-build-和-go-get-命令一些可选项的用途和用法">4. go build 和 go get  命令一些可选项的用途和用法</h3>
+
+<h4 id="go-build-命令">go build 命令</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">-<span style="color:#268bd2">a</span> <span style="color:#93a1a1;font-style:italic">// 不但目标代码包总是会被编译，它依赖的代码包也总会被编译，即使依赖的是标准库中的代码包也是如此。
+</span><span style="color:#93a1a1;font-style:italic"></span>
+-<span style="color:#268bd2">i</span> <span style="color:#93a1a1;font-style:italic">// 如果不但要编译依赖的代码包，还要安装它们的归档文件，那么可以加入标记
+</span><span style="color:#93a1a1;font-style:italic"></span>
+-<span style="color:#268bd2">x</span> <span style="color:#93a1a1;font-style:italic">// 可以看见 go build 命令具体都执行了哪些操作。另外也可以加入标记
+</span><span style="color:#93a1a1;font-style:italic"></span>
+-<span style="color:#268bd2">n</span> <span style="color:#93a1a1;font-style:italic">// 这样可以只查看具体操作而不执行它们。
+</span><span style="color:#93a1a1;font-style:italic"></span>
+-<span style="color:#268bd2">v</span> // <span style="color:#268bd2">可以看见</span>  <span style="color:#859900">go</span> <span style="color:#268bd2">build</span> <span style="color:#268bd2">命令编译的代码包的名称</span>。<span style="color:#268bd2">它在与</span> -<span style="color:#268bd2">a</span> <span style="color:#268bd2">搭配很有用</span>。</code></pre></div>
+<h4 id="go-get-命令">go get 命令</h4>
+
+<blockquote>
+<p>go get 命令会自动从一些主流公用代码仓库（比如 GitHub）下载目标代码包，并把它们安装到环境变量GOPATH包含的第 1 工作区的相应中。如果存在环境变量GOBIN，那么仅包含命令源码文件的代码包会被安装到GOBIN指向的那个目录。</p>
+</blockquote>
+
+<ul>
+<li>-u: 下载并安装代码包，不论工作区中是否已存在它们。</li>
+<li>-d: 只下载代码包，不安装代码包。</li>
+<li>-fix: 在下载代码包后先运行一个用于根据当前 Go 语言版本修正代码的工具，然后再安装代码包。</li>
+<li>-t: 同时下载测试所需的代码包。</li>
+<li>-insecure: 允许通过非安全的网络协议下载和安装代码包。HTTP 就是这样的协议。</li>
+</ul>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f&amp;text=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-01%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8cGOPATH&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-01%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8cGOPATH" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-01%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8cGOPATH" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-01%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8cGOPATH" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-01%25E5%25B7%25A5%25E4%25BD%259C%25E5%258C%25BA%25E5%2592%258Cgopath%2f&amp;description=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-01%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8cGOPATH" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/" data-toggle="tooltip" data-placement="top" title="Golang 关于 nil 的认识">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/" data-toggle="tooltip" data-placement="top" title="Go语言核心36讲-02工作区和GOPATH">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

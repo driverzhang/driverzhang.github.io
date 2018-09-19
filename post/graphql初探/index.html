@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>GraphQl初探</title>
+  <meta property="og:title" content="GraphQl初探" />
+  <meta name="twitter:title" content="GraphQl初探" />
+  <meta name="description" content="GraphQL初探
+
+1.什么是 GraphQL ？
+
+A query language for your API
+
+
+GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.
+
+GraphQL 是 Facebook 在2012年创建、2015年形成规范的一种应用层查询语言
+
+
+">
+  <meta property="og:description" content="GraphQL初探
+
+1.什么是 GraphQL ？
+
+A query language for your API
+
+
+GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.
+
+GraphQL 是 Facebook 在2012年创建、2015年形成规范的一种应用层查询语言
+
+
+">
+  <meta name="twitter:description" content="GraphQL初探
+
+1.什么是 GraphQL ？
+
+A query language for your API
+
+
+GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and …">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/graphql%E5%88%9D%E6%8E%A2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/graphql%E5%88%9D%E6%8E%A2/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>GraphQl初探</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on June 15, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="graphql初探">GraphQL初探</h1>
+
+<h2 id="1-什么是-graphql">1.什么是 GraphQL ？</h2>
+
+<h3 id="a-query-language-for-your-api">A query language for your API</h3>
+
+<blockquote>
+<p>GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.</p>
+
+<p>GraphQL 是 Facebook 在2012年创建、2015年形成规范的一种应用层查询语言</p>
+</blockquote>
+
+<p></p>
+
+<p>很多优点：</p>
+
+<ul>
+<li>客户端可以自定义查询语句，通过自定义不仅提高了灵活性，而且服务端只返回客户端所需要的数据，减少网络的开销，提高了性能</li>
+<li>服务端收到客户端的请求，首先做类型检查，及时反馈，而且更加安全；这个对于node.js 就效果很明显了。</li>
+<li>自动生成文档，降低维护成本；</li>
+<li>服务端可以通过新增字段，弃用字段，避免版本的繁杂和紊乱</li>
+</ul>
+
+<p>上面所述也都是Rest API弊端，GraphQL却能很好的解决他们。</p>
+
+<p><a href="http://graphql.cn/">中文网站GraphQL</a></p>
+
+<p><img src="https://segmentfault.com/img/remote/1460000006769258" alt="image" /></p>
+
+<p>大家都应该知道REST API需要为每个请求匹配相应的数据需求。而GraphQL的优点在与客户端数据要求发生变化时, 不需要修改后端. 因此, 你不必因为客户端数据需求的变更而改变你的后端。这解决了管理REST API中的最大的问题。</p>
+
+<h3 id="graphql的特征">GraphQL的特征：</h3>
+
+<ul>
+<li>可描述性的：使用GraphQL，你获取的都是你想要的数据，不多也不会少；</li>
+<li>分级性的：GraphQL天然遵循对象间的关系，通过一个简单的请求，我们可以获取到一个对象及其相关的对象，比如说，通过一个简单的请求，我们可以获取一个作者和他创建的所有文章，然后可以获取文章的所有评论；</li>
+<li>强类型的：使用GraphQL的类型系统，我们可以描述能够被服务器查询的可能的数据，然后确保从服务器获取到的数据和我们查询的一致；</li>
+<li>不做语言限制：并不绑定于某一特定的语言，实际上现在已经有一些不同的语言有了实践；</li>
+<li>兼容于任何后台：GraphQL不限于某一特定数据库，可以使用已经存在的数据，代码，甚至可以连接第三方的APIs.</li>
+<li>好反省的：GraphQL服务器能够查询架构的细节。</li>
+</ul>
+
+<h3 id="来看看-graphql-查询demo">来看看 GraphQL 查询demo</h3>
+
+<p>Graph的查询语句非常类似JSON，如客户端的查询语句</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  user{
+    name
+    sex
+  }
+}</code></pre></div>
+<p>查询用户信息的name和sex字段数据，服务端返回结果如</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{
+  &#34;data&#34;: {
+    &#34;user&#34;: {
+      &#34;name&#34;: &#34;zhaiqianfeng&#34;,
+      &#34;sex&#34;: &#34;男&#34;
+    }
+  }
+}</pre></div>
+<p>使用如下查询语句时</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{
+  user{
+    name
+    intro
+  }
+}</pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{
+  &#34;data&#34;: {
+    &#34;user&#34;: {
+      &#34;name&#34;: &#34;zhaiqianfeng&#34;,
+      &#34;intro&#34;: &#34;博主，专注于Linux,Java,nodeJs,Web前端:Html5,JavaScript,CSS3&#34;
+    }
+  }
+}</pre></div>
+<hr />
+
+<h2 id="2-graphql-组成">2. GraphQL 组成</h2>
+
+<blockquote>
+<p>GraphQL的核心包括Query,Mutation,Schemas等等，每个概念下又有一些子概念,下面分别做简单的介绍：</p>
+</blockquote>
+
+<h3 id="query">Query</h3>
+
+<p>Queries用做读操作，也就是从服务器获取数据。</p>
+
+<p>Queries定义了我们对模式执行的行为。下面是一个简单的查询及相应的结果：</p>
+
+<p>客服端：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">// Basic GraphQL Query
+
+    {
+      author {
+        name
+        posts {
+          title
+        }
+      }
+    }</pre></div>
+<p>服务端返回：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">// Basic GraphQL Query Response
+
+    {
+      &#34;data&#34;: {
+        &#34;author&#34;: {
+          &#34;name&#34;: &#34;Chimezie Enyinnaya&#34;,
+          &#34;posts&#34;: [
+            {
+              &#34;title&#34;: &#34;How to build a collaborative note app using Laravel&#34;
+            },
+            {
+              &#34;title&#34;: &#34;Event-Driven Laravel Applications&#34;
+            }
+          ]
+        }
+      }
+    }</pre></div>
+<p>===============================================================================================》》》</p>
+
+<h3 id="mutation">Mutation</h3>
+
+<blockquote>
+<p>传统的API使用场景中，我们会有需要修改服务器上数据的场景，mutations就是应这种场景而生。mutations被用以执行写操作，通过mutations我们会给服务器发送请求来修改和更新数据，并且会接收到包含更新数据的反馈。mutations和queries具有类似的语法，仅有些许的差别。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">mutation</span> <span style="color:#268bd2">UpdateAuthorDetails</span>(<span style="color:#268bd2">$authorID</span>: <span style="color:#268bd2">Int</span>!, <span style="color:#268bd2">$twitterHandle</span>: <span style="color:#cb4b16">String</span>!) {
+      <span style="color:#268bd2">updateAuthor</span>(<span style="color:#268bd2">id</span>: <span style="color:#268bd2">$authorID</span>, <span style="color:#268bd2">twitterHandle</span>: <span style="color:#268bd2">$twitterHandle</span>) {
+        <span style="color:#268bd2">twitterHandle</span>
+      }
+    }
+</code></pre></div>
+<p>在mutation中以数据为载物发送，比如上面的例子中，我们发送了下面的数据：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># Update data
+
+    {
+     &#34;authorID&#34;: 5,
+     &#34;twitterHandle&#34;: &#34;ammezie&#34;
+    }</pre></div>
+<p>更新完成后，我们将从服务器获取以下内容作为反馈。反馈数据中包含我们更新的数据</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># Response after update
+
+    {
+      &#34;data&#34;: {
+        &#34;id&#34;: 5,
+        &#34;twitterHandle&#34;: &#34;ammezie&#34;
+      }
+    }</pre></div>
+<p>和queries类似，mutations也能够接受，多重fields,不过queries和mutations的一个重大不同之处在于，为了保证数据的完整性mutations是串形执行，而queries可以并行执行。</p>
+
+<p>===============================================================================================》》》</p>
+
+<h3 id="schema">Schema</h3>
+
+<blockquote>
+<p>GraphQL中非常重要的一个概念是Schema, Schema由服务端来定义，用于定义API接口，并依靠Schema来生成文档以及对客户端请求进行校验。Schema只是一个概念，它是由各种数据类型及其字段组成，而每个类型的每个字段都有相应的函数来返回数据，这是其灵活的关键所在，如Schema</p>
+</blockquote>
+
+<h4 id="schemas-描述了-数据的组织形态-以及服务器上的那些数据能够被查询-schemas提供了你数据中可用的数据的对象类型-graphql中的对象是强类型的-因此schema中定义的所有的对象必须具备类型-类型允许graphql服务器确定查询是否有效或者是否在运行时-schemas可用是两种类型query和mutation">Schemas 描述了 数据的组织形态 以及服务器上的那些数据能够被查询，Schemas提供了你数据中可用的数据的对象类型，GraphQL中的对象是强类型的，因此schema中定义的所有的对象必须具备类型。类型允许GraphQL服务器确定查询是否有效或者是否在运行时。Schemas可用是两种类型Query和Mutation。</h4>
+
+<h4 id="示例一">示例一：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">type</span> <span style="color:#268bd2">User</span>{
+    <span style="color:#268bd2">name</span>: <span style="color:#cb4b16">String</span>
+    <span style="color:#268bd2">sex</span>: <span style="color:#cb4b16">String</span>
+    <span style="color:#268bd2">intro</span>: <span style="color:#cb4b16">String</span>
+}
+<span style="color:#268bd2">type</span> <span style="color:#268bd2">Query</span> {
+    <span style="color:#268bd2">user</span>:<span style="color:#268bd2">User</span>
+}
+</code></pre></div>
+<p>上面定义了两个类型，User和Query：User有三个字段分别是name、sex和intro；Query是个特殊的类型，用于查询数据，内含user字段；</p>
+
+<p>如果客户端输入的如下查询语句：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  user{
+    name
+    sex
+  }
+}</code></pre></div>
+<h4 id="示例二">示例二：</h4>
+
+<p>又或者是下面是一个示例：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">type</span> <span style="color:#268bd2">Author</span> {
+      <span style="color:#268bd2">name</span>: <span style="color:#cb4b16">String</span>! <span style="color:#93a1a1;font-style:italic">// 必填字段 用！表示
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#268bd2">posts</span>: [<span style="color:#268bd2">Post</span>]  <span style="color:#93a1a1;font-style:italic">// 可选字段 [] 表示数组字段
+</span><span style="color:#93a1a1;font-style:italic"></span>    }
+</code></pre></div>
+<p>schemas定义了一个Author对象，它包含两个fields(name和posts),这意味着当我们操作（读取）Author时，我们只能使用name和fields,每个field都可以是必须的或者可选的,比如上面的namefield是必须的，因为其后有符号!,而posts是可选的。</p>
+
+<hr />
+
+<hr />
+
+<p>&ensp;</p>
+
+<h2 id="3-graphql-vs-rest">3. GraphQL vs. REST</h2>
+
+<blockquote>
+<p>GraphQL目前被认为是革命性的API工具，因为它可以让客户端在请求中指定希望得到的数据，而不像传统的REST那样只能呆板地在服务端进行预定义。这样它就让前、后端团队的协作变得比以往更加的通畅，从而能够让组织更好地运作。而实际上，GraphQL与REST都是基于HTTP进行数据的请求与接收，而且GraphQL也内置了很多REST模型的元素在里面。</p>
+</blockquote>
+
+<p>从API的各个组件分别来讨论GraphQL和REST都分别是如何处理的。</p>
+
+<h3 id="资源-resources">资源（Resources）</h3>
+
+<blockquote>
+<p>REST的核心思想就是资源，每个资源都能用一个URL来表示，你能通过一个GET请求访问该URL从而获取该资源。根据当今大多数API的定义，你很有可能会得到一份JSON格式的数据响应，整个过程大概是这样：</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">GET /books/1
+{
+  &#34;name&#34;: &#34;Black Hole Blues&#34;,
+  &#34;author&#34;: { 
+    &#34;firstName&#34;: &#34;zhang&#34;,
+    &#34;lastName&#34;: &#34;liang&#34;
+  }
+  // ... more fields here
+}</pre></div>
+<p>以上形式它的路径与所请求到的数据是高度耦合的，基本无法变动。</p>
+
+<p>在这一点上GraphQL就大为不同，因为在GraphQL里这两个概念是完全分离的。比如说在你的schema定义中，你可能会有Book和Author两个类型（type）：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Book {
+  id: ID
+  title: String
+  published: Date
+  price: String
+  author: Author
+}
+type Author {
+  id: ID
+  firstName: String
+  lastName: String
+  books: [Book]
+}</pre></div>
+<h4 id="注意这里我们虽然定义了数据类型-但却不知道该如何获取这些数据-这是rest与graphql的一个核心差异-资源的描述信息与其获取方式相分离">注意这里我们虽然定义了数据类型，但却不知道该如何获取这些数据。这是REST与GraphQL的一个核心差异：资源的描述信息与其获取方式相分离。</h4>
+
+<p>如果要去访问某个特定的book或者author资源，我们需要在schema中创建一个Query类型：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Query {
+  book(id: ID!): Book
+  author(id: ID!): Author
+}</pre></div>
+<p>前端可以这样请求我们的数据</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">GET /graphql?query={ book(id: &#34;1&#34;) { title, author { firstName } } }
+{
+  &#34;title&#34;: &#34;Black Hole Blues&#34;,
+  &#34;author&#34;: {
+    &#34;firstName&#34;: &#34;Janna&#34;,
+  }
+}</pre></div>
+<h3 id="小结">小结：</h3>
+
+<p>异同点有：</p>
+
+<p>相同：
+- 都有资源这个概念，而且都能通过ID去获取资源。
+- 都可以通过HTTP GET方式来获取资源
+- 都可以使用JSON作为响应格式</p>
+
+<p>不同：</p>
+
+<ul>
+<li>在REST中，你所访问的路径就是该资源的唯一标识（ID）；在GraphQL中，该标识与访问方式并不相关</li>
+<li>在REST中，资源的返回结构与返回数量是由服务端决定；在GraphQL，服务端只负责定义哪些资源是可用的，由客户端自己决定需要得到什么资源。简单来说就是前者中 是后端强行给你一些数据要通过HTTP，而后者是将一些数据定义在了服务端，让前端自助从这些数据中来选择性的通过HTTP到前端。</li>
+</ul>
+
+<p>===============================================================================================》》》</p>
+
+<h3 id="路由-url-route-vs-graphql-schema">路由（URL Route） vs. GraphQL Schema</h3>
+
+<p>如今的REST API通常会由一系列的URL端点组成：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">GET /books/:id
+GET /authors/:id
+GET /books/:id/comments
+POST /books/:id/comments</pre></div>
+<p>你可以把这种API的形态称之为线性结构——因为这就是一个列表嘛。当你要获取数据时，第一个事情就是搞清楚你要访问的是哪个端点。</p>
+
+<p>在GraphQL中——可以通过查看GraphQL schema获得相关信息：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Query {
+  book(id: ID!): Book
+  author(id: ID!): Author
+}
+type Mutation {
+  addComment(input: AddCommentInput): Comment
+}
+type Book { ... }
+type Author { ... }
+type Comment { ... }
+input AddCommentInput { ... }</pre></div>
+<p>REST会使用类似GET、POST这样的动词去请求相同的URL来表示这到底是一个读操作还是写操作，而GraphQL会使用不同的预定义类型：Mutation和Query。在GraphQL请求中，你可以通过不同的关键字进行不同的操作：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">query { ... }
+mutation { ... }</pre></div>
+<p>这里的Query类型定义与上面的REST路由是完全契合的，同样表示了数据的访问入口，因此这是GraphQL中最能与REST的URL端点所对应的概念。</p>
+
+<p>如果是对资源的简单查询，GraphQL与REST是类似的，都是通过指定资源的名称以及相关参数来取得，但不同的是，在GraphQL中，你可以根据资源之间的关联关系来发起一个复杂请求，而在REST中你只能定义一些特殊的URL参数来获取到特殊的响应，或者是通过发起多个请求、再自行把响应得到的数据进行组装才行。</p>
+
+<p>===============================================================================================》》》</p>
+
+<h3 id="路由处理器-route-handlers-vs-解析器-resolvers">路由处理器（Route Handlers）vs. 解析器（Resolvers）</h3>
+
+<p>首先使用Express实现一个hello world：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">app.get(&#39;/hello&#39;, function (req, res) {
+  res.send(&#39;Hello World!&#39;)
+})</pre></div>
+<p>golang gin :</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">router := gin.Default()
+router.GET(&#34;/hello&#34;, func(c *gin.Context) {
+    c.String(http.StatusOK, &#34;Hello World&#34;)
+})</pre></div>
+<h4 id="从上面例子我们可以看到一个rest-api请求的的生命周期">从上面例子我们可以看到一个REST API请求的的生命周期：</h4>
+
+<ul>
+<li>服务器收到请求并提取出HTTP方法名（比如这里就是GET方法）与URL路径</li>
+<li>API框架找到提前注册好的、请求路径与请求方法都匹配的代码</li>
+<li>该段代码被执行，并得到相应结果</li>
+<li>API框架对结果进行序列化，添加上适当的状态码与响应头后，返回给客户端</li>
+</ul>
+
+<h4 id="graphql差不多也是这样工作的-我们来看下这个对应的">GraphQL差不多也是这样工作的，我们来看下这个对应的</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">const resolvers = {
+  Query: {
+    hello: () =&gt; {
+      return &#39;Hello world!&#39;;
+    },
+  },
+};</pre></div>
+<p>发起一个查询：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">query {
+  hello
+}</pre></div>
+<p>返回如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">{ &#34;hello&#34;: &#34;Hello, world!&#34; }</pre></div>
+<p>服务器对一个GraphQL请求的执行过程：</p>
+
+<ul>
+<li>服务器收到HTTP请求，取出其中的GraphQL查询</li>
+<li>遍历查询语句，调用里面每个字段所对应的Resolver。在这个例子里，只有Query这个类型中的一个字段hello</li>
+<li>Resolver函数被执行并返回相应结果</li>
+<li>GraphQL框架把结果根据查询语句的要求进行组装</li>
+<li></li>
+</ul>
+
+<p><img src="https://upload-images.jianshu.io/upload_images/6135025-0701ae97f92567db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700" alt="image" /></p>
+
+<p>上图形象地说明了使用REST和GraphQL进行多种资源获取的方式的差异</p>
+
+<p>这里放上一个现在体验 <a href="https://launchpad.graphql.com/new">在线体验GraphQL</a></p>
+
+<hr />
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/graphql/">GraphQL</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f&amp;text=GraphQl%e5%88%9d%e6%8e%a2&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=GraphQl%e5%88%9d%e6%8e%a2" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=GraphQl%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=GraphQl%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgraphql%25E5%2588%259D%25E6%258E%25A2%2f&amp;description=GraphQl%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/" data-toggle="tooltip" data-placement="top" title="Golang自学路劲资料讲解">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/" data-toggle="tooltip" data-placement="top" title="架构理论学习之分布式系统理论CAP">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

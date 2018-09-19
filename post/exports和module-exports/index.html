@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>exports和module exports</title>
+  <meta property="og:title" content="exports和module exports" />
+  <meta name="twitter:title" content="exports和module exports" />
+  <meta name="description" content="exports 和 module exports
+
+require 中路径 ./ 和 ../区别
+
+这两种写法都是属于相对路径的使用符号
+
+
+
+&rdquo;./&ldquo;：代表与当前文件所在的目录。
+&rdquo;../&ldquo;：代表上一层目录。
+&rdquo;/&ldquo;：开头代表根目录。
+
+
+
+">
+  <meta property="og:description" content="exports 和 module exports
+
+require 中路径 ./ 和 ../区别
+
+这两种写法都是属于相对路径的使用符号
+
+
+
+&rdquo;./&ldquo;：代表与当前文件所在的目录。
+&rdquo;../&ldquo;：代表上一层目录。
+&rdquo;/&ldquo;：开头代表根目录。
+
+
+
+">
+  <meta name="twitter:description" content="exports 和 module exports
+
+require 中路径 ./ 和 ../区别
+
+这两种写法都是属于相对路径的使用符号
+
+
+
+&rdquo;./&ldquo;：代表与当前文件所在的目录。
+&rdquo;../&ldquo;：代表上一层目录。
+&rdquo;/&ldquo;：开头代表根目录。
+
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/exports%E5%92%8Cmodule-exports/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/exports%E5%92%8Cmodule-exports/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>exports和module exports</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 7, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="exports-和-module-exports">exports 和 module exports</h1>
+
+<h2 id="require-中路径-和-区别">require 中路径 ./ 和 ../区别</h2>
+
+<h4 id="这两种写法都是属于相对路径的使用符号">这两种写法都是属于相对路径的使用符号</h4>
+
+<blockquote>
+<ul>
+<li>&rdquo;./&ldquo;：代表与当前文件所在的目录。</li>
+<li>&rdquo;../&ldquo;：代表上一层目录。</li>
+<li>&rdquo;/&ldquo;：开头代表根目录。</li>
+</ul>
+</blockquote>
+
+<p></p>
+
+<p>首先我们来建立一些文件路径如下图：
+<img src="http://shunfengche.oss-cn-shenzhen.aliyuncs.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-11-05%20%E4%B8%8B%E5%8D%882.02.14.png" alt="image" /></p>
+
+<h4 id="1-文件在当前目录">1. 文件在当前目录：</h4>
+
+<p>在page2.html 中访问 page2image.jpg。</p>
+
+<p>page2.html:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"> &lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src</span>=<span style="color:#2aa198">&#34;./page2image.jpg&#34;</span>&gt;
+ 或者
+ &lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src</span>=<span style="color:#2aa198">&#34;page2image.jpg&#34;</span>&gt;</code></pre></div>
+<h4 id="2-文件在上一层目录">2. 文件在上一层目录：</h4>
+
+<ul>
+<li>page1.html 中访问 image 下的 image.jpg。</li>
+</ul>
+
+<p>page1.html：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src </span>= <span style="color:#2aa198">&#34;../image/image.jpg&#34;</span>&gt;</code></pre></div>
+<ul>
+<li>page2.html 中访问 image 下的 image.jpg。
+page2.htl:</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src </span>= <span style="color:#2aa198">&#34;../../image/image.jpg&#34;</span>&gt;</code></pre></div>
+<h4 id="3-文件在下一层目录">3. 文件在下一层目录：</h4>
+
+<p>page1.html 中访问 text2 文件夹下的 page2image.jpg。</p>
+
+<p>page1.html:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src </span>= <span style="color:#2aa198">&#34;./text2/page2image.jpg&#34;</span>&gt;
+或者
+&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src </span>= <span style="color:#2aa198">&#34;text2/page2image.jpg&#34;</span>&gt;</code></pre></div>
+<h4 id="4-根目录表示法">4. 根目录表示法：</h4>
+
+<p>任何页面访问 image 下的 image.jpg。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src </span>= <span style="color:#2aa198">&#34;/image/image.jpg&#34;</span>&gt;</code></pre></div>
+<hr />
+
+<h2 id="exports-和-moudle-exports-区别">exports 和 moudle exports 区别：</h2>
+
+<h4 id="1-module-exports-初始值为一个空对象">1. module.exports 初始值为一个空对象 {}</h4>
+
+<h4 id="2-exports-是指向的-module-exports-的引用">2. exports 是指向的 module.exports 的引用</h4>
+
+<h4 id="3-require-返回的是-module-exports-而不是-exports">3. require() 返回的是 module.exports 而不是 exports</h4>
+
+<blockquote>
+<p>每一个node.js执行文件，都自动创建一个module对象，同时，module对象会创建一个叫exports的属性，初始化的值是 {}</p>
+</blockquote>
+
+<p>module.exports 被改变的时候，exports不会被改变，而模块导出的时候，真正导出的执行是module.exports，而不是exports:</p>
+
+<h5 id="foo-js">foo.js</h5>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">exports</span>.<span style="color:#268bd2">a</span> = <span style="color:#859900">function</span>(){
+  <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;a&#39;</span>)
+ }
+
+ <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> = {<span style="color:#268bd2">a</span>: <span style="color:#2aa198;font-weight:bold">2</span>}
+ <span style="color:#268bd2">exports</span>.<span style="color:#268bd2">a</span> = <span style="color:#2aa198;font-weight:bold">1</span> 
+</code></pre></div>
+<h5 id="text-js">text.js</h5>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">x</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;./foo&#39;</span>);
+
+ <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">x</span>.<span style="color:#268bd2">a</span>) <span style="color:#93a1a1;font-style:italic">// =&gt; 2
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>exports在module.exports 被改变后，失效。</p>
+
+<h3 id="一-require">一.  require</h3>
+
+<blockquote>
+<p>从require导入方式去理解，关键有两个变量(全局变量module.exports，局部变量exports)、一个返回值(module.exports)</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">require</span>(...) {  
+  <span style="color:#859900">var</span> <span style="color:#268bd2">module</span> = { <span style="color:#268bd2">exports</span>: {} };
+  ((<span style="color:#268bd2">module</span>, <span style="color:#268bd2">exports</span>) =&gt; {
+    <span style="color:#93a1a1;font-style:italic">// 你的被引入代码 Start
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// var exports = module.exports = {}; (默认都有的)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">function</span> <span style="color:#268bd2">some_func</span>() {};
+    <span style="color:#268bd2">exports</span> = <span style="color:#268bd2">some_func</span>;
+    <span style="color:#93a1a1;font-style:italic">// 此时，exports不再挂载到module.exports，
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// export将导出{}默认对象
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> = <span style="color:#268bd2">some_func</span>;
+    <span style="color:#93a1a1;font-style:italic">// 此时，这个模块将导出some_func对象，覆盖exports上的some_func    
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#93a1a1;font-style:italic">// 你的被引入代码 End
+</span><span style="color:#93a1a1;font-style:italic"></span>  })(<span style="color:#268bd2">module</span>, <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>);
+  <span style="color:#93a1a1;font-style:italic">//  不管是exports还是module.exports，最后返回的还是module.exports 
+</span><span style="color:#93a1a1;font-style:italic"></span>  <span style="color:#859900">return</span> <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>;
+}
+</code></pre></div>
+<h3 id="二-demo-事例">二. Demo 事例</h3>
+
+<h4 id="demo01-1-js">demo01: 1.js</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">exports</span>); <span style="color:#93a1a1;font-style:italic">// {}  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>);  <span style="color:#93a1a1;font-style:italic">// {}  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">exports</span> === <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>);    <span style="color:#93a1a1;font-style:italic">// true  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">exports</span> == <span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>);        <span style="color:#93a1a1;font-style:italic">// true  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic"> Module {
+</span><span style="color:#93a1a1;font-style:italic">  id: &#39;.&#39;,
+</span><span style="color:#93a1a1;font-style:italic">  exports: {},
+</span><span style="color:#93a1a1;font-style:italic">  parent: null,
+</span><span style="color:#93a1a1;font-style:italic">  filename: &#39;/1.js&#39;,
+</span><span style="color:#93a1a1;font-style:italic">  loaded: false,
+</span><span style="color:#93a1a1;font-style:italic">  children: [],
+</span><span style="color:#93a1a1;font-style:italic">  paths:
+</span><span style="color:#93a1a1;font-style:italic">   [ 
+</span><span style="color:#93a1a1;font-style:italic">     &#39;/node_modules&#39; ] 
+</span><span style="color:#93a1a1;font-style:italic"> }
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">module</span>);
+</code></pre></div>
+<p>从 demo01 中，可以看出来:</p>
+
+<ol>
+<li>每个js文件一创建，都有一个var exports = module.exports = {};，使exports和module.exports都指向一个空对象。</li>
+<li>module是全局内置对象，exports是被var创建的局部对象。</li>
+<li>module.exports和exports所指向的内存地址相同。</li>
+</ol>
+
+<hr />
+
+<h4 id="dome02-2-js-3-js">Dome02：2.js、3.js</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 2.js
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id</span> = <span style="color:#2aa198">&#39;exports的id&#39;</span>;  
+<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id2</span> = <span style="color:#2aa198">&#39;exports的id2&#39;</span>;  
+<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">func</span> = <span style="color:#859900">function</span>(){  
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;exports的函数&#39;</span>);
+};
+<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">func2</span> = <span style="color:#859900">function</span>() {  
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;exports的函数2&#39;</span>);
+};
+<span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> = {  
+    <span style="color:#268bd2">id</span>: <span style="color:#2aa198">&#39;module.exports的id&#39;</span>,
+    <span style="color:#268bd2">func</span>:<span style="color:#859900">function</span>(){
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;module.exports的函数&#39;</span>);
+    }
+
+};
+</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 3.js
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">a</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;./2.js&#39;</span>);  
+<span style="color:#93a1a1;font-style:italic">// 当属性和函数在module.exports都有定义时：
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">id</span>);  <span style="color:#93a1a1;font-style:italic">// module.exports的id  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">func</span>()); <span style="color:#93a1a1;font-style:italic">// module.exports的函数
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// 当属性在module.exports没有定义，函数在module.exports有定义
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">id2</span>);  <span style="color:#93a1a1;font-style:italic">// undefined  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">func</span>());  <span style="color:#93a1a1;font-style:italic">// module.exports的函数
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// 当函数在module.exports没有定义，属性在module.exports有定义
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">id</span>);        <span style="color:#93a1a1;font-style:italic">// module.exports的id  
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">func2</span>());    <span style="color:#93a1a1;font-style:italic">// 报错了 TypeError: a.func2 is not a function  
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>由 demo02 可以知道：
+1. module.exports像是exports的大哥，当module.exports以{}整体导出时会覆盖exports的属性和方法。</p>
+
+<ol>
+<li>注意，若只是将属性/方法挂载在module.exports./exports.上时，exports.id=1和module.exports.id=100，module.exports.id=function(){}和exports.id=function(){}，最后id的值取决于exports.id和module.exports.id的顺序，谁在后，就是最后的值</li>
+<li>若exports和module.exports同时赋值时，exports所使用的属性和方法必须出现在module.exports，若属性没有在module.exports中定义的话，出现undefined，若方法没有在module.exports中定义，会抛出TypeError错误。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 2.js
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;module.exports&#39;</span>);
+};
+
+<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;exports&#39;</span>);
+};
+
+<span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id</span> = <span style="color:#2aa198">&#39;moudle.exports的id&#39;</span>;
+
+<span style="color:#268bd2">exports</span>.<span style="color:#268bd2">id</span> = <span style="color:#2aa198">&#39;exports的id&#39;</span>;
+
+
+<span style="color:#93a1a1;font-style:italic">// 1.js
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">a</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;./2.js&#39;</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">id</span>); <span style="color:#93a1a1;font-style:italic">// exports的id
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">id</span>()); <span style="color:#93a1a1;font-style:italic">// exports
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<hr />
+
+<h3 id="dome3-4-js-5-js">Dome3: 4.js、5.js</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 5.js
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">function</span> <span style="color:#268bd2">View</span>(){
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">test1</span> = <span style="color:#859900">function</span> () {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;test1&#39;</span>);
+    }
+}
+
+<span style="color:#268bd2">View</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">test</span> = <span style="color:#859900">function</span>(){
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;test&#39;</span>)
+};
+
+<span style="color:#268bd2">View</span>.<span style="color:#268bd2">test1</span> = <span style="color:#859900">function</span>(){
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;test1-out&#39;</span>)
+};
+
+<span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> = <span style="color:#268bd2">View</span>;
+</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 4.js
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">const</span> <span style="color:#268bd2">a</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;./5.js&#39;</span>);
+<span style="color:#93a1a1;font-style:italic">// new一个对象
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">const</span> <span style="color:#268bd2">person</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">a</span>();
+
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">person</span>.<span style="color:#268bd2">test1</span>()); <span style="color:#93a1a1;font-style:italic">// =&gt; test1
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">person</span>.<span style="color:#268bd2">test</span>()); <span style="color:#93a1a1;font-style:italic">// =&gt; test
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">test1</span>()); <span style="color:#93a1a1;font-style:italic">// =&gt; test1-out  无法打出 test1 因为没有实例化new a();
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">test</span>()); <span style="color:#93a1a1;font-style:italic">// =&gt; 报错：没有 new a()实例化无法直接调用原型方法。
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;person: &#39;</span>+<span style="color:#268bd2">person</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; [object Object]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;a: &#39;</span>+<span style="color:#268bd2">a</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; 如下：
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic"> * function View(){
+</span><span style="color:#93a1a1;font-style:italic"> *     this.test1 = function () {
+</span><span style="color:#93a1a1;font-style:italic"> *  console.log(&#39;test1&#39;);
+</span><span style="color:#93a1a1;font-style:italic"> * }
+</span><span style="color:#93a1a1;font-style:italic"> *}
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;a.test: &#39;</span>+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">test</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; undefined
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;a.test1: &#39;</span>+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">test1</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; 如下：
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#93a1a1;font-style:italic">/**
+</span><span style="color:#93a1a1;font-style:italic"> * function (){
+</span><span style="color:#93a1a1;font-style:italic"> *   console.log(&#39;test1-out&#39;)
+</span><span style="color:#93a1a1;font-style:italic"> * }
+</span><span style="color:#93a1a1;font-style:italic"> */</span>
+
+
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;a.test1(): &#39;</span>+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">test1</span>()); <span style="color:#93a1a1;font-style:italic">// =&gt; test1-out
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>或者是 6.js、7.js</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 6.js
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">var</span> <span style="color:#268bd2">a</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;./5.js&#39;</span>);  
+<span style="color:#93a1a1;font-style:italic">// 若传的是类，new一个对象
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">person</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">a</span>(<span style="color:#2aa198">&#39;Kylin&#39;</span>,<span style="color:#2aa198;font-weight:bold">20</span>);  
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">person</span>.<span style="color:#268bd2">speak</span>()); <span style="color:#93a1a1;font-style:italic">// my name is Kylin ,my age is 20
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// 若不需要在构造函数时初始化参数，直接调用方法/属性
+</span><span style="color:#93a1a1;font-style:italic">// a.speak();  // my name is kylin ,my age is 20
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// 7.js
+</span><span style="color:#93a1a1;font-style:italic">// Person类
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">function</span> <span style="color:#268bd2">Person</span>(<span style="color:#268bd2">name</span>,<span style="color:#268bd2">age</span>){  
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">name</span> = <span style="color:#268bd2">name</span>;
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">age</span> = <span style="color:#268bd2">age</span>;
+}
+<span style="color:#93a1a1;font-style:italic">// 为类添加方法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">Person</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">speak</span> = <span style="color:#859900">function</span>(){  
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;my name is &#39;</span>+<span style="color:#859900">this</span>.<span style="color:#268bd2">name</span>+<span style="color:#2aa198">&#39; ,my age is &#39;</span>+<span style="color:#859900">this</span>.<span style="color:#268bd2">age</span>);
+};
+
+<span style="color:#93a1a1;font-style:italic">// 返回类
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">module</span>.<span style="color:#268bd2">exports</span> = <span style="color:#268bd2">Person</span>;
+
+<span style="color:#93a1a1;font-style:italic">// 若构造函数没有传入参数(name,age)，直接传入对象
+</span><span style="color:#93a1a1;font-style:italic">// module.exports = new Person(&#39;kylin&#39;,20);
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<h2 id="总之">总之</h2>
+
+<p>说了这么多，其实建议就是，如果只是单一属性或方法的话，就使用exports.属性/方法。要是导出多个属性或方法或使用对象构造方法，结合prototype等，就建议使用module.exports = {}。</p>
+
+<p>但是要注意什么时候该 new 实例。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/node.js/">Node.js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f&amp;text=exports%e5%92%8cmodule%20exports&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f&amp;title=exports%e5%92%8cmodule%20exports" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f&amp;title=exports%e5%92%8cmodule%20exports" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f&amp;title=exports%e5%92%8cmodule%20exports" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fexports%25E5%2592%258Cmodule-exports%2f&amp;description=exports%e5%92%8cmodule%20exports" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E7%AB%AF%E5%8F%A3%E4%BD%BF%E7%94%A8/" data-toggle="tooltip" data-placement="top" title="端口使用">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/node-js%E4%B9%8Bpath%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Node.js之path模块">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

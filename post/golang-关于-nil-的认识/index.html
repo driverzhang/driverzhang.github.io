@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang 关于 nil 的认识</title>
+  <meta property="og:title" content="Golang 关于 nil 的认识" />
+  <meta name="twitter:title" content="Golang 关于 nil 的认识" />
+  <meta name="description" content="Golang 关于 nil 的认识
+
+1. 什么是 nil ？
+
+大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：
+bool      -&gt; false                              
+numbers -&gt; 0                                 
+string    -&gt; &#34;&#34;      
+
+pointers -&gt; nil
+slices -&gt; nil
+maps -&gt; nil
+channels -&gt; nil
+functions -&gt; nil
+interfaces -&gt; nil
+">
+  <meta property="og:description" content="Golang 关于 nil 的认识
+
+1. 什么是 nil ？
+
+大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：
+bool      -&gt; false                              
+numbers -&gt; 0                                 
+string    -&gt; &#34;&#34;      
+
+pointers -&gt; nil
+slices -&gt; nil
+maps -&gt; nil
+channels -&gt; nil
+functions -&gt; nil
+interfaces -&gt; nil
+">
+  <meta name="twitter:description" content="Golang 关于 nil 的认识
+
+1. 什么是 nil ？
+
+大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：
+bool      -&gt; false                              
+numbers -&gt; 0 …">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang 关于 nil 的认识</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 17, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="golang-关于-nil-的认识">Golang 关于 nil 的认识</h1>
+
+<h2 id="1-什么是-nil">1. 什么是 nil ？</h2>
+
+<p>大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bool      -&gt; false                              
+numbers -&gt; 0                                 
+string    -&gt; &#34;&#34;      
+
+pointers -&gt; nil
+slices -&gt; nil
+maps -&gt; nil
+channels -&gt; nil
+functions -&gt; nil
+interfaces -&gt; nil</pre></div>
+<p></p>
+
+<p>再来一个strcut :</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Person struct {
+  Age int
+  Name string
+  Friends []Person
+}
+
+var p Person // Person{0, &#34;&#34;, nil}</pre></div>
+<p>变量p只声明但没有赋值，所以p的所有字段都有对应的零值。</p>
+
+<h4 id="1-go的文档中说到-nil是预定义的标识符-代表指针-通道-函数-接口-映射或切片的零值-并不是go-的关键字之一">1. Go的文档中说到，nil是预定义的标识符，代表指针、通道、函数、接口、映射或切片的零值,并不是GO 的关键字之一</h4>
+
+<h4 id="2-nil只能赋值给指针-channel-func-interface-map或slice类型的变量-非基础类型-否则会引发-panic">2. nil只能赋值给指针、channel、func、interface、map或slice类型的变量 (非基础类型) 否则会引发 panic</h4>
+
+<hr />
+
+<h2 id="2-那么-nil-有何用">2. 那么 nil 有何用？</h2>
+
+<h3 id="pointers">pointers</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">var</span> <span style="color:#268bd2">p</span> *<span style="color:#859900;font-weight:bold">int</span>
+<span style="color:#268bd2">p</span> == <span style="color:#859900;font-weight:bold">nil</span>    <span style="color:#93a1a1;font-style:italic">// true
+</span><span style="color:#93a1a1;font-style:italic"></span>*<span style="color:#268bd2">p</span>          // <span style="color:#268bd2">panic</span>: <span style="color:#268bd2">invalid</span> <span style="color:#268bd2">memory</span> <span style="color:#268bd2">address</span> <span style="color:#268bd2">or</span> <span style="color:#859900;font-weight:bold">nil</span> <span style="color:#268bd2">pointer</span> <span style="color:#268bd2">dereference</span></code></pre></div>
+<p>指针表示指向内存的地址，如果对为nil的指针进行解引用的话就会导致panic。</p>
+
+<h3 id="interface-与-nil-重点讲解">interface 与 nil (重点讲解)</h3>
+
+<blockquote>
+<p>nil只能赋值给指针、channel、func、interface、map或slice类型的变量。如果未遵循这个规则，则会引发panic。</p>
+</blockquote>
+
+<h4 id="在底层-interface作为两个成员来实现-一个类型和一个值">在底层，interface作为两个成员来实现，一个类型和一个值</h4>
+
+<p><a href="http://golang.org/doc/go_faq.html#nil_error">看这里有官方明确说明</a></p>
+
+<p>在底层，interface作为两个成员实现：一个类型和一个值。该值被称为接口的动态值， 它是一个任意的具体值，而该接口的类型则为该值的类型。对于 int 值3， 一个接口值示意性地包含(int, 3)。</p>
+
+<p>只有在内部值和类型都未设置时(nil, nil)，一个接口的值才为 nil。特别是，一个 nil 接口将总是拥有一个 nil 类型。若我们在一个接口值中存储一个 *int 类型的指针，则内部类型将为 *int，无论该指针的值是什么：(*int, nil)。 因此，这样的接口值会是非 nil 的，即使在该指针的内部为 nil。</p>
+
+<p>来看看interface倒底是什么。会用到反射，关于反射的文章你可以自己下来学习，也可参考这篇文章</p>
+
+<p><a href="https://mikespook.com/2011/09/%E5%8F%8D%E5%B0%84%E7%9A%84%E8%A7%84%E5%88%99/">反射文章讲解</a></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+    <span style="color:#2aa198">&#34;reflect&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">val</span> <span style="color:#859900">interface</span>{} = <span style="color:#cb4b16">int64</span>(<span style="color:#2aa198;font-weight:bold">58</span>)
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">TypeOf</span>(<span style="color:#268bd2">val</span>)) <span style="color:#93a1a1;font-style:italic">// int64
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">val</span> = <span style="color:#2aa198;font-weight:bold">50</span>
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">TypeOf</span>(<span style="color:#268bd2">val</span>)) <span style="color:#93a1a1;font-style:italic">// int
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>在上面的例子中，第一条打印语句输出的是：int64。这是因为已经显示的将类型为int64的数据58赋值给了interface类型的变量val，所以val的底层结构应该是：(int64, 58)。</p>
+
+<p>我们暂且用这种二元组的方式来描述，二元组的第一个成员为type，第二个成员为data。第二条打印语句输出的是：int。这是因为字面量的整数在golang中默认的类型是int，所以这个时候val的底层结构就变成了：(int, 50)。</p>
+
+<p>请看下面的代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+    <span style="color:#2aa198">&#34;reflect&#34;</span>
+)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">MyError</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">Name</span> <span style="color:#859900;font-weight:bold">string</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">e</span> *<span style="color:#268bd2">MyError</span>) <span style="color:#268bd2">Error</span>() <span style="color:#859900;font-weight:bold">string</span> {
+    <span style="color:#859900">return</span> <span style="color:#2aa198">&#34;a&#34;</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+
+    <span style="color:#93a1a1;font-style:italic">// nil只能赋值给指针、channel、func、interface、map或slice类型的变量 (非基础类型) 否则会引发 panic
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">var</span> <span style="color:#268bd2">a</span> *<span style="color:#268bd2">MyError</span>                          <span style="color:#93a1a1;font-style:italic">// 这里不是 interface 类型  =&gt; 而是 一个值为 nil 的指针变量 a
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%+v\n&#34;</span>, <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">TypeOf</span>(<span style="color:#268bd2">a</span>))  <span style="color:#93a1a1;font-style:italic">// *main.MyError
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%#v\n&#34;</span>, <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">ValueOf</span>(<span style="color:#268bd2">a</span>)) <span style="color:#93a1a1;font-style:italic">// a =&gt; (*main.MyError)(nil)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%p %#v\n&#34;</span>, &amp;<span style="color:#268bd2">a</span>, <span style="color:#268bd2">a</span>)           <span style="color:#93a1a1;font-style:italic">// 0xc42000c028 (*main.MyError)(nil)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">i</span> := <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">ValueOf</span>(<span style="color:#268bd2">a</span>)
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">i</span>.<span style="color:#268bd2">IsNil</span>()) <span style="color:#93a1a1;font-style:italic">// true
+</span><span style="color:#93a1a1;font-style:italic"></span>
+    <span style="color:#859900">if</span> <span style="color:#268bd2">a</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;a == nil&#34;</span>) <span style="color:#93a1a1;font-style:italic">//  a == nil
+</span><span style="color:#93a1a1;font-style:italic"></span>    } <span style="color:#859900">else</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;a != nil&#34;</span>)
+    }
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;a Error():&#34;</span>, <span style="color:#268bd2">a</span>.<span style="color:#268bd2">Error</span>()) <span style="color:#93a1a1;font-style:italic">//a 为什么 a 为 nil 也能调用方法？（指针类型的值为nil 也可以调用方法！但不能进行赋值操作！如下：）
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// a.Name = &#34;1&#34;           // panic: runtime error: invalid memory address or nil pointer dereference
+</span><span style="color:#93a1a1;font-style:italic"></span>
+    <span style="color:#859900">var</span> <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">error</span> = <span style="color:#268bd2">a</span>
+
+    <span style="color:#93a1a1;font-style:italic">// 为什么 a 为 nil 给了 b 而 b != nil ??? =&gt; error 是 interface 类型，type = *a.MyError  data = nil
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%+v\n&#34;</span>, <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">TypeOf</span>(<span style="color:#268bd2">b</span>))  <span style="color:#93a1a1;font-style:italic">// type =&gt; *main.MyError
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%+v\n&#34;</span>, <span style="color:#268bd2">reflect</span>.<span style="color:#268bd2">ValueOf</span>(<span style="color:#268bd2">b</span>)) <span style="color:#93a1a1;font-style:italic">// data =&gt; a == nil
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">if</span> <span style="color:#268bd2">b</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;b == nil&#34;</span>)
+    } <span style="color:#859900">else</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;b != nil&#34;</span>)
+    }
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;b Error():&#34;</span>, <span style="color:#268bd2">b</span>.<span style="color:#268bd2">Error</span>()) <span style="color:#93a1a1;font-style:italic">// a
+</span><span style="color:#93a1a1;font-style:italic"></span>
+}</code></pre></div>
+<h4 id="1-首先-a-是个变量指针-注意这里-a-并不是interface-该变量指针只是声明-但并没有指向任何地址-所以-a-nil">1. 首先 a 是个变量指针，（注意这里 a 并不是interface）该变量指针只是声明，但并没有指向任何地址，所以 a == nil</h4>
+
+<h4 id="2-指针类型的值为-nil-也能调用方法-但不能进行赋值操作-否则就会引起-panic">2. 指针类型的值为 nil  ，也能调用方法，但不能进行赋值操作，否则就会引起 panic</h4>
+
+<h4 id="3-var-b-error-a-这时这里的b-是一个interface-即应该要满足-上面提到的-interface-与-nil-的关系-即-只有当它的-type-和-data-都为-nil-时才-nil-b-是有类型的-为-main-myerror-所以最后会有-b-nil">3. var b error = a, 这时这里的b 是一个interface, 即应该要满足 上面提到的 interface 与 nil 的关系，即 只有当它的 type 和 data 都为 nil 时才 = nil! (b 是有类型的 为 *main.MyError) 所以最后会有 b != nil</h4>
+
+<hr />
+
+<h2 id="3-来看一个-error-的例子吧">3. 来看一个 error 的例子吧</h2>
+
+<p>有时候您想自定义一个返回错误的函数来做这个事，可能会写出以下代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>  
+   
+<span style="color:#dc322f;font-weight:bold">import</span> (  
+    <span style="color:#2aa198">&#34;fmt&#34;</span>  
+)  
+   
+<span style="color:#859900">type</span> <span style="color:#268bd2">data</span> <span style="color:#859900">struct</span>{}  
+   
+<span style="color:#859900">func</span> (<span style="color:#268bd2">this</span> *<span style="color:#268bd2">data</span>) <span style="color:#268bd2">Error</span>() <span style="color:#859900;font-weight:bold">string</span> { <span style="color:#859900">return</span> <span style="color:#2aa198">&#34;&#34;</span> }  
+   
+<span style="color:#859900">func</span> <span style="color:#268bd2">test</span>() <span style="color:#859900;font-weight:bold">error</span> {  
+    <span style="color:#859900">var</span> <span style="color:#268bd2">p</span> *<span style="color:#268bd2">data</span> = <span style="color:#859900;font-weight:bold">nil</span>  
+    <span style="color:#859900">return</span> <span style="color:#268bd2">p</span>  
+}  
+   
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {  
+    <span style="color:#859900">var</span> <span style="color:#268bd2">e</span> <span style="color:#859900;font-weight:bold">error</span> = <span style="color:#268bd2">test</span>()  
+    <span style="color:#859900">if</span> <span style="color:#268bd2">e</span> == <span style="color:#859900;font-weight:bold">nil</span> {  
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;e is nil&#34;</span>)  
+    } <span style="color:#859900">else</span> {  
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;e is not nil&#34;</span>)   <span style="color:#93a1a1;font-style:italic">//  e is not nil
+</span><span style="color:#93a1a1;font-style:italic"></span>    }  
+}  </code></pre></div>
+<h3 id="分析">分析：</h3>
+
+<p>error是一个接口类型，test方法中返回的指针p虽然数据是nil，但是由于它被返回成包装的error类型，也即它是有类型的。所以它的底层结构应该是(*data, nil)，很明显它是非nil的。可以打印观察下底层结构数据：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+    <span style="color:#2aa198">&#34;unsafe&#34;</span>
+)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">data</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (*<span style="color:#268bd2">data</span>) <span style="color:#268bd2">Error</span>() <span style="color:#859900;font-weight:bold">string</span> { <span style="color:#859900">return</span> <span style="color:#2aa198">&#34;&#34;</span> }
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">test</span>() <span style="color:#859900;font-weight:bold">error</span> {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">p</span> *<span style="color:#268bd2">data</span> = <span style="color:#859900;font-weight:bold">nil</span> <span style="color:#93a1a1;font-style:italic">// (*data, nil)
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">return</span> <span style="color:#268bd2">p</span>
+}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">aa</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">itab</span> <span style="color:#859900;font-weight:bold">uintptr</span>
+    <span style="color:#268bd2">data</span> <span style="color:#859900;font-weight:bold">uintptr</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">e</span> <span style="color:#859900;font-weight:bold">error</span> = <span style="color:#268bd2">test</span>()
+    <span style="color:#268bd2">d</span> := (*<span style="color:#268bd2">aa</span>)(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Pointer</span>(&amp;<span style="color:#268bd2">e</span>))
+    <span style="color:#268bd2">dd</span> := (*<span style="color:#859900">struct</span> {
+        <span style="color:#268bd2">itab</span> <span style="color:#859900;font-weight:bold">uintptr</span>
+        <span style="color:#268bd2">data</span> <span style="color:#859900;font-weight:bold">uintptr</span>
+    })(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Pointer</span>(&amp;<span style="color:#268bd2">e</span>))
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">d</span>)          <span style="color:#93a1a1;font-style:italic">// &amp;{17636960 0}
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%+v\n&#34;</span>, <span style="color:#268bd2">d</span>)  <span style="color:#93a1a1;font-style:italic">// &amp;{itab:17644608 data:0}
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%#v\n&#34;</span>, <span style="color:#268bd2">d</span>)  <span style="color:#93a1a1;font-style:italic">// &amp;main.aa{itab:0x10d3e00, data:0x0}
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%#v\n&#34;</span>, <span style="color:#268bd2">dd</span>) <span style="color:#93a1a1;font-style:italic">// &amp;struct { itab uintptr; data uintptr }{itab:0x10d3ca0, data:0x0}
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>正确的做法应该是：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>  
+   
+<span style="color:#dc322f;font-weight:bold">import</span> (  
+    <span style="color:#2aa198">&#34;fmt&#34;</span>  
+)  
+   
+<span style="color:#859900">type</span> <span style="color:#268bd2">data</span> <span style="color:#859900">struct</span>{}  
+   
+<span style="color:#859900">func</span> (<span style="color:#268bd2">this</span> *<span style="color:#268bd2">data</span>) <span style="color:#268bd2">Error</span>() <span style="color:#859900;font-weight:bold">string</span> { <span style="color:#859900">return</span> <span style="color:#2aa198">&#34;&#34;</span> }  
+   
+<span style="color:#859900">func</span> <span style="color:#268bd2">bad</span>() <span style="color:#859900;font-weight:bold">bool</span> {  
+    <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">true</span>  
+}  
+   
+<span style="color:#859900">func</span> <span style="color:#268bd2">test</span>() <span style="color:#859900;font-weight:bold">error</span> {  
+    <span style="color:#859900">var</span> <span style="color:#268bd2">p</span> *<span style="color:#268bd2">data</span> = <span style="color:#859900;font-weight:bold">nil</span>  
+    <span style="color:#859900">if</span> <span style="color:#268bd2">bad</span>() {  
+        <span style="color:#859900">return</span> <span style="color:#268bd2">p</span>  
+    }  
+    <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>   <span style="color:#93a1a1;font-style:italic">// 直接抛 nil
+</span><span style="color:#93a1a1;font-style:italic"></span>}  
+   
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {  
+    <span style="color:#859900">var</span> <span style="color:#268bd2">e</span> <span style="color:#859900;font-weight:bold">error</span> = <span style="color:#268bd2">test</span>()  
+    <span style="color:#859900">if</span> <span style="color:#268bd2">e</span> == <span style="color:#859900;font-weight:bold">nil</span> {  
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;e is nil&#34;</span>)  
+    } <span style="color:#859900">else</span> {  
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;e is not nil&#34;</span>)  
+    }  
+}  </code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f&amp;text=Golang%20%e5%85%b3%e4%ba%8e%20nil%20%e7%9a%84%e8%ae%a4%e8%af%86&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f&amp;title=Golang%20%e5%85%b3%e4%ba%8e%20nil%20%e7%9a%84%e8%ae%a4%e8%af%86" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f&amp;title=Golang%20%e5%85%b3%e4%ba%8e%20nil%20%e7%9a%84%e8%ae%a4%e8%af%86" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f&amp;title=Golang%20%e5%85%b3%e4%ba%8e%20nil%20%e7%9a%84%e8%ae%a4%e8%af%86" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-%25E5%2585%25B3%25E4%25BA%258E-nil-%25E7%259A%2584%25E8%25AE%25A4%25E8%25AF%2586%2f&amp;description=Golang%20%e5%85%b3%e4%ba%8e%20nil%20%e7%9a%84%e8%ae%a4%e8%af%86" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/" data-toggle="tooltip" data-placement="top" title="Golang 中对请求超时设置时间">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/" data-toggle="tooltip" data-placement="top" title="Go语言核心36讲-01工作区和GOPATH">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

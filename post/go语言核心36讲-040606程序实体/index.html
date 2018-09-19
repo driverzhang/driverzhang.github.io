@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Go语言核心36讲-040606程序实体</title>
+  <meta property="og:title" content="Go语言核心36讲-040606程序实体" />
+  <meta name="twitter:title" content="Go语言核心36讲-040606程序实体" />
+  <meta name="description" content="程序实体之变量、类型推断">
+  <meta property="og:description" content="程序实体之变量、类型推断">
+  <meta name="twitter:description" content="程序实体之变量、类型推断">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Go语言核心36讲-040606程序实体</h1>
+                
+                  
+                    <h2 class="post-subheading">程序实体之变量、类型推断</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 8, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="04-05-06-程序实体知识点汇总">04.05.06 | 程序实体知识点汇总</h1>
+
+<h1 id="04-程序实体哪些事-上">04 程序实体哪些事（上）</h1>
+
+<h2 id="问题1-声明变量有几种方式">问题1： 声明变量有几种方式</h2>
+
+<ul>
+<li>var</li>
+<li>:=</li>
+</ul>
+
+<hr />
+
+<!-- more -->
+
+<h2 id="问题解析">问题解析：</h2>
+
+<h3 id="考点">考点：</h3>
+
+<ul>
+<li>#### 1. 类型推断</li>
+</ul>
+
+<blockquote>
+<p>简单地说，类型推断是一种编程语言在编译期自动解释表达式类型的能力。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">var name  = &#34;zhang&#34;</pre></div>
+<p>这里利用了 Go 语言自身的类型推断省去了 string
+它只能用于对变量或常量的初始化。</p>
+
+<ul>
+<li>#### 2. 短变量声明用法</li>
+</ul>
+
+<h2 id="知识扩展">知识扩展</h2>
+
+<h3 id="1-go-语言的类型推断可以带来哪些好处">1. ==Go 语言的类型推断可以带来哪些好处==？</h3>
+
+<blockquote>
+<p>通过使用 Go 语言的类型推断，而节省下来的键盘敲击次数几乎可以忽略不计。但它真正的好处往往体现在我们写代码之后的事情上， 比如代码的 重构。</p>
+</blockquote>
+
+<h4 id="重构-通常把-不改变某个程序与外界的任何交互方式和规则-而只改变其内部实现-的代码修改方式-叫做对该程序的重构">重构： 通常把“不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。</h4>
+
+<p>重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;flag&#34;</span>
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">name</span> = <span style="color:#268bd2">getTheFlag</span>()
+    <span style="color:#268bd2">flag</span>.<span style="color:#268bd2">Parse</span>()
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;Hello, %v!\n&#34;</span>, *<span style="color:#268bd2">name</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">getTheFlag</span>() *<span style="color:#859900;font-weight:bold">string</span> {
+    <span style="color:#859900">return</span> <span style="color:#268bd2">flag</span>.<span style="color:#268bd2">String</span>(<span style="color:#2aa198">&#34;name&#34;</span>, <span style="color:#2aa198">&#34;everyone&#34;</span>, <span style="color:#2aa198">&#34;The greeting object.&#34;</span>)
+}</code></pre></div>
+<p>以上代码我们做了一些重构，你会发现，你可以随意改变函数的内部实现及其返回结果的类型，而不用修改 main 函数中的任何代码。</p>
+
+<h3 id="最终答案">最终答案：</h3>
+
+<h4 id="go-语言的类型推断可以明显提升程序的灵活性-使得代码重构变得更加容易-同时又不会给代码的维护带来额外负担-实际上-它恰恰可以避免散弹式的代码修改-更不会损失程序的运行效率">==Go 语言的类型推断可以明显提升程序的灵活性，使得代码重构变得更加容易，同时又不会给代码的维护带来额外负担（实际上，它恰恰可以避免散弹式的代码修改），更不会损失程序的运行效率。==</h4>
+
+<p>&ensp;</p>
+
+<p>&ensp;</p>
+
+<h3 id="2-变量的重声明是什么意思">2. ==变量的重声明是什么意思？==</h3>
+
+<blockquote>
+<p>这涉及了短变量声明。通过使用它，我们可以对同一个代码块中的变量进行重声明。</p>
+</blockquote>
+
+<p>每个源码文件也都是一个代码块，每个函数也是一个代码块，每个if语句、for语句、switch语句和select语句都是一个代码块。</p>
+
+<p>甚至，switch 或 select 语句中的 case 子句也都是独立的代码块。</p>
+
+<p>main函数中写一对紧挨着的花括号算不算一个代码块？当然也算，这甚至还有个名词，叫“空代码块”。</p>
+
+<h4 id="变量重声明-其含义是对已经声明过的变量再次声明">变量重声明：其含义是对已经声明过的变量再次声明。</h4>
+
+<h4 id="变量重声明的前提条件">变量重声明的前提条件：</h4>
+
+<ol>
+<li><p>由于变量的类型在其初始化时就已经确定了，所以对它再次声明时赋予的类型必须与其原本的类型相同，否则会产生编译错误。</p></li>
+
+<li><p>变量的重声明只可能发生在某一个代码块中。如果与当前的变量重名的是外层代码块中的变量，那么就是另外一种含义了，我在下一篇文章中会讲到。</p></li>
+
+<li><p>变量的重声明只有在使用短变量声明时才会发生，否则也无法通过编译。如果要在此处声明全新的变量，那么就应该使用包含关键字</p></li>
+
+<li><p>被“声明并赋值”的变量必须是多个，并且其中至少有一个是新的变量。这时我们才可以说对其中的旧变量进行了重声明。
+（其实这里有个术语叫做： 退化赋值。 它有两个条件：</p></li>
+
+<li><p>必须至少要有一个新的变量产生； 2. 必须是同一个作用域中。
+）</p></li>
+</ol>
+
+<hr />
+
+<p>&ensp;</p>
+
+<p>&ensp;</p>
+
+<h1 id="05-程序实体哪些事-中">05 程序实体哪些事（中）</h1>
+
+<h2 id="问题2-如果一个变量与其外层代码块中的变量重名会出现什么状况">问题2：如果一个变量与其外层代码块中的变量重名会出现什么状况？</h2>
+
+<h2 id="问题解析-1">问题解析：</h2>
+
+<p>优先查找对应最内部的代码块中的变量，再逐步往外一层查找，如果到了最外层也没有找到则会编译报错。</p>
+
+<p>但有个特殊情况，如果我们把代码包导入语句写成 import . XXX
+的形式（注意中间的那个“.”），那么就会让这个“XXX”包中公开的程序实体被当前源码文件中的代码，视为当前代码包中的程序实体。</p>
+
+<p>比如，如果有代码包导入语句，那么我们在当前源码文件中引用 fmt.Printf 函数的时候直接用 Printf 就可以了。</p>
+
+<p>在这个特殊情况下，程序在查找当前源码文件后会先去查用这种方式导入的那些代码包。</p>
+
+<h2 id="知识扩展-1">知识扩展：</h2>
+
+<h3 id="1-不同代码块中的重名变量与变量重声明中的变量区别到底在哪儿">==1. 不同代码块中的重名变量与变量重声明中的变量区别到底在哪儿？==</h3>
+
+<blockquote>
+<p>为了方便描述，我就把前者叫做“可重名变量”吧。</p>
+
+<p>注意，在同一个代码块中是不允许出现重名的变量的，这违背了 Go 语言的语法。</p>
+</blockquote>
+
+<h3 id="变量重声明-和-可重名变量的区别">变量重声明 和 可重名变量的区别：</h3>
+
+<ol>
+<li><p>变量重声明中的变量一定是在某一个代码块内的。注意，这里的“某一个代码块内”并不包含它的任何子代码块，否则就变成了“多个代码块之间”。而可重名变量指的正是在多个代码块之间的由相同的标识符代表的变量。</p></li>
+
+<li><p>变量重声明是对同一个变量的多次声明，这里的变量只有一个。而可重名变量中涉及的变量肯定是有多个的。</p></li>
+
+<li><p>不论对变量重声明多少次，其类型必须始终一致，具体遵从它第一次被声明时给定的类型。而可重名变量之间不存在类似的限制，它们的类型可以是任意的。</p></li>
+
+<li><p>如果可重名变量所在的代码块之间存在直接或间接的嵌套关系，那么它们之间一定会存在“屏蔽”的现象。但是这种现象绝对不会在变量重声明的场景下出现。</p></li>
+</ol>
+
+<hr />
+
+<p>&ensp;</p>
+
+<p>&ensp;</p>
+
+<h1 id="06-程序实体哪些事-下">06 程序实体哪些事（下）</h1>
+
+<h2 id="问题3-怎样判断一个变量的类型">问题3：怎样判断一个变量的类型？</h2>
+
+<p>使用“类型断言”表达式。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">value, ok := interface{}(container).([]string)</pre></div>
+<blockquote>
+<p>把变量 container 的值转换为空接口值的 interface{}(container)。</p>
+
+<p>以及一个用于判断前者的类型是否为切片类型  []string 的  .([]string)</p>
+</blockquote>
+
+<p>ok 如果是true，那么被判断的值将会被自动转换为[]stringl类型的值，并赋值给变量 value，否则 value 将被赋值 nil （即“空”）。</p>
+
+<h2 id="问题解析-2">问题解析：</h2>
+
+<h4 id="类型断言表达式的语法形式是-x-t">类型断言表达式的语法形式是：x.(T)</h4>
+
+<blockquote>
+<p>其中 x 代表要被判断类型的那个值。这个值当下的类型必须是接口类型的，不过具体是哪个接口类型其实是无所谓的。</p>
+</blockquote>
+
+<p>所以，当这里的 container 变量类型不是任何的接口类型时，就需要先把它转化成某个接口类型的值。</p>
+
+<h4 id="请记住-一对不包裹任何东西的花括号-除了可以代表空的代码块之外-还可以用于表示不包含任何内容的数据结构-或者说数据类型">==请记住，一对不包裹任何东西的花括号，除了可以代表空的代码块之外，还可以用于表示不包含任何内容的数据结构（或者说数据类型）。==</h4>
+
+<h2 id="知识扩展-2">知识扩展：</h2>
+
+<h3 id="1-类型转换规则中有哪些要注意的地方">==1. 类型转换规则中有哪些要注意的地方？==</h3>
+
+<blockquote>
+<p>注意这里是 类型转换 ，而上面提到的是 类型断言，他们的语法形式是不一样的哦。</p>
+</blockquote>
+
+<ul>
+<li>####  类型断言语法形式： x.(T)</li>
+<li>#### 类型转换语法形式：T(x)  这里要说的。</li>
+</ul>
+
+<h4 id="首先-对于整数类型值-整数常量之间的类型转换-原则上只要源值在目标类型的可表示范围内就是合法的">首先，对于整数类型值、整数常量之间的类型转换，原则上只要源值在目标类型的可表示范围内就是合法的。</h4>
+
+<p>uint8(255) 能把无类型的常量 255 转换为 uint8 类型的值，是因为 255 在【0.255】的范围内。</p>
+
+<p>但是 比如：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">var srcInt = int16(-255) 
+
+dstIn := int8(srcInt)</pre></div>
+<p>类型是int8。int16类型的可表示范围可比int8类型大了很多，所有最终 dstIn 的值为多少？</p>
+
+<blockquote>
+<p>整数在 Go 语言以及计算机中都是以补码的形式存储的。这主要是为了简化计算机对整数的运算过程。补码其实就是原码个位求反再加 1。</p>
+</blockquote>
+
+<p>比如，int16类型的值-255的补码是1111111100000001。</p>
+
+<p>如果我们把该值转换为 int8 类型的值，那么 Go 语言会把在较高位置（或者说最左边位置）上的 8 位二进制数直接截掉，从而得到 00000001。</p>
+
+<p>又由于其最左边一位是 0 ，表示它是个正整数，以及正整数的补码就等于其原码，所以 dstInt 的值就是 1。</p>
+
+<h4 id="当整数值的类型的有效范围由宽变窄时-只需在补码形式下截掉一定数量的高位二进制数即可">==当整数值的类型的有效范围由宽变窄时，只需在补码形式下截掉一定数量的高位二进制数即可。==</h4>
+
+<blockquote>
+<p>类似的快刀斩乱麻规则还有：当把一个浮点数类型的值转换为整数类型值时，前者的小数部分会被全部截掉。</p>
+</blockquote>
+
+<p>&ensp;</p>
+
+<p>&ensp;</p>
+
+<h4 id="其次-虽然直接把一个整数值转换为一个-string-类型的值是可行的-但值得关注的是-被转换的整数值应该可以代表一个有效的-unicode-代码点-否则转换的结果将会是-仅由高亮的问号组成的字符串值">其次，虽然直接把一个整数值转换为一个 string 类型的值是可行的，但值得关注的是，被转换的整数值应该可以代表一个有效的 Unicode 代码点，否则转换的结果将会是&rdquo;�&rdquo;（仅由高亮的问号组成的字符串值）。</h4>
+
+<hr />
+
+<p>&ensp;</p>
+
+<p>&ensp;</p>
+
+<h3 id="2-什么是别名类型-什么是潜在类型">2. 什么是别名类型？什么是潜在类型？</h3>
+
+<blockquote>
+<p>Go 语言中 可以用关键字type声明自定义的各种类型。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> type MyString = string</pre></div>
+<p>这条声明语句表示，MyString是类型的别名类型。顾名思义，别名类型与其源类型的区别恐怕只是在名称上，它们是完全相同的。</p>
+
+<p>源类型与别名类型是一对概念，是两个对立的称呼。别名类型主要是为了代码重构而存在的。更详细的信息可参见 Go 语言官方的文档</p>
+
+<p>Go 语言内建的基本类型中就存在两个别名类型。</p>
+
+<ul>
+<li>byte 是 uint8 的别名类型</li>
+<li>rune 是 int32 的别名类型</li>
+</ul>
+
+<p>如果是一下声明：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type MyString2 string // 注意，这里没有等号</pre></div>
+<p>对于这里的类型再定义来说，string 可以被称为 MyString2 的潜在类型。</p>
+
+<p>潜在类型的含义是某个类型在本质上是哪个类型或者是哪个类型的集合。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f&amp;text=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-040606%e7%a8%8b%e5%ba%8f%e5%ae%9e%e4%bd%93&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-040606%e7%a8%8b%e5%ba%8f%e5%ae%9e%e4%bd%93" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-040606%e7%a8%8b%e5%ba%8f%e5%ae%9e%e4%bd%93" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f&amp;title=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-040606%e7%a8%8b%e5%ba%8f%e5%ae%9e%e4%bd%93" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E8%25AF%25AD%25E8%25A8%2580%25E6%25A0%25B8%25E5%25BF%258336%25E8%25AE%25B2-040606%25E7%25A8%258B%25E5%25BA%258F%25E5%25AE%259E%25E4%25BD%2593%2f&amp;description=Go%e8%af%ad%e8%a8%80%e6%a0%b8%e5%bf%8336%e8%ae%b2-040606%e7%a8%8b%e5%ba%8f%e5%ae%9e%e4%bd%93" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" data-toggle="tooltip" data-placement="top" title="高性能数据库集群：分库分表">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E5%88%9D%E6%8E%A2%E6%9E%B6%E6%9E%84-%E4%B8%80-%E4%BD%95%E4%B8%BA%E6%9E%B6%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="初探架构(一)何为架构?">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

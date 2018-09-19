@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Git常用命令及用法</title>
+  <meta property="og:title" content="Git常用命令及用法" />
+  <meta name="twitter:title" content="Git常用命令及用法" />
+  <meta name="description" content="Git 常用命令：
+
+
+git init 创库初始化。
+
+git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。
+
+git commit 提交你所有添加的文件
+
+git push origin master提交本地仓库到远处链接仓库。
+
+
+">
+  <meta property="og:description" content="Git 常用命令：
+
+
+git init 创库初始化。
+
+git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。
+
+git commit 提交你所有添加的文件
+
+git push origin master提交本地仓库到远处链接仓库。
+
+
+">
+  <meta name="twitter:description" content="Git 常用命令：
+
+
+git init 创库初始化。
+
+git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。
+
+git commit 提交你所有添加的文件
+
+git push origin master提交本地仓库到远处链接仓库。
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%8F%8A%E7%94%A8%E6%B3%95/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Git常用命令及用法</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 1, 0001
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="git-常用命令">Git 常用命令：</h1>
+
+<blockquote>
+<p>git init 创库初始化。</p>
+
+<p>git add 【文件名称】 添加更改的文件 后加上 . 为添加所有文件（git add .）适用于在远处创建仓库后clone到本地，再到本地对应文件下添加整个文件项目，可方便上传到远程库中。</p>
+
+<p>git commit 提交你所有添加的文件</p>
+
+<p>git push origin master提交本地仓库到远处链接仓库。</p>
+</blockquote>
+
+<p></p>
+
+<h3 id="创建版本库">创建版本库</h3>
+
+<blockquote>
+<p>mkdir testgit &amp;&amp; cd test git</p>
+
+<p>git init</p>
+</blockquote>
+
+<p>你会发现对应文件下多了个 .git 文件 这说明你已经创建成功，并且已经初始化仓库完成了。</p>
+
+<h3 id="把文件添加到版本库">把文件添加到版本库</h3>
+
+<blockquote>
+<p>gittext.md</p>
+
+<p>git add gittext.md</p>
+</blockquote>
+
+<p>然后用命令git commit告诉Git把文件提交到仓库：</p>
+
+<blockquote>
+<p>git commit -m &ldquo;wrote a readme file&rdquo;</p>
+</blockquote>
+
+<p>git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。</p>
+
+<p>一次可以add多个不同的文件，以空格分隔：
+&gt; git add a.txt b.txt c.txt</p>
+
+<h3 id="仓库状态">仓库状态</h3>
+
+<blockquote>
+<p>git status</p>
+</blockquote>
+
+<p>git status命令可以让我们时刻掌握仓库当前的状态。</p>
+
+<p>但如果能看看具体修改了什么内容就更好了：
+&gt; git git diff gittext.md</p>
+
+<h3 id="版本回退">版本回退</h3>
+
+<p>某个命令可以告诉我们历史记录，在Git中，我们用git log命令查看：
+&gt; git log</p>
+
+<p><img src="http://blog.u.qiniudn.com/uploads/git2.png" alt="image" /></p>
+
+<p>git log命令显示从最近到最远的提交日志。如果嫌输出信息太多，看得眼花缭乱的，可以试试加上&ndash;pretty=oneline参数：
+&gt; git log &ndash;pretty=oneline</p>
+
+<p><img src="http://blog.u.qiniudn.com/uploads/git3.png" alt="image" /></p>
+
+<p>一大串类似2e70fd&hellip;376315的就是commit id（版本号）</p>
+
+<h4 id="在-git中-用head表示当前版本-也就是最新的提交commit-id-上一个版本就是head-上上一个版本就是head-当然往上100个版本写100个-比较容易数不过来-所以写成head-100">在 Git中，用HEAD表示当前版本，也就是最新的提交commit id，上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。</h4>
+
+<p>把当前版本回退到上一个版本，就可以使用git reset命令：
+&gt; git reset &ndash;hard HEAD^
+git log再看看现在版本库的状态，最新的那个版本已经看不到了！</p>
+
+<p><img src="http://blog.u.qiniudn.com/uploads/git4.png" alt="imgae" /></p>
+
+<p>如果你又反悔了，git是有反悔药吃的。</p>
+
+<p>假设找到那个commit id是2e70fdf&hellip;，于是就可以指定回到未来的某个版本：
+&gt; git reset &ndash;hard 2e70fdf</p>
+
+<p>此处注意版本号没必要写全，前几位就可以了，Git会自动去找。当然也不能只写前一两位，因为Git可能会找到多个版本号，就无法确定是哪一个了。</p>
+
+<p>Git提供了一个命令git reflog用来记录你的每一次命令：
+&gt; git reflog</p>
+
+<p><img src="http://blog.u.qiniudn.com/uploads/git5.png" alt="image" /></p>
+
+<h1 id="远程仓库-git-clone-到本地">远程仓库 git clone 到本地</h1>
+
+<blockquote>
+<p>你拥有了一个 GitHub 账号之后，就可以自由的 clone 或者下载其他项目，也可以创建自己的 项目，但是你没法提交代码。</p>
+
+<p>提交代码之前一定是需要某种授权 的，而 GitHub 上一般都是基于 SSH 授权的。</p>
+</blockquote>
+
+<p>关于SSH key生成自行查找。</p>
+
+<p>添加 SSH key 成功之后，我们就有权限向 GitHub 上我们自己的项目提交代码了，而提交代 码有两种方法:</p>
+
+<h2 id="1-推荐使用-clone自己的项目-我们以我在-github-上创建的-test-项目为例-执行如下命令">1 推荐使用. Clone自己的项目 我们以我在 GitHub 上创建的 test 项目为例，执行如下命令:</h2>
+
+<blockquote>
+<p>git clone git@github.com:driverzhang/fooderCard.git</p>
+</blockquote>
+
+<p>我这里用得是SSH 链接。</p>
+
+<p>把项目 clone 到了本地，这个时候该 项目本身就已经是一个git 仓库了，不需要执行 git init 进行初始化，而且甚至都已经关联好了 远程仓库，我们只需要在这个项目的 目录下任意修改或者添加文件后执行以下命令：
+&gt; git add .</p>
+
+<blockquote>
+<p>git commit -m &ldquo;你的描述&rdquo;</p>
+
+<p>git push origin master</p>
+</blockquote>
+
+<p><strong>进行代码提交，这种是最简单方便的一种方式。</strong></p>
+
+<h3 id="2-关联本地已有项目">2.关联本地已有项目</h3>
+
+<p>假设我们本地有个 test2 的项目，我们需要的是在 GitHub 上建一个 test 的项目，然后把本地 test2 上的所有代码 commit 记录提交到 GitHub 上的 test 项目。</p>
+
+<p>第一步：就是在 GitHub 上建一个 test 项目，这个想必大家都会了，就不用多讲了。</p>
+
+<p>第二步：把本地 test2 项目与 GitHub 上的 test 项目进行关联，切换到 test2 目录，执行如下命 令:
+&gt; git remote add git@github.com:driverzhang/fooderCard.git</p>
+
+<p>就是添加一个远程仓库，他的地址是 git@github.com:driverzhang/fooderCard.git， 而 origin 是给这个项目的远程仓库起的名字，是的，名字你可以随便取，只不过大家公认的 只有一个远程仓库时名字就是 origin ，为什么要给远程仓库取名字?因为我们可能一个项目 有多个远程仓库?比如 GitHub 一个，比如公司一个，这样的话提交到不同的远程仓库就需要 指定不同的仓库名字了。</p>
+
+<p>查看我们当前项目有哪些远程仓库可以执行如下命令:
+&gt; git remote -v</p>
+
+<p>进行提交：
+&gt; git push origin master</p>
+
+<p>默认向 GitHub 上的 test 目录提交了代码，而这个代码是在 master 分支。当然你可以提 交到指定的分支，这个之后的文章再详细讲解。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/git/">Git</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f&amp;text=Git%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e5%8f%8a%e7%94%a8%e6%b3%95&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f&amp;title=Git%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e5%8f%8a%e7%94%a8%e6%b3%95" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f&amp;title=Git%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e5%8f%8a%e7%94%a8%e6%b3%95" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f&amp;title=Git%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e5%8f%8a%e7%94%a8%e6%b3%95" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E5%25B8%25B8%25E7%2594%25A8%25E5%2591%25BD%25E4%25BB%25A4%25E5%258F%258A%25E7%2594%25A8%25E6%25B3%2595%2f&amp;description=Git%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e5%8f%8a%e7%94%a8%e6%b3%95" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/js%E8%BD%AC%E5%8C%96%E5%A4%A7%E5%86%99/" data-toggle="tooltip" data-placement="top" title="TJS转化大写">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E5%A4%B4%E5%83%8F%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0filereader/" data-toggle="tooltip" data-placement="top" title="FileReader图片上传到服务器">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

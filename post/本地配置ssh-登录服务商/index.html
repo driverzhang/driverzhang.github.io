@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>本地配置SSH 登录服务商</title>
+  <meta property="og:title" content="本地配置SSH 登录服务商" />
+  <meta name="twitter:title" content="本地配置SSH 登录服务商" />
+  <meta name="description" content="本地配置SSH 登录服务商
+
+1. 创建ssh公钥和私钥
+
+在你的终端输入：
+ssh-keygen
+
+cd .ssh/
+
+open ./
+你就会看见 有两个文件：
+
+
+### id_rsa (这是用于你本地登录服务器的秘钥)
+### id_rsa.pub (这就是要给服务器配置你的公钥)
+
+
+">
+  <meta property="og:description" content="本地配置SSH 登录服务商
+
+1. 创建ssh公钥和私钥
+
+在你的终端输入：
+ssh-keygen
+
+cd .ssh/
+
+open ./
+你就会看见 有两个文件：
+
+
+### id_rsa (这是用于你本地登录服务器的秘钥)
+### id_rsa.pub (这就是要给服务器配置你的公钥)
+
+
+">
+  <meta name="twitter:description" content="本地配置SSH 登录服务商
+
+1. 创建ssh公钥和私钥
+
+在你的终端输入：
+ssh-keygen
+
+cd .ssh/
+
+open ./
+你就会看见 有两个文件：
+
+
+### id_rsa (这是用于你本地登录服务器的秘钥)
+### id_rsa.pub (这就是要给服务器配置你的公钥)
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>本地配置SSH 登录服务商</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on July 8, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="本地配置ssh-登录服务商">本地配置SSH 登录服务商</h1>
+
+<h2 id="1-创建ssh公钥和私钥">1. 创建ssh公钥和私钥</h2>
+
+<p>在你的终端输入：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">ssh-keygen
+
+cd .ssh/
+
+open ./</pre></div>
+<p>你就会看见 有两个文件：</p>
+
+<ul>
+<li>### id_rsa (这是用于你本地登录服务器的秘钥)</li>
+<li>### id_rsa.pub (这就是要给服务器配置你的公钥)</li>
+</ul>
+
+<p></p>
+
+<h2 id="2-将公钥复制到ssh服务器">2. 将公钥复制到ssh服务器</h2>
+
+<blockquote>
+<p>将前一步骤生成的公钥~/id_rsa.pub文件，复制到ssh服务器对应用户下的~/.ssh/authorized_keys文件,可以有多种方式，这里只介绍常用的三种。</p>
+</blockquote>
+
+<ul>
+<li><p>[适用于osx系统]使用<a href="https://github.com/beautifulcode/ssh-copy-id-for-OSX">ssh-copy-id-for-OSX</a>工具将公钥复制至ssh服务器</p>
+
+<p>brew install ssh-copy-id
+ssh-copy-id username@hostname  #将username和hostname替换为你的ssh服务器用户名和IP</p></li>
+
+<li><p>当ssh服务器username用户目录下尚未有.ssh目录时使用此方式</p>
+
+<p>cat ~/.ssh/id_rsa.pub | ssh username@hostname &ldquo;mkdir ~/.ssh; cat &gt;&gt; ~/.ssh/authorized_keys&rdquo;</p></li>
+
+<li><p>通用方式</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">scp ~/.ssh/id_rsa.pub username@hostname:~/ #将公钥文件复制至ssh服务器
+ssh username@hostname #使用用户名和密码方式登录至ssh服务器
+mkdir .ssh  #若.ssh目录已存在，可省略此步
+cat id_rsa.pub &gt;&gt; .ssh/authorized_keys  #将公钥文件id_rsa.pub文件内容追加到authorized_keys文件</pre></div></li>
+</ul>
+
+<p>最后你可以开始登录了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">ssh-add ~/.ssh/id_rsa
+ssh-add -l
+ssh root@44.99.222.11 #root是你的服务器账户名，@后面是服务器IP</pre></div>
+<h2 id="3-用ssh-快捷登录远程服务器">3. 用ssh 快捷登录远程服务器</h2>
+
+<p>每次都输入 名称和IP 很不爽 你可以这样搞：</p>
+
+<h4 id="ssh本身也提供了一种快捷的方式来解决这个问题-往-ssh-config配置文件添加你的ssh服务器信息即可">ssh本身也提供了一种快捷的方式来解决这个问题，往~/.ssh/config配置文件添加你的ssh服务器信息即可</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">vim ~/.ssh/config #若没有该文件，直接新建即可</pre></div>
+<p>添加文件内容格式如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">Host        alias #自定义别名
+    HostName        hostname  #替换为你的ssh服务器ip或domain
+    Port            port #ssh服务器端口，默认为22
+    User            user #ssh服务器用户名
+    IdentityFile    ~/.ssh/id_rsa #第一个步骤生成的公钥文件对应的私钥文件</pre></div>
+<p>敲下  :wq<br />
+保存文件退出后，即可使用别名登录ssh服务器</p>
+
+<ul>
+<li>ssh alias #alias是你在~/.ssh/config文件配置的别名</li>
+</ul>
+
+<p>若有多个ssh账号需要配置，只要在~/.ssh/config空行再写即可，如下:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">Host        foo
+    HostName        192.168.2.222
+    Port            22
+    User            test
+    IdentityFile    ~/.ssh/id_rsa
+
+Host        alias
+    HostName    hostname
+    Port        port
+    User        user</pre></div>
+<h4 id="如果你本地终端使用的是zsh-那就太简单不过了-直接给zsh添加一条别名">如果你本地终端使用的是zsh，那就太简单不过了，直接给zsh添加一条别名</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">echo &#34;alias ssh-to-username=&#39;ssh username@hostname&#39;&#34; &gt;&gt; ~/.zshrc #将username和hostname替换为你的服务器信息
+source ~/.zshrc   #重新加载更改后的zshrc文件</pre></div>
+<p>ssh-to-username   #使用别名，一条命令即可登录你的ssh服务器</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f&amp;text=%e6%9c%ac%e5%9c%b0%e9%85%8d%e7%bd%aeSSH%20%e7%99%bb%e5%bd%95%e6%9c%8d%e5%8a%a1%e5%95%86&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f&amp;title=%e6%9c%ac%e5%9c%b0%e9%85%8d%e7%bd%aeSSH%20%e7%99%bb%e5%bd%95%e6%9c%8d%e5%8a%a1%e5%95%86" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f&amp;title=%e6%9c%ac%e5%9c%b0%e9%85%8d%e7%bd%aeSSH%20%e7%99%bb%e5%bd%95%e6%9c%8d%e5%8a%a1%e5%95%86" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f&amp;title=%e6%9c%ac%e5%9c%b0%e9%85%8d%e7%bd%aeSSH%20%e7%99%bb%e5%bd%95%e6%9c%8d%e5%8a%a1%e5%95%86" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259C%25AC%25E5%259C%25B0%25E9%2585%258D%25E7%25BD%25AEssh-%25E7%2599%25BB%25E5%25BD%2595%25E6%259C%258D%25E5%258A%25A1%25E5%2595%2586%2f&amp;description=%e6%9c%ac%e5%9c%b0%e9%85%8d%e7%bd%aeSSH%20%e7%99%bb%e5%bd%95%e6%9c%8d%e5%8a%a1%e5%95%86" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E6%9E%B6%E6%9E%84%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BAcap/" data-toggle="tooltip" data-placement="top" title="架构理论学习之分布式系统理论CAP">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/" data-toggle="tooltip" data-placement="top" title="域名解析cname和A记录">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang自学路劲资料讲解</title>
+  <meta property="og:title" content="Golang自学路劲资料讲解" />
+  <meta name="twitter:title" content="Golang自学路劲资料讲解" />
+  <meta name="description" content="Go语言 自学讲解与资料
+
+
+简单说下自己情况，本人目前已有一年多开发经验（前端&#43;后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。
+
+
+各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。
+
+">
+  <meta property="og:description" content="Go语言 自学讲解与资料
+
+
+简单说下自己情况，本人目前已有一年多开发经验（前端&#43;后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。
+
+
+各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。
+
+">
+  <meta name="twitter:description" content="Go语言 自学讲解与资料
+
+
+简单说下自己情况，本人目前已有一年多开发经验（前端&#43;后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。
+
+
+各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang自学路劲资料讲解</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on May 1, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="go语言-自学讲解与资料">Go语言 自学讲解与资料</h1>
+
+<blockquote>
+<p>简单说下自己情况，本人目前已有一年多开发经验（前端+后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。</p>
+</blockquote>
+
+<p>各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。</p>
+
+<p></p>
+
+<p>&ensp;</p>
+
+<h2 id="一-go-语言简介">一.  Go 语言简介</h2>
+
+<blockquote>
+<h4 id="go语言-全称-go-programming-language-为了避免与-go-这个英文单词冲突-就简称为-golang">go语言 全称：&rdquo;Go Programming Language&rdquo; 为了避免与 go 这个英文单词冲突 就简称为 golang</h4>
+</blockquote>
+
+<p>&ensp;</p>
+
+<h3 id="go-的来历">Go 的来历</h3>
+
+<blockquote>
+<p>很久以前，有一个IT公司，这公司有个传统，允许员工拥有20%自由时间来开发实验性项目。在2007的某一天，公司的几个大牛，正在用 c + +  开发一些比较繁琐但是核心的工作，主要包括庞大的分布式集群，大牛觉得很闹心，后来 c + +委员会来他们公司演讲，说 c + + 将要添加大概35种新特性。这几个大牛的其中一个人，名为：Rob Pike，听后心中一万个xxx飘过，“ c + +特性还不够多吗？简化 c  + +应该更有成就感吧”。于是乎，Rob Pike和其他几个大牛讨论了一下，怎么解决这个问题，过了一会，Rob Pike说要不我们自己搞个语言吧，名字叫“go”，非常简短，容易拼写。其他几位大牛就说好啊，然后他们找了块白板，在上面写下希望能有哪些功能（详见文尾）。接下来的时间里，大牛们开心的讨论设计这门语言的特性，经过漫长的岁月，他们决定，以c语言为原型，以及借鉴其他语言的一些特性，来解放程序员，解放自己，然后在2009年，go语言诞生。</p>
+</blockquote>
+
+<p>而这个IT公司就是现在的 Google</p>
+
+<p>&ensp;</p>
+
+<p>### Go 创始人黄金三人团</p>
+
+<p>Go 语言是由谷歌公司在 2007 年开始开发的一门语言，目的是能在多核心时代高效编写网络应用程序。Go 语言的创始人 Robert Griesemer、Rob Pike 和 Ken Thompson 都是在计算机发展过程中作出过重要贡献的人。
+- #### Rob Pike：Go 语言项目总负责人，贝尔实验室的Unix团队和Plan9操作系统计划成员，与Thompson工同创造了UTF-8字符编码
+- #### Robert Griesemer：制作Java的HotSpot编译器和Chrome浏览器的JavaScript引擎V8
+- #### Ken Thompson： 是C语言和Unix的创造者。（1983年图灵奖和1988国家技术奖）</p>
+
+<p><img src="http://tonybai.com/wp-content/uploads/GPT.png" alt="image" /></p>
+
+<blockquote>
+<p>从左到右分别是罗伯特·格瑞史莫(Robert Griesemer)、罗伯·派( Rob Pike)和肯·汤普逊(Ken Thompson)。</p>
+</blockquote>
+
+<p>&ensp;</p>
+
+<h3 id="go-的特点">Go 的特点</h3>
+
+<blockquote>
+<p>Go是一种编译型语言，一种并发的、带垃圾回收的、快速编译的语言。它具有以下特点：</p>
+</blockquote>
+
+<ul>
+<li>#### 它可以在一台计算机上用几秒钟的时间编译一个大型的Go程序。</li>
+<li>####  Go为软件构造提供了一种模型，它使依赖分析更加容易，且避免了大部分C风格include文件与库的开头。</li>
+<li>####  Go是静态类型的语言，它的类型系统没有层级。因此用户不需要在定义类型之间的关系上花费时间，这样感觉起来比典型的面向对象语言更轻量级。</li>
+<li>####  Go完全是垃圾回收型的语言，并为并发执行与通信提供了基本的支持。</li>
+</ul>
+
+<h3 id="go-的基本结构">Go 的基本结构</h3>
+
+<blockquote>
+<p>Go语言专门针对多处理器系统应用程序的编程进行了优化，使用Go编译的程序可以媲美C或C++代码的速度，而且更加安全、支持并行进程。而且并结合类似 Python 的语法简洁。</p>
+
+<p>任何一个编程语言都有自己的基础架构，只有在了解了编程语言的基础架构后才能开始进行一些简单的编程的逻辑，然后组合简单结构变为复杂的数据结构，其实编程很多的时候都是一种艺术，写出的代码也是一种艺术，给人赏心悦目的感觉，这需要持续不断的努力和精进才能达到。</p>
+</blockquote>
+
+<p>基本结构有：</p>
+
+<ul>
+<li>##### 命名</li>
+<li>##### 常量</li>
+<li>##### 变量</li>
+<li>##### 赋值</li>
+<li>##### 类型</li>
+<li>##### 包和文件</li>
+<li>##### 作用域</li>
+</ul>
+
+<h4 id="命名">命名:</h4>
+
+<p>Go语言的函数名，变量名，常量名，类型名和包的命名也是都遵循这一规则的:</p>
+
+<p>一个一个名字必须以一个字母（Unicode字母）或下划线开头，后面可以跟任意数量的字母、数字或下划线。</p>
+
+<p>大写字母和小写字母是不同的：Car和car是两个不同的名字。</p>
+
+<p>Go语言中只有 25 个关键字；且关键字不能用于自定义名字，只能在特定语法结构中使用.</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">  <span style="color:#859900">break</span>      <span style="color:#859900">default</span>        <span style="color:#859900">func</span>     <span style="color:#859900">interface</span>    <span style="color:#859900">select</span>
+<span style="color:#859900">case</span>       <span style="color:#859900">defer</span>          <span style="color:#859900">go</span>       <span style="color:#859900">map</span>          <span style="color:#859900">struct</span>
+<span style="color:#859900">chan</span>       <span style="color:#859900">else</span>           <span style="color:#859900">goto</span>     <span style="color:#dc322f;font-weight:bold">package</span>      <span style="color:#859900">switch</span>
+<span style="color:#859900">const</span>      <span style="color:#859900">fallthrough</span>    <span style="color:#859900">if</span>       <span style="color:#859900">range</span>        <span style="color:#859900">type</span>
+<span style="color:#859900">continue</span>   <span style="color:#859900">for</span>            <span style="color:#dc322f;font-weight:bold">import</span>   <span style="color:#859900">return</span>       <span style="color:#859900">var</span></pre></div>
+<p>除此之外Go语言中还有30多个预定义的名字，比如int和ture等：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">内建常量: true false iota nil
+
+内建类型: int   int8   int16   int32  int64   uint   uint8  uint16   uint32   uint64   uintptr  
+         float32   float64   complex128   complex64   bool   byte    rune   string  error
+
+内建函数: make  len  cap   new   append   copy   close   delete   complex   real    imag    panic  recover</pre></div>
+<h4 id="常量">常量：</h4>
+
+<p>在Go语言中，常量是指编译期间就已知且不可改变的值。常量可以是数值类型（包括整型、浮点型和复数类型）、布尔类型、字符串类型等。 下面我们使用const 关键字来定义常量:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;fmt&#34;</span>
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;math&#34;</span>
+
+<span style="color:#93a1a1;font-style:italic">// &#34;const&#34; 关键字用来定义常量
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">const</span> <span style="color:#268bd2">s</span> <span style="color:#859900;font-weight:bold">string</span> = <span style="color:#2aa198">&#34;appropriate&#34;</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">s</span>)
+
+    <span style="color:#93a1a1;font-style:italic">// &#34;const&#34;关键字可以出现在任何&#34;var&#34;关键字出现的地方
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// 区别是常量必须有初始值
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">const</span> <span style="color:#268bd2">n</span> = <span style="color:#2aa198;font-weight:bold">20</span>
+
+    <span style="color:#93a1a1;font-style:italic">// 常量表达式可以执行任意精度数学计算
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">const</span> <span style="color:#268bd2">d</span> = <span style="color:#2aa198;font-weight:bold">3e20</span> / <span style="color:#268bd2">n</span>
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">d</span>)
+
+    <span style="color:#93a1a1;font-style:italic">// 数值型常量没有具体类型，除非指定一个类型
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// 比如显式类型转换
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#cb4b16">int64</span>(<span style="color:#268bd2">d</span>))
+
+    <span style="color:#93a1a1;font-style:italic">// 数值型常量可以在程序的逻辑上下文中获取类型
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// 比如变量赋值或者函数调用。
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// 例如，对于math包中的Sin函数,它需要一个float64类型的变量
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">math</span>.<span style="color:#268bd2">Sin</span>(<span style="color:#268bd2">n</span>))
+}</code></pre></div>
+<h4 id="变量">变量:</h4>
+
+<p>通常用var声明语句可以创建一个特定类型的变量，然后给变量附加一个名字，并且设置变量的初始值。</p>
+
+<p>Go的基本类型有：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">* bool
+* string
+* int int8 int16  int32 int64 
+* uint uint8 uint16 uint32 uint64 uintptr
+* byte // uint8 的别名
+* rune // int32 的别名 代表一个Unicode码
+* float32 float64
+* complex64 complex128</pre></div>
+<p>变量的声明的语法一般是：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> var 变量名字 类型 = 表达式</pre></div>
+<p>通常我们在编程的过程中，也用简短声明变量。它以“名字 := 表达式”形式声明变量，变量的类型根据表达式来自动推导。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">  destination := 12
+result := rand.Float64() * 3.0</pre></div>
+<p>&ensp;</p>
+
+<h2 id="二-go语言-自学资料">二. Go语言 自学资料</h2>
+
+<p>首先来说下自己的自学路径吧：
+&gt; 之前我是搞 Node.js 的，他是用c++ 搞出来的产物，所以你要是想弄透它，你还得熟练个 c++ 。而对于 Go语言 来说在 1.5 版本开始作者就开始用 Go 本身来写自己的底层的一些东西比如 gc 。所以对于学习Go语言的小伙伴门，你有什么不明白的函数方法都可以直接进入源码直接查看，这是我学习Go的过程中感觉很爽的一点。</p>
+
+<h3 id="1-基本语法学习">1. 基本语法学习</h3>
+
+<h4 id="书籍篇">书籍篇：</h4>
+
+<p>1.1 个人推介 <a href="https://books.studygolang.com/gopl-zh/index.html">《The Go Programming Language》Go语言圣经（中文版）</a>。国人翻译过来还是不错的，如果你英语没问题可以直接上 原版。</p>
+
+<p><img src="https://books.studygolang.com/gopl-zh/cover_middle.jpg" alt="image" /></p>
+
+<blockquote>
+<p>这本书每个知识点都讲的较为清晰详细，里面举例代码基本是Go自身标准代码库里面的源码。里面的概念性的东西也许你刚开始看理解不透彻，但是当我用过一段时间Golang 后也会回来再看，这时看起来理解的东西又不一样了。</p>
+</blockquote>
+
+<p>1.2 <a href="https://book.douban.com/subject/25858023/">《Go in Action》Go语言实战</a> 这本书网上没有电子图书版本，你可以上当当或者淘宝购买实体书。</p>
+
+<p><img src="http://img3.doubanio.com/view/subject/l/public/s28372870.jpg" alt="image" /></p>
+
+<blockquote>
+<p>这本书也很不错，里面不仅阐述了GO 的基础概念，也加入了实际可操作的实例代码。如果你嫌看书太慢，我推介你微信公众号关注 “飞雪无情” 写的Go语言实战笔记系列文章，或直接网页打开 <a href="http://www.flysnow.org/categories/Golang/page/4/">飞雪无情的博客</a></p>
+</blockquote>
+
+<p>1.3 还有一本<a href="https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/preface.md"> go web</a> 这本书是 谢大 开源在他的 github 上的，star目前2W+，如果想快速上手 web开发的 推介给各位。</p>
+
+<p><img src="http://img1.doubanio.com/view/subject/l/public/s26376659.jpg" alt="image" /></p>
+
+<p>以上基本每本书我都有看翻看过所有才推介给大家，对于go 相关的书籍还有很多这里就不一一介绍了。</p>
+
+<p>&ensp;</p>
+
+<h4 id="视频篇">视频篇：</h4>
+
+<p>直接上干货了：</p>
+
+<ul>
+<li><a href="https://www.bilibili.com/video/av20926956/?p=11">无闻老师的全套</a> 这是基础视频 他还有强化的进阶视频，这里给出他的个人 github <a href="https://github.com/Unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md">无闻go教程地址</a></li>
+<li>某私人组织的<a href="https://space.bilibili.com/276273794/#/">公开视频</a> 讲的较为基础，可以了解下，给出他们的教程文档地址：
+<a href="https://songjiayang.gitbooks.io/go-basic-courses/content/">Go 零基础编程入门教程</a></li>
+<li>还有套视频 是现在慕课网挂在首页的 谷歌工程师讲解收费的 go语言视频教程，由于是特殊渠道这里就不直接公布了，可以联系我分享给你。</li>
+</ul>
+
+<blockquote>
+<p>其实我觉得视频这个东西属于被动学习，还是以自己开文档主动学习较好，视频速度偏慢，当然我也有看过，就是觉得文档看够了有点累，换着看看视频也不错的。</p>
+</blockquote>
+
+<p>&ensp;</p>
+
+<h4 id="网站资料篇">网站资料篇：</h4>
+
+<blockquote>
+<p>除了官网给出的学习资料外（其实官网的资料就已经很不错了），我在这里提供一些之外的资料：</p>
+</blockquote>
+
+<ul>
+<li><a href="https://gobyexample.com/">Go by Example</a> 这个是必须的，里面包括了 Golang 几乎所有常用的方法，都是一个个的demo，给一个<a href="https://books.studygolang.com/gobyexample/">中文版本</a>，这个可以反复敲打自行体验（尤其是关于并发和通道部分）。</li>
+<li><a href="https://studygolang.com/pkgdoc">Golang标准库文档</a> 这个给出的是中文版本的，你可以快速根据需求进行查询观看。</li>
+<li><a href="https://studygolang.com/">GO语言中文网</a> 这是一个golang的社区</li>
+<li><a href="https://gocn.io/">GO中国技术社区</a></li>
+</ul>
+
+<h3 id="go-技能树全展示">Go 技能树全展示</h3>
+
+<p>给出一张 GO中国 发出来的技术图谱
+你也可以直接去这个页面查看链接 <a href="https://github.com/KeKe-Li/For-learning-Go-Tutorial">Golang 技术栈</a></p>
+
+<p><img src="https://github.com/KeKe-Li/For-learning-Go-Tutorial/blob/master/src/images/1.jpg?raw=true" alt="image" /></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f&amp;text=Golang%e8%87%aa%e5%ad%a6%e8%b7%af%e5%8a%b2%e8%b5%84%e6%96%99%e8%ae%b2%e8%a7%a3&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f&amp;title=Golang%e8%87%aa%e5%ad%a6%e8%b7%af%e5%8a%b2%e8%b5%84%e6%96%99%e8%ae%b2%e8%a7%a3" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f&amp;title=Golang%e8%87%aa%e5%ad%a6%e8%b7%af%e5%8a%b2%e8%b5%84%e6%96%99%e8%ae%b2%e8%a7%a3" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f&amp;title=Golang%e8%87%aa%e5%ad%a6%e8%b7%af%e5%8a%b2%e8%b5%84%e6%96%99%e8%ae%b2%e8%a7%a3" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E8%2587%25AA%25E5%25AD%25A6%25E8%25B7%25AF%25E5%258A%25B2%25E8%25B5%2584%25E6%2596%2599%25E8%25AE%25B2%25E8%25A7%25A3%2f&amp;description=Golang%e8%87%aa%e5%ad%a6%e8%b7%af%e5%8a%b2%e8%b5%84%e6%96%99%e8%ae%b2%e8%a7%a3" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" data-toggle="tooltip" data-placement="top" title="iota实例情况">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/graphql%E5%88%9D%E6%8E%A2/" data-toggle="tooltip" data-placement="top" title="GraphQl初探">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

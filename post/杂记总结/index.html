@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>杂记总结</title>
+  <meta property="og:title" content="杂记总结" />
+  <meta name="twitter:title" content="杂记总结" />
+  <meta name="description" content="杂记总结
+
+1. 项目框架 express 理解
+
+1.1 express response 有哪些方法：
+
+">
+  <meta property="og:description" content="杂记总结
+
+1. 项目框架 express 理解
+
+1.1 express response 有哪些方法：
+
+">
+  <meta name="twitter:description" content="杂记总结
+
+1. 项目框架 express 理解
+
+1.1 express response 有哪些方法：
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E6%9D%82%E8%AE%B0%E6%80%BB%E7%BB%93/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E6%9D%82%E8%AE%B0%E6%80%BB%E7%BB%93/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>杂记总结</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 20, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="杂记总结">杂记总结</h1>
+
+<h2 id="1-项目框架-express-理解">1. 项目框架 express 理解</h2>
+
+<h3 id="1-1-express-response-有哪些方法">1.1 express response 有哪些方法：</h3>
+
+<p></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">render</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">sendFile</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">set</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">get</span>()
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>();
+</code></pre></div>
+<h4 id="01-res-send-body">01. res.send([body])</h4>
+
+<blockquote>
+<p>Sends the HTTP response.</p>
+
+<p>The body parameter can be a Buffer object, a String, an object, or an Array. For example:</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>(<span style="color:#859900">new</span> <span style="color:#268bd2">Buffer</span>(<span style="color:#2aa198">&#39;whoop&#39;</span>));
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>({ <span style="color:#268bd2">some</span>: <span style="color:#2aa198">&#39;json&#39;</span> });
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;&lt;p&gt;some html&lt;/p&gt;&#39;</span>);
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">404</span>).<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;Sorry, we cannot find that!&#39;</span>);
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">500</span>).<span style="color:#268bd2">send</span>({ <span style="color:#268bd2">error</span>: <span style="color:#2aa198">&#39;something blew up&#39;</span> });
+</code></pre></div>
+<h4 id="02-res-render-view-locals-callback">02. res.render(view [, locals] [, callback])</h4>
+
+<blockquote>
+<p>Renders a view and sends the rendered HTML string to the client. 就是导出你的模板引擎中的文件如：ejs、jade等</p>
+</blockquote>
+
+<p>Optional parameters（可选参数）:
+- locals: an object whose properties define local variables for the view.
+- callback, a callback function. If provided, the method returns both the possible error and rendered string, but does not perform an automated response. When an error occurs, the method invokes next(err) internally.</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">// send the rendered view to the client
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">render</span>(<span style="color:#2aa198">&#39;index&#39;</span>);
+
+<span style="color:#93a1a1;font-style:italic">// if a callback is specified, the rendered HTML string has to be sent explicitly
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">render</span>(<span style="color:#2aa198">&#39;index&#39;</span>, <span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>, <span style="color:#268bd2">html</span>) {
+  <span style="color:#268bd2">res</span>.<span style="color:#268bd2">send</span>(<span style="color:#268bd2">html</span>);
+});
+
+<span style="color:#93a1a1;font-style:italic">// pass a local variable to the view
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">render</span>(<span style="color:#2aa198">&#39;user&#39;</span>, { <span style="color:#268bd2">name</span>: <span style="color:#2aa198">&#39;Tobi&#39;</span> }, <span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>, <span style="color:#268bd2">html</span>) {
+  <span style="color:#93a1a1;font-style:italic">// ...
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+</code></pre></div>
+<h4 id="03-res-sendfile-path-options-fn">03. res.sendFile(path [, options] [, fn])</h4>
+
+<blockquote>
+<p>Transfers the file at the given path. Sets the Content-Type response HTTP header field based on the filename’s extension. Unless the root option is set in the options object, path must be an absolute path of the file.</p>
+</blockquote>
+
+<p>Here is an example of using res.sendFile with all its arguments.</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">app</span>.<span style="color:#268bd2">get</span>(<span style="color:#2aa198">&#39;/file/:name&#39;</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>, <span style="color:#268bd2">next</span>) {
+
+  <span style="color:#859900">var</span> <span style="color:#268bd2">options</span> = {
+    <span style="color:#268bd2">root</span>: <span style="color:#268bd2">__dirname</span> + <span style="color:#2aa198">&#39;/public/&#39;</span>,
+    <span style="color:#268bd2">dotfiles</span>: <span style="color:#2aa198">&#39;deny&#39;</span>,
+    <span style="color:#268bd2">headers</span>: {
+        <span style="color:#2aa198">&#39;x-timestamp&#39;</span>: <span style="color:#cb4b16">Date</span>.<span style="color:#268bd2">now</span>(),
+        <span style="color:#2aa198">&#39;x-sent&#39;</span>: <span style="color:#859900;font-weight:bold">true</span>
+    }
+  };
+
+  <span style="color:#859900">var</span> <span style="color:#268bd2">fileName</span> = <span style="color:#268bd2">req</span>.<span style="color:#268bd2">params</span>.<span style="color:#268bd2">name</span>;
+  <span style="color:#268bd2">res</span>.<span style="color:#268bd2">sendFile</span>(<span style="color:#268bd2">fileName</span>, <span style="color:#268bd2">options</span>, <span style="color:#859900">function</span> (<span style="color:#268bd2">err</span>) {
+    <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+      <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">err</span>);
+      <span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#268bd2">err</span>.<span style="color:#268bd2">status</span>).<span style="color:#268bd2">end</span>();
+    }
+    <span style="color:#859900">else</span> {
+      <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;Sent:&#39;</span>, <span style="color:#268bd2">fileName</span>);
+    }
+  });
+
+})  
+</code></pre></div>
+<h4 id="04-res-set-field-value">04. res.set(field [, value])</h4>
+
+<blockquote>
+<p>Sets the response’s HTTP header field to value. To set multiple fields at once, pass an object as the parameter.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">set</span>(<span style="color:#2aa198">&#39;Content-Type&#39;</span>, <span style="color:#2aa198">&#39;text/plain&#39;</span>);
+
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">set</span>({
+  <span style="color:#2aa198">&#39;Content-Type&#39;</span>: <span style="color:#2aa198">&#39;text/plain&#39;</span>,
+  <span style="color:#2aa198">&#39;Content-Length&#39;</span>: <span style="color:#2aa198">&#39;123&#39;</span>,
+  <span style="color:#2aa198">&#39;ETag&#39;</span>: <span style="color:#2aa198">&#39;12345&#39;</span>
+})
+</code></pre></div>
+<p>Aliased as res.header(field [, value]).</p>
+
+<h4 id="05-res-get-field">05. res.get(field)</h4>
+
+<blockquote>
+<p>Returns the HTTP response header specified by field. The match is case-insensitive.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">set</span>(<span style="color:#2aa198">&#39;Content-Type&#39;</span>, <span style="color:#2aa198">&#39;text/plain&#39;</span>);
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">get</span>(<span style="color:#2aa198">&#39;Content-Type&#39;</span>); <span style="color:#93a1a1;font-style:italic">// =&gt; &#34;text/plain&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<h4 id="06-res-status-code">06. res.status(code)</h4>
+
+<blockquote>
+<p>Use this method to set the HTTP status for the response. It is a chainable alias of Node’s response.statusCode.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">403</span>).<span style="color:#268bd2">end</span>();
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">400</span>).<span style="color:#268bd2">send</span>(<span style="color:#2aa198">&#39;Bad Request&#39;</span>);
+<span style="color:#268bd2">res</span>.<span style="color:#268bd2">status</span>(<span style="color:#2aa198;font-weight:bold">404</span>).<span style="color:#268bd2">sendFile</span>(<span style="color:#2aa198">&#39;/absolute/path/to/404.png&#39;</span>);
+</code></pre></div>
+<h4 id="07-res-type-type">07. res.type(type)</h4>
+
+<blockquote>
+<p>Sets the Content-Type HTTP header to the MIME type as determined by mime.lookup() for the specified type. If type contains the “/” character, then it sets the Content-Type to type.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;.html&#39;</span>);              <span style="color:#93a1a1;font-style:italic">// =&gt; &#39;text/html&#39;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;html&#39;</span>);               <span style="color:#93a1a1;font-style:italic">// =&gt; &#39;text/html&#39;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;json&#39;</span>);               <span style="color:#93a1a1;font-style:italic">// =&gt; &#39;application/json&#39;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;application/json&#39;</span>);   <span style="color:#93a1a1;font-style:italic">// =&gt; &#39;application/json&#39;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">res</span>.<span style="color:#268bd2">type</span>(<span style="color:#2aa198">&#39;png&#39;</span>);                <span style="color:#93a1a1;font-style:italic">// =&gt; image/png:
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<hr />
+
+<h3 id="1-2-什么是错误优先的回调函数">1.2. 什么是错误优先的回调函数？</h3>
+
+<blockquote>
+<p>错误优先的回调函数用于传递错误和数据。第一个参数始终应该是一个错误对象， 用于检查程序是否发生了错误。其余的参数用于传递数据。例如：</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#268bd2">fs</span>.<span style="color:#268bd2">readFile</span>(<span style="color:#268bd2">filePath</span>, <span style="color:#859900">function</span>(<span style="color:#268bd2">err</span>, <span style="color:#268bd2">data</span>) {  
+    <span style="color:#859900">if</span> (<span style="color:#268bd2">err</span>) {
+        <span style="color:#93a1a1;font-style:italic">//handle the error
+</span><span style="color:#93a1a1;font-style:italic"></span>    }
+    <span style="color:#93a1a1;font-style:italic">// use the data object
+</span><span style="color:#93a1a1;font-style:italic"></span>});
+</code></pre></div>
+<hr />
+
+<h3 id="1-3-如何用node监听80端口">1.3. 如何用Node监听80端口</h3>
+
+<blockquote>
+<p>这题有陷阱！在类Unix系统中你不应该尝试去监听80端口，因为这需要超级用户权限。 因此不推荐让你的应用直接监听这个端口。</p>
+</blockquote>
+
+<p>目前，如果你一定要让你的应用监听80端口的话，你可以有通过在Node应用的前方再增加一层反向代理 （例如nginx）来实现，如下图所示。否则，建议你直接监听大于1024的端口。
+&gt; 方向代理: 指的是以代理服务器来接收Internet上的连接请求，然后将请求转发给内部网络上的服务器， 并且将服务器返回的结果发送给客户端。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/675733-2545d6ad21d9d177.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image" /></p>
+
+<hr />
+
+<h2 id="2-restful-接口理解">2. restful 接口理解</h2>
+
+<h3 id="2-1-什么是-restful-接口">2.1 什么是 restful 接口</h3>
+
+<blockquote>
+<h4 id="一句话-url定位资源-用http动词-get-post-delete-detc-描述操作">一句话:URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</h4>
+</blockquote>
+
+<h4 id="为什么要用-restful-结构呢">为什么要用 restful 结构呢？</h4>
+
+<blockquote>
+<p>近年来移动互联网的发展，各种类型的Client层出不穷，RESTful可以通过一套统一的接口为 Web，iOS和Android提供服务。另外对于广大平台来说，比如Facebook platform，微博开放平台，微信公共平台等，它们不需要有显式的前端，只需要一套提供服务的接口，于是RESTful更是它们最好的选择。在RESTful架构下：</p>
+</blockquote>
+
+<p><img src="http://pic2.zhimg.com/50/06ee404783540f0af299042057738a99_hd.jpg" alt="image" /></p>
+
+<h4 id="达到一个目的或者起到的作用-就是">达到一个目的或者起到的作用 就是：</h4>
+
+<ul>
+<li>看Url就知道要什么</li>
+<li>看http method就知道干什么</li>
+<li>看http status  code就知道结果如何</li>
+</ul>
+
+<blockquote>
+<p>首先 REST 是所有Web应用都应该遵守的架构设计指导原则。</p>
+</blockquote>
+
+<p>Representational State Transfer，翻译是”表现层状态转化”。</p>
+
+<p>面向资源是REST最明显的特征，对于同一个资源的一组不同的操作。资源是服务器上一个可命名的抽象概念，资源是以名词为核心来组织的，首先关注的是名词。</p>
+
+<p>REST要求，必须通过统一的接口来对资源执行各种操作。对于每个资源只能执行一组有限的操作。（7个HTTP方法：GET/POST/PUT/DELETE/PATCH/HEAD/OPTIONS）
+&gt; GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源。</p>
+
+<p>总之：符合REST设计标准的API，即RESTful API。REST架构设计，遵循的各项标准和准则，就是HTTP协议的表现，换句话说，HTTP协议就是属于REST架构的设计模式。</p>
+
+<h3 id="restful-标准接口">restful 标准接口：</h3>
+
+<h4 id="一-uri规范">一. URI规范：</h4>
+
+<ol>
+<li>不用大写；</li>
+<li>用中杠 - 不用下杠 _ ；</li>
+<li>参数列表要encode；</li>
+<li>URI中的名词表示资源集合，使用复数形式。</li>
+<li>在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词（特殊情况可以使用动词），而且所用的名词往往与数据库的表格名对应。</li>
+</ol>
+
+<h4 id="资源集合-vs单个资源">资源集合 vs单个资源</h4>
+
+<blockquote>
+<p>URI表示资源的两种方式：资源集合、单个资源。</p>
+</blockquote>
+
+<p>资源集合：</p>
+
+<p>/zoos //所有动物园</p>
+
+<p>/zoos/1/animals //id为1的动物园中的所有动物</p>
+
+<p>单个资源</p>
+
+<p>/zoos/1//id为1的动物园</p>
+
+<p>/zoos/1;2;3//id为1，2，3的动物园</p>
+
+<h4 id="避免层级过深的uri">避免层级过深的URI</h4>
+
+<blockquote>
+<p>在url中表达层级，用于 按实体关联关系进行对象导航 ，一般根据id导航。
+过深的导航容易导致url膨胀，不易维护，</p>
+</blockquote>
+
+<p>如 GET /zoos/1/areas/3/animals/4 ，尽量使用查询参数代替路径中的实体导航，如 GET/animals?zoo=1&amp;area=3 ；</p>
+
+<h4 id="二-版本">二. 版本</h4>
+
+<p>应该将API的版本号放入到URI中</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">       https://api.example.com/v1/zoos</pre></div>
+<hr />
+
+<h2 id="3-mvc-框架实现的理解">3. MVC 框架实现的理解</h2>
+
+<h3 id="3-1-项目中的-mvc-分别对应文件目录结构的哪些目录">3.1. 项目中的 mvc 分别对应文件目录结构的哪些目录?</h3>
+
+<p>node.js express中的MVC模式</p>
+
+<ul>
+<li>app.js : 入口文件</li>
+<li>package.json : 工程信息以及模块依赖
+通过npm安装模块时输入命令 : npm instal xxx –save , 会自动把模块信息保存在package.jason中</li>
+<li>node_modules : 存放模块</li>
+<li>public : 存放image , css , js 等文件</li>
+<li>routes : 存放路由文件</li>
+<li>views : 存放视图文件
+
+<ul>
+<li>通俗理解即前端
+
+<ul>
+<li>如jade,ejs,html等(个人使用jade)</li>
+</ul></li>
+</ul></li>
+<li>存放可执行文件</li>
+</ul>
+
+<h5 id="1-model">1. Model</h5>
+
+<ul>
+<li>node提供的模块,中间件,在用express创建项目时,产生node_modules即表示M层,即Model</li>
+
+<li><p>模块如jade,mongoose,morgan,body-parser等等</p>
+
+<h5 id="2-view">2. View</h5></li>
+
+<li><p>express生成项目时会产生views,即前端 ejs、jade等</p>
+
+<h5 id="3-controller">3. Controller</h5></li>
+
+<li><p>即视图向控制器发出请求,由控制器选择相应的模型来处理</p></li>
+
+<li><p>模型返回的结果给控制器,由控制器来选择合适的视图,生成界面给用户</p></li>
+
+<li><p>如 通过res.render来渲染jade文件</p></li>
+</ul>
+
+<hr />
+
+<h2 id="4-数据库理解">4. 数据库理解</h2>
+
+<h3 id="4-1-knex-中怎么处理-join-查询和子查询">4.1. knex 中怎么处理 join 查询和子查询。</h3>
+
+<h3 id="4-2-insert-和-update-操作返回值是什么-代表什么">4.2 insert 和 update 操作返回值是什么，代表什么?</h3>
+
+<hr />
+
+<p>## 5. 怎么充分利用多核 CPU 方式提升性能</p>
+
+<p>Node 虽然没有提供多线程用于计算支持，但是还是以下两个方式来充分利用CPU：</p>
+
+<blockquote>
+<ul>
+<li><p>Node 可以通过编程 C/C++ 扩展的方式更高效地利用CPU，将一些 V8 不能做到性能极致的地方通过 C/C++ 来实现。</p></li>
+
+<li><p>可以通过创建 子线程 （child proccesses）的方式，将一部分 Node 进程当做常驻服务用于计算，然后利用进程间的消息来传递结果，将计算与I/O分离，这样就能充分利用多核CPU。</p></li>
+</ul>
+</blockquote>
+
+<p>Node 提供了child_process 模块，并且也提供了 child_process.fork() 函数供我们实现进场的复制。</p>
+
+<p>建立worker.js文件</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">http</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;http&#39;</span>);
+
+<span style="color:#268bd2">http</span>.<span style="color:#268bd2">createServer</span>(<span style="color:#859900">function</span> (<span style="color:#268bd2">req</span>, <span style="color:#268bd2">res</span>) {
+    <span style="color:#268bd2">res</span>.<span style="color:#268bd2">writeHead</span>(<span style="color:#2aa198;font-weight:bold">200</span>, {<span style="color:#2aa198">&#39;Conent-Type&#39;</span>: <span style="color:#2aa198">&#39;text/plain&#39;</span>});
+    <span style="color:#268bd2">res</span>.<span style="color:#268bd2">end</span>(<span style="color:#2aa198">&#39;Hello world\n&#39;</span>);
+}).<span style="color:#268bd2">listen</span>(<span style="color:#cb4b16">Math</span>.<span style="color:#268bd2">round</span>((<span style="color:#2aa198;font-weight:bold">1</span> + <span style="color:#cb4b16">Math</span>.<span style="color:#268bd2">random</span>()) * <span style="color:#2aa198;font-weight:bold">1000</span>), <span style="color:#2aa198">&#39;127.0.0.1&#39;</span>);
+</code></pre></div>
+<p>运行 node worker.js</p>
+
+<p>master.js 文件</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">const</span> <span style="color:#268bd2">fork</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;child_process&#39;</span>).<span style="color:#268bd2">fork</span>;
+<span style="color:#859900">const</span> <span style="color:#268bd2">cpus</span> = <span style="color:#268bd2">require</span>(<span style="color:#2aa198">&#39;os&#39;</span>).<span style="color:#268bd2">cpus</span>();
+
+<span style="color:#859900">for</span> (<span style="color:#859900">let</span> <span style="color:#268bd2">i</span> = <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">cpus</span>.<span style="color:#268bd2">length</span>; <span style="color:#268bd2">i</span>++) {
+    <span style="color:#268bd2">fork</span>(<span style="color:#2aa198">&#39;./worker.js&#39;</span>);
+}
+</code></pre></div>
+<p>并运行 node master.js</p>
+
+<blockquote>
+<p>这段代码会根据当前机器上的CPU数量复制出对应Node进程数。</p>
+</blockquote>
+
+<p>可以通过 psaux | grep worker.js 查看到进程的数量。</p>
+
+<p>这样的解决方案就是*nix系统上最经典的Master-Worker模式，又称为主从模式。</p>
+
+<p>这种典型并行处理业务模式的分布式架构具备较好的可伸缩性（可伸缩性实际上是和并行算法以及并行计算机体系结构放在一起讨论的。某个算法在某个机器上的可扩放性反映该算法是否能有效利用不断增加的CPU。）和稳定性。主进程不负责具体的业务处理，而是负责调度和管理工作进程，工作进程负责具体的业务处理，所以，工作进程的稳定性是开发人员需要关注的。</p>
+
+<p><img src="http://segmentfault.com/img/bVEYpC?w=776&amp;h=522" alt="image" /></p>
+
+<blockquote>
+<p>通过fork()复制的进程都是一个独立的进程，这个进程中有着独立而全新的V8实例。虽然Node提供了fork()用来复制进程使每个CPU内核都使用上，但是依然要记住fork()进程代价是很大的。好在Node通过事件驱动在单个线程上可以处理大并发的请求。</p>
+
+<ul>
+<li>注意：这里启动多个进程只是为了充分将CPU资源利用起来，而不是为了解决并发问题。 关于本文具体内容可参见
+朴灵 的 《深入浅出Node.js》P238.</li>
+</ul>
+</blockquote>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E6%80%BB%E7%BB%93/">总结</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%90%8E%E7%AB%AF/">后端</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f&amp;text=%e6%9d%82%e8%ae%b0%e6%80%bb%e7%bb%93&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e6%9d%82%e8%ae%b0%e6%80%bb%e7%bb%93" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e6%9d%82%e8%ae%b0%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e6%9d%82%e8%ae%b0%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E6%259D%2582%25E8%25AE%25B0%25E6%2580%25BB%25E7%25BB%2593%2f&amp;description=%e6%9d%82%e8%ae%b0%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/void-0/" data-toggle="tooltip" data-placement="top" title="void 0">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E5%B9%B6%E5%8F%91%E4%B8%8E%E5%B9%B6%E8%A1%8C/" data-toggle="tooltip" data-placement="top" title="并发与并行">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

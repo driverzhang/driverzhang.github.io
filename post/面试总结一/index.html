@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>面试总结一</title>
+  <meta property="og:title" content="面试总结一" />
+  <meta name="twitter:title" content="面试总结一" />
+  <meta name="description" content="面试总结一
+
+box-sizing 常用的属性有哪些？分别什么作用？
+
+
+我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。
+
+那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。
+">
+  <meta property="og:description" content="面试总结一
+
+box-sizing 常用的属性有哪些？分别什么作用？
+
+
+我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。
+
+那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。
+">
+  <meta name="twitter:description" content="面试总结一
+
+box-sizing 常用的属性有哪些？分别什么作用？
+
+
+我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。
+
+那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%80/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>面试总结一</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 1, 0001
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="面试总结一">面试总结一</h1>
+
+<h2 id="box-sizing-常用的属性有哪些-分别什么作用">box-sizing 常用的属性有哪些？分别什么作用？</h2>
+
+<blockquote>
+<p>我们平时用div的盒子理论时，定义的 width 只为 content 内容。但是并不包括周边的 border 和 padding 部分。</p>
+
+<p>那么如果我们想直接对整个盒子进行设置布局就可以使用 box-sizing 了。</p>
+</blockquote>
+
+<p>
+- 语法：box-sizing:   content-box（默认） | border-box | inherit;</p>
+
+<h2 id="例如-上面我们想要一个宽度为200px的盒子-那么我们直接设置宽度为200px-是不是看起来清晰多了-当再设置它的左右边框和左右补白后-它的内容区会自动调整-这可能更直接和一目了然-css代码如下">- 例如：上面我们想要一个宽度为200px的盒子，那么我们直接设置宽度为200px。是不是看起来清晰多了。当再设置它的左右边框和左右补白后，它的内容区会自动调整。这可能更直接和一目了然。CSS代码如下：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css"><span style="color:#268bd2;font-weight:bold">div</span> {
+    <span style="color:#859900">box-sizing</span>: <span style="color:#859900;font-weight:bold">border-box</span>;
+    <span style="color:#859900">width</span>: <span style="color:#2aa198;font-weight:bold">200</span><span style="color:#859900;font-weight:bold">px</span>;
+    <span style="color:#859900">padding</span>: <span style="color:#2aa198;font-weight:bold">20</span><span style="color:#859900;font-weight:bold">px</span>;
+    <span style="color:#859900">border</span>: <span style="color:#2aa198;font-weight:bold">1</span><span style="color:#859900;font-weight:bold">px</span> <span style="color:#859900;font-weight:bold">solid</span> <span style="color:#2aa198;font-weight:bold">#DDD</span>;
+}</code></pre></div>
+<p>如上那么它的实际 content 内容得 width 就为 158px;</p>
+
+<table>
+<thead>
+<tr>
+<th>属性值</th>
+<th>属性值说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>content-box</td>
+<td>默认值，其让元素维持W3C的标准盒模型，也就是说元素的宽度和高度（width/height）等于元素边框宽度（border）加上元素内距（padding）加上元素内容宽度或高度（content width/ height），也就是element width/height = border + padding + content width / height</td>
+</tr>
+
+<tr>
+<td>border-box</td>
+<td>重新定义CSS2.1中盒模型组成的模式，让元素维持IE传统的盒模型（IE6以下版本和IE6-7怪异模式），也就是说元素的宽度或高度等于元素内容的宽度或高度。从上面盒模型介绍可知，这里的内容宽度或高度包含了元素的border、padding、内容的宽度或高度（此处的内容宽度或高度＝盒子的宽度或高度—边框—内距）。</td>
+</tr>
+
+<tr>
+<td>inherit</td>
+<td>使元素继承父元素的盒模型模式</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="css-隐藏元素的几张方法">CSS 隐藏元素的几张方法；</h2>
+
+<h3 id="1-display-使用none值会让元素从文档中直接删除-直接消失不见了">1. display，使用none值会让元素从文档中直接删除，”直接消失不见了”</h3>
+
+<p>用法：display:none</p>
+
+<p>优点：简单暴力，不需要多余代码。不占空间，对布局没影响。</p>
+
+<p>缺点：元素从文档删除，不利于seo。</p>
+
+<h3 id="2-text-indent-一般是首行缩2个中文字的用法是text-indent-2em-但当给他一个足够大的负值-大到一般我们浏览器无法显示">2. text-indent，一般是首行缩2个中文字的用法是text-indent:2em。但当给他一个足够大的负值，大到一般我们浏览器无法显示。</h3>
+
+<blockquote>
+<p>text-indent 属性规定文本块中首行文本的缩进。</p>
+</blockquote>
+
+<p>text-indent: length （定义固定的缩进。默认值：0。） | % |inherit</p>
+
+<p>用法：text-indent:-999em</p>
+
+<p>优点：利于搜索引擎</p>
+
+<p>缺点：它的作用其实就是把文字提到段落前面，不让我们看见，不影响宽度</p>
+
+<h3 id="3-position-假如说一个元素的距离我们的视窗-电脑显示屏幕-足够大-大到我们浏览器也无法显示出来-那么它也是-消失-的-但是这种做法一般适用于比较写死的东西">3. position，假如说一个元素的距离我们的视窗（电脑显示屏幕）足够大，大到我们浏览器也无法显示出来，那么它也是“消失”的。但是这种做法一般适用于比较写死的东西。</h3>
+
+<p>用法：position:absolute; top:-999em或者left:-999em 或  position:absolute; visibility:hidden;</p>
+
+<p>优点：信手拈来，随意摆放</p>
+
+<p>缺点：用法太死，不能随意修改，比较死板。</p>
+
+<h3 id="4-visibility-只是-看不见-而已-所以元素依然会影响到布局">4. visibility，只是“看不见”而已，所以元素依然会影响到布局</h3>
+
+<p>用法：visibility:hidden</p>
+
+<p>优点：利于SEO优化</p>
+
+<p>缺点：该属性会继承，假如祖先用了visibility:hidden，那么子元素也是直接显示不见，想要子元素显示让用户看见，还要必须再多写visibility：visible</p>
+
+<h2 id="页面导入样式时-使用-link-和-import-有什么区别">页面导入样式时，使用 link 和 @import 有什么区别？</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"> &lt;<span style="color:#268bd2;font-weight:bold">link</span> <span style="color:#268bd2">rel</span>=<span style="color:#2aa198">&#34;stylesheet&#34;</span> <span style="color:#268bd2">href</span>=<span style="color:#2aa198">&#34;yellow.css&#34;</span>&gt;
+    
+    &lt;<span style="color:#268bd2;font-weight:bold">style</span> <span style="color:#268bd2">type</span>=<span style="color:#2aa198">&#34;text/css&#34;</span>&gt;
+        @<span style="color:#859900">import</span> <span style="color:#268bd2;font-weight:bold">url</span>(<span style="color:#2aa198">&#34;green.css&#34;</span>);
+    &lt;/<span style="color:#268bd2;font-weight:bold">style</span>&gt;</code></pre></div>
+<h3 id="区别">区别：</h3>
+
+<h3 id="1-老祖宗的差别">1. 老祖宗的差别：</h3>
+
+<p>link属于XHTML标签，而@import完全是CSS提供的一种方式。link标签除了可以加载CSS外，还可以做很多其它的事情，比如定义RSS，定义rel连接属性等，@import就只能加载CSS了。</p>
+
+<h3 id="2-加载顺序的差别">2. 加载顺序的差别：</h3>
+
+<p>当一个页面被加载的时候（就是被浏览者浏览的时候），link引用的CSS会同时被加载，而@import引用的CSS 会等到页面全部被下载完再被加载。所以有时候浏览@import加载CSS的页面时开始会没有样式（就是闪烁），网速慢的时候还挺明显（梦之都加载CSS 的方式就是使用@import，一边下载一边浏览梦之都网页时，就会出现上述问题）。</p>
+
+<h3 id="3-兼容性的差别">3. 兼容性的差别：</h3>
+
+<p>由于@import是CSS2.1提出的所以老的浏览器不支持，@import只有在IE5以上的才能识别，而link标签无此问题。</p>
+
+<h3 id="4-使用dom控制样式时的差别">4. 使用dom控制样式时的差别：</h3>
+
+<h2 id="当使用javascript控制dom去改变样式的时候-只能使用link标签-因为-import不是dom可以控制的">当使用javascript控制dom去改变样式的时候，只能使用link标签，因为@import不是dom可以控制的。</h2>
+
+<h2 id="js-中-typeof-返回哪些数据">js 中 typeof 返回哪些数据?</h2>
+
+<ol>
+<li>number</li>
+<li>undefined</li>
+<li>boolean</li>
+<li>string</li>
+<li>object</li>
+<li>function</li>
+</ol>
+
+<h2 id="说明下数组方法pop-push-unshift-shift">说明下数组方法pop(); push(); unshift(); shift();</h2>
+
+<h3 id="1-push-方法">1. push()方法</h3>
+
+<blockquote>
+<p>该方法是向数组末尾添加一个或者多个元素，并返回新的长度。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">arr</span> = []; <span style="color:#93a1a1;font-style:italic">//创建一个空数组
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// []
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;入栈&#34;</span>); <span style="color:#93a1a1;font-style:italic">// 入栈
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">1</span>); <span style="color:#93a1a1;font-style:italic">// 将1添加到数组arr中
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">2</span>); <span style="color:#93a1a1;font-style:italic">//将2添加到数组arr中
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">//[1,2]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">push</span>([<span style="color:#2aa198;font-weight:bold">3</span>,<span style="color:#2aa198;font-weight:bold">4</span>]); <span style="color:#93a1a1;font-style:italic">// 将数组[3,4]添加到arr中
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1,2,[3,4]]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>.<span style="color:#268bd2">length</span>); <span style="color:#93a1a1;font-style:italic">// 3
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>Chrome浏览器控制台输出的效果如下图所示：
+<img src="http://www.w3cplus.com/sites/default/files/blogs/2016/1602/array-1.png" alt="image" /></p>
+
+<h3 id="2-pop-方法">2. pop()方法</h3>
+
+<blockquote>
+<p>pop()方法刚好和push()方法相反。pop()方法删除数组的最后一个元素，把数组的长度减1，并且返回它被删除元素的值，如果数组变为空，则该方法不改变数组，返回undefine值。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">arr</span> = [<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>,<span style="color:#2aa198;font-weight:bold">3</span>,<span style="color:#2aa198;font-weight:bold">4</span>]; <span style="color:#93a1a1;font-style:italic">//创建一个数组
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1,2,3,4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>.<span style="color:#268bd2">length</span>); <span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;出栈，后进先出&#34;</span>); <span style="color:#93a1a1;font-style:italic">// 出栈，后进先出
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">pop</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">//  // [1,2,3]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">pop</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1,2]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">pop</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">pop</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// []
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>Chrome浏览器控制台输出的效果如下图所示：
+<img src="http://www.w3cplus.com/sites/default/files/blogs/2016/1602/array-2.png" alt="image" /></p>
+
+<h3 id="3-unshift-方法">3. unshift()方法</h3>
+
+<blockquote>
+<p>unshift()方法是向数组的开头添加一个或多个元素，并且返回新的长度。</p>
+
+<h4 id="unshift-和-pop">unshift() 和 pop()</h4>
+
+<p>可以从相反的方向来模拟队列，即在数组的前端添加数组项，从数组末端移除数组项。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">arr</span> = []; <span style="color:#93a1a1;font-style:italic">//创建一个空的数组
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// []
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;入队&#34;</span>); <span style="color:#93a1a1;font-style:italic">// 入队
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">unshift</span>(<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>,<span style="color:#2aa198;font-weight:bold">3</span>,<span style="color:#2aa198;font-weight:bold">4</span>); <span style="color:#93a1a1;font-style:italic">// 将1,2,3,4推入到数组arr
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1,2,3,4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>.<span style="color:#268bd2">length</span>); <span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>Chrome浏览器控制台输出的效果如下图所示：
+<img src="http://www.w3cplus.com/sites/default/files/blogs/2016/1602/array-4.png" alt="image" /></p>
+
+<h2 id="4-shift-方法">4. shift()方法</h2>
+
+<blockquote>
+<p>shift()方法和unshift()方法恰恰相反。该方法用于把数组的第一个元素从其中删除，并返回被删除的值。如果数组是空的，shift()方法将不进行任何操作，返回undefined的值。</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">arr</span> = [<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>,<span style="color:#2aa198;font-weight:bold">3</span>,<span style="color:#2aa198;font-weight:bold">4</span>]; <span style="color:#93a1a1;font-style:italic">// 创建一个数组
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [1,2,3,4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">shift</span>(); <span style="color:#93a1a1;font-style:italic">// 取得第一项
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [2,3,4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">shift</span>(); <span style="color:#93a1a1;font-style:italic">// 取得第一项
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [3,4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">shift</span>(); <span style="color:#93a1a1;font-style:italic">// 取得第一项
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// [4]
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">arr</span>.<span style="color:#268bd2">shift</span>(); <span style="color:#93a1a1;font-style:italic">// 取得第一项
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">arr</span>); <span style="color:#93a1a1;font-style:italic">// []
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>Chrome浏览器控制台输出的效果如下图所示：
+<img src="http://www.w3cplus.com/sites/default/files/blogs/2016/1602/array-5.png" alt="image" /></p>
+
+<h3 id="简单得回忆一下">简单得回忆一下：</h3>
+
+<ul>
+<li>push()方法可以在数组的末属添加一个或多个元素</li>
+<li>shift()方法把数组中的第一个元素删除</li>
+<li>unshift()方法可以在数组的前端添加一个或多个元素</li>
+
+<li><p>pop()方法把数组中的最后一个元素删除</p>
+
+<h3 id="实现类似栈的行为">实现类似栈的行为</h3>
+
+<h4 id="将push-和pop-结合在一起-我们就可以实现类似栈的行为">将push()和pop()结合在一起，我们就可以实现类似栈的行为：</h4></li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">//创建一个数组来模拟堆栈
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">a</span>=<span style="color:#859900">new</span> <span style="color:#cb4b16">Array</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#93a1a1;font-style:italic">//push: 在数组的末尾添加一个或更多元素，并返回新的长度
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;入栈&#34;</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">2</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">3</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2,3
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">4</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2,3,4
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;出栈，后进先出&#34;</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#93a1a1;font-style:italic">//pop：从数组中把最后一个元素删除，并返回这个元素的值
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">pop</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;4
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">pop</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;3
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">pop</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;2
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">pop</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;1
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+</code></pre></div>
+<h3 id="实现类似队列的行为">实现类似队列的行为</h3>
+
+<h4 id="将shift-和push-方法结合在一起-可以像使用队列一样使用数组-即在数组的后端添加项-从数组的前端移除项">将shift()和push()方法结合在一起，可以像使用队列一样使用数组。即在数组的后端添加项，从数组的前端移除项：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#93a1a1;font-style:italic">//创建一个数组来模拟队列
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">a</span>=<span style="color:#859900">new</span> <span style="color:#cb4b16">Array</span>();
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#93a1a1;font-style:italic">//push: 在数组的末尾添加一个或更多元素，并返回新的长度
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;入队&#34;</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">2</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">3</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2,3
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198;font-weight:bold">4</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);<span style="color:#93a1a1;font-style:italic">//-----&gt;1,2,3,4
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#34;出队，先进先出&#34;</span>);
+<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#93a1a1;font-style:italic">//shift：从数组中把第一个元素删除，并返回这个元素的值
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">a</span>.<span style="color:#268bd2">shift</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;1
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">shift</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;2
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">shift</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;3
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+<span style="color:#268bd2">a</span>.<span style="color:#268bd2">shift</span>();<span style="color:#93a1a1;font-style:italic">//-----&gt;4
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">a</span>);
+</code></pre></div>
+<hr />
+
+<h2 id="null-和-undefined-的区别">null 和 undefined 的区别</h2>
+
+<h3 id="null表示-没有对象-即该处不应该有值-典型用法是">null表示&rdquo;没有对象&rdquo;，即该处不应该有值。典型用法是：</h3>
+
+<ol>
+<li><p>作为函数的参数，表示该函数的参数不是对象。</p></li>
+
+<li><p>作为对象原型链的终点。</p></li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#cb4b16">Object</span>.<span style="color:#268bd2">getPrototypeOf</span>(<span style="color:#cb4b16">Object</span>.<span style="color:#268bd2">prototype</span>)
+<span style="color:#93a1a1;font-style:italic">// null
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<h3 id="undefined表示-缺少值-就是此处应该有一个值-但是还没有定义-典型用法是">undefined表示&rdquo;缺少值&rdquo;，就是此处应该有一个值，但是还没有定义。典型用法是：</h3>
+
+<ol>
+<li>变量被声明了，但没有赋值时，就等于undefined。</li>
+<li>调用函数时，应该提供的参数没有提供，该参数等于undefined。</li>
+<li>对象没有赋值的属性，该属性的值为undefined。</li>
+<li>函数没有返回值时，默认返回undefined。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">i</span>;
+<span style="color:#268bd2">i</span> <span style="color:#93a1a1;font-style:italic">// undefined
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">function</span> <span style="color:#268bd2">f</span>(<span style="color:#268bd2">x</span>){<span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#268bd2">x</span>)}
+<span style="color:#268bd2">f</span>() <span style="color:#93a1a1;font-style:italic">// undefined
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">var</span>  <span style="color:#268bd2">o</span> = <span style="color:#859900">new</span> <span style="color:#cb4b16">Object</span>();
+<span style="color:#268bd2">o</span>.<span style="color:#268bd2">p</span> <span style="color:#93a1a1;font-style:italic">// undefined
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">var</span> <span style="color:#268bd2">x</span> = <span style="color:#268bd2">f</span>();
+<span style="color:#268bd2">x</span> <span style="color:#93a1a1;font-style:italic">// undefined
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E9%9D%A2%E8%AF%95/">面试</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/js/">js</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;text=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%b8%80&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25B8%2580%2f&amp;description=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%b8%80" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/" data-toggle="tooltip" data-placement="top" title="面试总结三">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/arguments/" data-toggle="tooltip" data-placement="top" title="arguments系列问题">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

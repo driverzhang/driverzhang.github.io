@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Web on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/web/</link>
+    <description>Recent content in Web on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Wed, 07 Feb 2018 22:51:59 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Web工作方式</title>
+      <link>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</link>
+      <pubDate>Wed, 07 Feb 2018 22:51:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/web%E5%B7%A5%E4%BD%9C%E6%96%B9%E5%BC%8F/</guid>
+      <description>&lt;h2 id=&#34;一-web工作方式&#34;&gt;一. Web工作方式&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们平时浏览网页的时候,会打开浏览器，输入网址后按下回车键，然后就会显示出你想要浏览的内容。在这个看似简单的用户行为背后，到底隐藏了些什么呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

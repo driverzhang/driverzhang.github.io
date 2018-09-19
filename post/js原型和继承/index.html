@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>JS原型和继承</title>
+  <meta property="og:title" content="JS原型和继承" />
+  <meta name="twitter:title" content="JS原型和继承" />
+  <meta name="description" content="JS原型与继承
+
+
+首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，
+
+
+1. 开篇
+
+先看如下代码出自 JavaScript 高级程序设计第三版 P163：
+
+">
+  <meta property="og:description" content="JS原型与继承
+
+
+首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，
+
+
+1. 开篇
+
+先看如下代码出自 JavaScript 高级程序设计第三版 P163：
+
+">
+  <meta name="twitter:description" content="JS原型与继承
+
+
+首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，
+
+
+1. 开篇
+
+先看如下代码出自 JavaScript 高级程序设计第三版 P163：
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/js%E5%8E%9F%E5%9E%8B%E5%92%8C%E7%BB%A7%E6%89%BF/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>JS原型和继承</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 21, 2017
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="js原型与继承">JS原型与继承</h1>
+
+<blockquote>
+<p>首先原型和继承在 JavaScript 中一直都是比较核心重点并且难点的理论，今天我们就来看看其中的奥秘点，</p>
+</blockquote>
+
+<h2 id="1-开篇">1. 开篇</h2>
+
+<p>先看如下代码出自 JavaScript 高级程序设计第三版 P163：</p>
+
+<p></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">SuperType</span>(){
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">property</span> = <span style="color:#859900;font-weight:bold">true</span>;
+}
+
+<span style="color:#268bd2">SuperType</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">getSuperValue</span> = <span style="color:#859900">function</span>(){
+    <span style="color:#859900">return</span> <span style="color:#859900">this</span>.<span style="color:#268bd2">property</span>;
+};
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">SubType</span>(){
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">subproperty</span> = <span style="color:#859900;font-weight:bold">false</span>;
+}
+
+<span style="color:#268bd2">SubType</span>.<span style="color:#268bd2">prototype</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">SuperType</span>();
+<span style="color:#268bd2">SubType</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">getSubValue</span> = <span style="color:#859900">function</span> (){
+    <span style="color:#859900">return</span> <span style="color:#859900">this</span>.<span style="color:#268bd2">subproperty</span>;
+};
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">instance</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">SubType</span>();
+<span style="color:#268bd2">alert</span>(<span style="color:#268bd2">instance</span>.<span style="color:#268bd2">getSuperValue</span>());
+</code></pre></div>
+<p>请大家猜一猜最后alert出的结果是什么？</p>
+
+<p>大家先思考一下再看下面的内容。</p>
+
+<hr />
+
+<h2 id="2-关于原型与原型链问题">2. 关于原型与原型链问题：</h2>
+
+<h3 id="2-1-什么是prototype以及-proto">2.1 什么是prototype以及 <em>proto</em></h3>
+
+<h4 id="proto">_proto_：</h4>
+
+<p>任何一个对象Object都有 _proto_，它是每一个对象的私有属性，是天生自带的。</p>
+
+<h4 id="prototype">prototype:</h4>
+
+<p>不是任何对象都有prototype，只有构造函数有prototype，是后天赋予的。</p>
+
+<h3 id="2-2-什么是原型链查找">2.2 什么是原型链查找</h3>
+
+<h4 id="一句话">一句话：</h4>
+
+<blockquote>
+<h3 id="调用一个对象的属性或方法-若该对象中没有-就去这个对象的-proto-中查找-这个对象的-proto-指向自己构造函数的prototype属性">调用一个对象的属性或方法，若该对象中没有，就去这个对象的_proto_中查找。这个对象的_proto_指向自己构造函数的prototype属性。</h3>
+
+<p>如下图所示：
+<img src="http://segmentfault.com/img/bVB1ts?w=675&amp;h=336" alt="image" />
+如下代码:</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">Person</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">sleep</span> = <span style="color:#2aa198">&#39;zzzzz&#39;</span>;
+}
+<span style="color:#268bd2">Person</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">sayHello</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#2aa198">&#39;hello world&#39;</span>);
+}
+<span style="color:#859900">var</span> <span style="color:#268bd2">Nodezhang</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Person</span>();
+<span style="color:#268bd2">Nodezhang</span>.<span style="color:#268bd2">sayHello</span>();  <span style="color:#93a1a1;font-style:italic">// =&gt; hello world
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<blockquote>
+<p>其实 Nodezhang 这个对象下面只有一个sleep属性，是没有sayHello方法的。
+但是通过原型链查找会查 Nodezhang._proto_也就是查找它的构造函数的Person.prototype，Person.prototype下有sayHello这个方法，所以会在控制台输出hello world.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="3-六种继承方式">3. 六种继承方式</h2>
+
+<blockquote>
+<ol>
+<li>纯原型链继承.</li>
+
+<li><p>借用构造函数继承.</p>
+
+<h4 id="3-组合继承-重点推荐使用">3. 组合继承.（重点推荐使用!）</h4></li>
+
+<li><p>原型式继承.</p></li>
+
+<li><p>寄生式继承.</p></li>
+
+<li><p>寄生组合式继承.</p></li>
+</ol>
+</blockquote>
+
+<h3 id="3-1-纯原型链继承">3.1 纯原型链继承</h3>
+
+<p>直接上代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">Father</span>() {
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">likeFood</span>= [<span style="color:#2aa198">&#39;牛排&#39;</span>,<span style="color:#2aa198">&#39;饺子&#39;</span>,<span style="color:#2aa198">&#39;啤酒&#39;</span>,<span style="color:#2aa198">&#39;可乐&#39;</span>]
+}
+<span style="color:#268bd2">Father</span>.<span style="color:#268bd2">prototype</span>.<span style="color:#268bd2">saylikeFood</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#859900">this</span>.<span style="color:#268bd2">likeFood</span>);  
+};
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">Son</span>() {
+}
+<span style="color:#268bd2">Son</span>.<span style="color:#268bd2">prototype</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Father</span>();
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">zhangsan</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Son</span>();
+<span style="color:#268bd2">zhangsan</span>.<span style="color:#268bd2">likeFood</span>.<span style="color:#268bd2">push</span>(<span style="color:#2aa198">&#39;西瓜&#39;</span>);
+<span style="color:#268bd2">zhangsan</span>.<span style="color:#268bd2">saylikeFood</span>(); <span style="color:#93a1a1;font-style:italic">// [&#34;牛排&#34;, &#34;饺子&#34;, &#34;啤酒&#34;, &#34;可乐&#34;, &#34;西瓜&#34;]
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>但是这样的方式有问题。接着上面的代码再写：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">var</span> <span style="color:#268bd2">lisi</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Son</span>();
+<span style="color:#268bd2">lisi</span>.<span style="color:#268bd2">saylikeFood</span>(); <span style="color:#93a1a1;font-style:italic">// [&#34;牛排&#34;, &#34;饺子&#34;, &#34;啤酒&#34;, &#34;可乐&#34;, &#34;西瓜&#34;]
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>看出问题了吧，zhangsan直接修改了其构造函数的likeFood，
+导致我们再实例的对象也收到了修改的影响，
+因此这种继承方式有缺陷</p>
+
+<h4 id="没错你会看见包含引用类型值的原型属性会被所有实例共享">没错你会看见包含引用类型值的原型属性会被所有实例共享。</h4>
+
+<h3 id="3-2-借用构造函数继承">3.2 借用构造函数继承</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">Father</span>(<span style="color:#268bd2">name</span>) {
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">name</span> = <span style="color:#268bd2">name</span>;
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">sayName</span> = <span style="color:#859900">function</span> () {
+        <span style="color:#268bd2">console</span>.<span style="color:#268bd2">log</span>(<span style="color:#859900">this</span>.<span style="color:#268bd2">name</span>);
+    }
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">Son</span>(<span style="color:#268bd2">name</span>, <span style="color:#268bd2">age</span>) {
+    <span style="color:#268bd2">Father</span>.<span style="color:#268bd2">call</span>(<span style="color:#859900">this</span>, <span style="color:#268bd2">name</span>);
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">age</span> = <span style="color:#268bd2">age</span>;
+}
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">zhangsan</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">Son</span>(<span style="color:#2aa198">&#39;zhangsan&#39;</span>, <span style="color:#2aa198;font-weight:bold">17</span>);
+</code></pre></div>
+<p>这种继承方式并没有利用到原型以及原型链的概念，它主要利用call的特性，call的第一个参数传入this，后面的参数传入函数所需的参数。
+这种方式归根结底其实就是在实例一个对象的时候，向这个对象的上面添加所需的属性和方法。</p>
+
+<h4 id="问题在于-按照这种方式-每次new一个对象-就是实例化一个对象-都会向这个对象身上添加一堆属性和方法-添加属性是没问题的-但是每次在对象身上添加的方法-这个函数就要重写一次-方法都在构造函数中定义了">问题在于：按照这种方式，每次new一个对象，就是实例化一个对象，都会向这个对象身上添加一堆属性和方法。添加属性是没问题的，但是每次在对象身上添加的方法，这个函数就要重写一次。方法都在构造函数中定义了。</h4>
+
+<h4 id="函数不能进行复用-这就是最大的问题">函数不能进行复用，这就是最大的问题！</h4>
+
+<h3 id="3-3-组合继承">3.3 组合继承</h3>
+
+<p>组合继承其实分别是拥有以上两种方法的优点，同时也规避了以上两种方法的缺点。
+这种方法的应用是最广泛的，是最普遍的，举个列子来看一下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#859900">function</span> <span style="color:#268bd2">SuperType</span> (<span style="color:#268bd2">name</span>) {
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">name</span> = <span style="color:#268bd2">name</span>;
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">colors</span> = [<span style="color:#2aa198">&#34;red&#34;</span>, <span style="color:#2aa198">&#34;blue&#34;</span>, <span style="color:#2aa198">&#34;green&#34;</span>];
+}
+
+<span style="color:#268bd2">SuperType</span>.<span style="color:#268bd2">prototyoe</span>.<span style="color:#268bd2">sayName</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">alert</span>(<span style="color:#859900">this</span>.<span style="color:#268bd2">name</span>);
+}
+
+<span style="color:#859900">function</span> <span style="color:#268bd2">FooType</span> (<span style="color:#268bd2">name</span>, <span style="color:#268bd2">age</span>) {
+    <span style="color:#93a1a1;font-style:italic">// 继承属性
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">SuperType</span>.<span style="color:#268bd2">call</span> (<span style="color:#859900">this</span>.<span style="color:#268bd2">name</span>);
+
+    <span style="color:#859900">this</span>.<span style="color:#268bd2">age</span> = <span style="color:#268bd2">age</span>;
+}
+
+<span style="color:#93a1a1;font-style:italic">// 继承方法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">FooType</span>.<span style="color:#268bd2">prototyoe</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">SuperType</span>(); <span style="color:#93a1a1;font-style:italic">// 光只有这一句会让 FooType 继承 SuperType 的属性+方法。
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">FooType</span>.<span style="color:#268bd2">prototyoe</span>.<span style="color:#268bd2">constructor</span> = <span style="color:#268bd2">FooType</span>; <span style="color:#93a1a1;font-style:italic">// 加上这句就会实现仅仅是继承了 SuperType 的方法而不改变其属性。
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">FooType</span>.<span style="color:#268bd2">prototyoe</span>.<span style="color:#268bd2">sayAge</span> = <span style="color:#859900">function</span> () {
+    <span style="color:#268bd2">alert</span>(<span style="color:#859900">this</span>.<span style="color:#268bd2">age</span>);
+}
+
+<span style="color:#859900">var</span> <span style="color:#268bd2">instance1</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">FooType</span>(<span style="color:#2aa198">&#34;Nicholas&#34;</span>, <span style="color:#2aa198;font-weight:bold">29</span>);
+<span style="color:#268bd2">instance1</span>.<span style="color:#268bd2">colors</span>.<span style="color:#268bd2">push</span> (<span style="color:#2aa198">&#34;black&#34;</span>);
+<span style="color:#268bd2">alert</span>(<span style="color:#268bd2">instance1</span>.<span style="color:#268bd2">colors</span>); <span style="color:#93a1a1;font-style:italic">// &#34;red,blue,green,black&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">instance1</span>.<span style="color:#268bd2">sayName</span>();    <span style="color:#93a1a1;font-style:italic">// &#34;Nicholas&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">instance1</span>.<span style="color:#268bd2">sayAge</span>();     <span style="color:#93a1a1;font-style:italic">// &#34;29&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">var</span> <span style="color:#268bd2">instance2</span> = <span style="color:#859900">new</span> <span style="color:#268bd2">FooType</span>(<span style="color:#2aa198">&#34;Greg&#34;</span>, <span style="color:#2aa198;font-weight:bold">10</span>);
+<span style="color:#268bd2">alert</span>(<span style="color:#268bd2">instance2</span>.<span style="color:#268bd2">colors</span>); <span style="color:#93a1a1;font-style:italic">// &#34;red,blue,green&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">instance2</span>.<span style="color:#268bd2">sayName</span>();    <span style="color:#93a1a1;font-style:italic">// &#34;Greg&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">instance2</span>.<span style="color:#268bd2">sayAge</span>();     <span style="color:#93a1a1;font-style:italic">// &#34;10&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span></code></pre></div>
+<p>除了组合继承外，还有三种继承方式：</p>
+
+<h4 id="原型式继承-寄生式继承-和-寄生组合式继承-详情自行百度或看js高程3版p170">原型式继承、寄生式继承 和 寄生组合式继承。详情自行百度或看js高程3版P170.</h4>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/js/">js</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f&amp;text=JS%e5%8e%9f%e5%9e%8b%e5%92%8c%e7%bb%a7%e6%89%bf&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f&amp;title=JS%e5%8e%9f%e5%9e%8b%e5%92%8c%e7%bb%a7%e6%89%bf" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f&amp;title=JS%e5%8e%9f%e5%9e%8b%e5%92%8c%e7%bb%a7%e6%89%bf" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f&amp;title=JS%e5%8e%9f%e5%9e%8b%e5%92%8c%e7%bb%a7%e6%89%bf" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fjs%25E5%258E%259F%25E5%259E%258B%25E5%2592%258C%25E7%25BB%25A7%25E6%2589%25BF%2f&amp;description=JS%e5%8e%9f%e5%9e%8b%e5%92%8c%e7%bb%a7%e6%89%bf" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E5%9B%9B/" data-toggle="tooltip" data-placement="top" title="面试总结四">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/git%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98/" data-toggle="tooltip" data-placement="top" title="Git分支问题">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

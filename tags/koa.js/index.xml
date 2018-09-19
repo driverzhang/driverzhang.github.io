@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Koa.js on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/koa.js/</link>
+    <description>Recent content in Koa.js on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Tue, 07 Nov 2017 22:06:58 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/koa.js/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>express、koa框架</title>
+      <link>https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/</link>
+      <pubDate>Tue, 07 Nov 2017 22:06:58 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/expresskoa%E6%A1%86%E6%9E%B6/</guid>
+      <description>&lt;h1 id=&#34;expres-koa-egg框架&#34;&gt;expres、koa、egg框架&lt;/h1&gt;
+
+&lt;h2 id=&#34;express的中间件是什么&#34;&gt;express的中间件是什么？&lt;/h2&gt;
+
+&lt;p&gt;中间件是一个可访问请求对象（req）和响应对象（res）的函数，在 Express 应用的请求-响应循环里，下一个内联的中间件通常用变量 next 表示。中间件的功能包括：
+- 执行任何代码。
+- 修改请求和响应对象。
+- 终结请求-响应循环。
+- 调用堆栈中的下一个中间件。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

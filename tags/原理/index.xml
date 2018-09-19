@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>原理 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E5%8E%9F%E7%90%86/</link>
+    <description>Recent content in 原理 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Wed, 22 Nov 2017 14:00:59 +0000</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E5%8E%9F%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>javascript事件循环解析</title>
+      <link>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 22 Nov 2017 14:00:59 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/javascript%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%A7%A3%E6%9E%90/</guid>
+      <description>&lt;h1 id=&#34;javascript-事件循环解析&#34;&gt;javascript 事件循环解析&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;用几张图来示意了解一下 事件循环和异步调用&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;先来个简单的-ajax-异步&#34;&gt;先来个简单的 ajax 异步&lt;/h2&gt;
+
+&lt;p&gt;让我们来看看下面的例子:&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

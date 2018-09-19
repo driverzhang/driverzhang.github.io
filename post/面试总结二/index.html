@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>面试总结二</title>
+  <meta property="og:title" content="面试总结二" />
+  <meta name="twitter:title" content="面试总结二" />
+  <meta name="description" content="面试总结二
+
+css常见兼容问题
+
+1. 浏览器默认的margin和padding不同：">
+  <meta property="og:description" content="面试总结二
+
+css常见兼容问题
+
+1. 浏览器默认的margin和padding不同：">
+  <meta name="twitter:description" content="面试总结二
+
+css常见兼容问题
+
+1. 浏览器默认的margin和padding不同：">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%BA%8C/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>面试总结二</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 1, 0001
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="面试总结二">面试总结二</h1>
+
+<h1 id="css常见兼容问题">css常见兼容问题</h1>
+
+<h3 id="1-浏览器默认的margin和padding不同">1. 浏览器默认的margin和padding不同：</h3>
+
+<p>
+加一个全局的：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">* {<span style="color:#859900">margin</span>:<span style="color:#2aa198;font-weight:bold">0</span>;<span style="color:#859900">padding</span>:<span style="color:#2aa198;font-weight:bold">0</span>;}</code></pre></div>
+<h3 id="2-ie6在块元素-左右浮动-设定marin时造成margin双倍-双边距">2.IE6在块元素、左右浮动、设定marin时造成margin双倍（双边距） :</h3>
+
+<p>解决方法：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css"><span style="color:#268bd2;font-weight:bold">_display</span>:<span style="color:#268bd2">inline</span>;</code></pre></div>
+<h3 id="3-被点击访问过的超链接样式不在具有hover和active了">3.被点击访问过的超链接样式不在具有hover和active了</h3>
+
+<p>解决方法：
+改变CSS属性的排列顺序: L-V-H-A</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">a:link {} a:visited {} a:hover {} a:active {} </code></pre></div>
+<h3 id="4-ie6和火狐-图片下方出现几像素的空白间隙">4.IE6和火狐 图片下方出现几像素的空白间隙</h3>
+
+<p>例如:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">div</span>&gt;&lt;<span style="color:#268bd2;font-weight:bold">img</span> <span style="color:#268bd2">src</span>=<span style="color:#2aa198">&#34;&#34;</span>/&gt;&lt;/<span style="color:#268bd2;font-weight:bold">div</span>&gt;</code></pre></div>
+<p>这个图片下面会有一条空白间隙。</p>
+
+<p>解决方法：给图上一个垂直方向的属性如:vertical-align:
+top(任意一个就行middle);</p>
+
+<h3 id="5-position-absolute定位在ie6下z-index失效的bug">5.position:absolute定位在IE6下z-index失效的bug:</h3>
+
+<p>解决方法：ie6只识别父层的z-index，所以我们可以给父层也加一个z-index</p>
+
+<h3 id="6-css-hack">6.CSS hack</h3>
+
+<p>◆IE6认识的hacker 是下划线_ 和星号 *</p>
+
+<p>◆IE7 遨游认识的hacker是星号 *</p>
+
+<p>◆IE6-IE10都可以识别 &ldquo;\9&rdquo;</p>
+
+<p>例如：
+可以先使用“\9&rdquo;标记，将IE分离出来，再用”*&ldquo;分离出IE6/IE7，最后可以用“_”分离出IE6</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#cb4b16">type</span>{
+        <span style="color:#859900">color</span>: <span style="color:#2aa198;font-weight:bold">#111</span>; <span style="color:#93a1a1;font-style:italic">/* all */</span>
+
+        <span style="color:#859900">color</span>: <span style="color:#2aa198;font-weight:bold">#222</span>\<span style="color:#2aa198;font-weight:bold">9</span>; <span style="color:#93a1a1;font-style:italic">/* IE */</span>
+        *<span style="color:#859900">color</span>: <span style="color:#2aa198;font-weight:bold">#333</span>; <span style="color:#93a1a1;font-style:italic">/* IE6/IE7 */</span>
+        <span style="color:#268bd2">_color</span>: <span style="color:#2aa198;font-weight:bold">#444</span>; <span style="color:#93a1a1;font-style:italic">/* IE6 */</span>
+    }</code></pre></div>
+<hr />
+
+<h1 id="cookie-session-和localstorage的区别">cookie ，session 和localStorage的区别</h1>
+
+<ul>
+<li><p>cookie机制采用的是在 客户端 保持状态的方案</p></li>
+
+<li><p>session机制采用的是在 服务器端 保持状态的方案</p>
+
+<h3 id="cookie-和session-的区别">cookie 和session 的区别：</h3>
+
+<h3 id="存取方式的不同">存取方式的不同</h3></li>
+
+<li><p>cookie数据存放在客户的浏览器上，session数据放在服务器上。Cookie中只能保管ASCII字符串,而Session中能够存取任何类型的数据。</p>
+
+<h3 id="隐私策略的不同">隐私策略的不同</h3></li>
+
+<li><p>cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗,考虑到安全应当使用session。</p>
+
+<h3 id="服务器压力的不同">服务器压力的不同</h3></li>
+
+<li><p>session会在一定时间内保存在服务器上。Session是保管在服务器端的，每个用户都会产生一个Session。当访问增多，会比较占用你服务器的性能,考虑到减轻服务器性能方面，应当使用COOKIE。</p>
+
+<h3 id="有效期上的不同">有效期上的不同</h3>
+
+<p>4.运用Cookie会是时间有效期长是比较好的选择。只需要设置Cookie的过期时间属性为一个很大很大的数字。Session依赖于名为JSESSIONID的Cookie，而Cookie JSESSIONID的过期时间默许为–1，只需关闭了阅读器该Session就会失效，因而Session不能完成信息永世有效的效果。</p>
+
+<h3 id="跨域支持上的不同">跨域支持上的不同</h3>
+
+<p>5.Cookie支持跨域名访问，例如将domain属性设置为“.biaodianfu.com”，则以“.biaodianfu.com”为后缀的一切域名均能够访问该Cookie。Session仅在他所在的域名内有效。</p></li>
+</ul>
+
+<hr />
+
+<h2 id="storage和cookie的区别">storage和cookie的区别</h2>
+
+<ol>
+<li>Storage的概念和cookie相似，区别是它是为了更大容量存储设计的。Cookie的大小是受限的，并且每次你请求一个新的页面的时候Cookie都会被发送过去，这样无形中浪费了带宽。</li>
+<li>Storage拥有setItem,getItem,removeItem,clear等方法，不像cookie需要前端开发者自己封装setCookie，getCookie。</li>
+<li>Cookie的作用是与服务器进行交互，作为HTTP规范的一部分而存在 ，而Web Storage仅仅是为了在本地“存储”数据而生</li>
+</ol>
+
+<p>sessionStorage、localStorage、cookie都是在浏览器端存储的数据，其中sessionStorage的概念很特别，引入了一个“浏览器窗口”的概念。</p>
+
+<hr />
+
+<h2 id="sessionstorage-localstorage-和-cookie-之间的区别">sessionStorage 、localStorage 和 cookie 之间的区别</h2>
+
+<p>共同点：都是保存在浏览器端，且同源的。</p>
+
+<p>区别：</p>
+
+<h3 id="1-存取方式不同">1. 存取方式不同：</h3>
+
+<p>cookie在浏览器和服务器间来回传递,而sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存.</p>
+
+<h3 id="2-存储大小限制也不同">2. 存储大小限制也不同：</h3>
+
+<p>cookie数据不能超过4k，同时因为每次http请求都会携带cookie，所以cookie只适合保存很小的数据.sessionStorage和localStorage 虽然也有存储大小的限制，但比cookie大得多，可以达到5M或更大。</p>
+
+<h3 id="3-数据有效期不同">3. 数据有效期不同:</h3>
+
+<p>sessionStorage：仅在当前浏览器窗口关闭前有效，自然也就不可能持久保持；</p>
+
+<p>localStorage：始终有效，窗口或浏览器关闭也一直保存，因此用作持久数据；</p>
+
+<p>cookie：只在设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭。</p>
+
+<h3 id="4-作用域不同">4. 作用域不同:</h3>
+
+<p>sessionStorage：不能在不同的浏览器窗口中共享（即使是在同一个页面），即只能在同一浏览器的同一个窗口中。</p>
+
+<p>localStorage： 在所有同源窗口中都是共享的。</p>
+
+<p>cookie：也是在所有同源窗口中都是共享的。</p>
+
+<hr />
+
+<h2 id="清楚浮动有哪些方式-最好的是哪种">清楚浮动有哪些方式？最好的是哪种？</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#268bd2;font-weight:bold">style</span> <span style="color:#268bd2">type</span>=<span style="color:#2aa198">&#34;text/css&#34;</span>&gt;
+		.<span style="color:#cb4b16">out</span>{
+			<span style="color:#859900">border</span>: <span style="color:#2aa198;font-weight:bold">2</span><span style="color:#859900;font-weight:bold">px</span> <span style="color:#859900;font-weight:bold">solid</span> <span style="color:#859900;font-weight:bold">red</span>;
+		}
+
+		.<span style="color:#cb4b16">inner</span> {
+			<span style="color:#859900">border</span>: <span style="color:#2aa198;font-weight:bold">2</span><span style="color:#859900;font-weight:bold">px</span> <span style="color:#859900;font-weight:bold">solid</span> <span style="color:#859900;font-weight:bold">black</span>;
+			<span style="color:#859900">height</span>: <span style="color:#2aa198;font-weight:bold">400</span><span style="color:#859900;font-weight:bold">px</span>;
+			<span style="color:#859900">float</span>: <span style="color:#859900;font-weight:bold">left</span>;
+		}
+		
+	&lt;/<span style="color:#268bd2;font-weight:bold">style</span>&gt;
+&lt;<span style="color:#268bd2;font-weight:bold">body</span>&gt;
+	&lt;<span style="color:#268bd2;font-weight:bold">div</span> <span style="color:#268bd2">class</span>=<span style="color:#2aa198">&#34;out&#34;</span>&gt;
+		&lt;<span style="color:#268bd2;font-weight:bold">div</span> <span style="color:#268bd2">class</span>=<span style="color:#2aa198">&#34;inner&#34;</span>&gt;Hello Nodezhang!&lt;/<span style="color:#268bd2;font-weight:bold">div</span>&gt;
+		&lt;<span style="color:#268bd2;font-weight:bold">h1</span>&gt;我的姐姐。&lt;/<span style="color:#268bd2;font-weight:bold">h1</span>&gt;
+		&lt;<span style="color:#268bd2;font-weight:bold">p</span>&gt;你好，我的姐姐！&lt;/<span style="color:#268bd2;font-weight:bold">p</span>&gt;
+	&lt;/<span style="color:#268bd2;font-weight:bold">div</span>&gt;
+&lt;/<span style="color:#268bd2;font-weight:bold">body</span>&gt;</code></pre></div>
+<p>如上代码中如果 .inner 高度超过 .out所包裹的高度，就会出现撑不开的现象：
+<img src="http://shunfengche.oss-cn-shenzhen.aliyuncs.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-10-13%20%E4%B8%8B%E5%8D%887.58.23.png" alt="image" /></p>
+
+<h3 id="解决方法">解决方法：</h3>
+
+<ol>
+<li><p>额外标签法：
+再盒子内部的底部加入：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">&lt;<span style="color:#268bd2;font-weight:bold">div</span> <span style="color:#268bd2;font-weight:bold">class</span>=<span style="color:#2aa198">&#34;clear&#34;</span>&gt;&lt;/<span style="color:#268bd2;font-weight:bold">div</span>&gt;
+	<span style="color:#268bd2;font-weight:bold">css</span>:	.<span style="color:#cb4b16">clear</span> {
+			<span style="color:#859900">clear</span>: <span style="color:#859900;font-weight:bold">both</span>;
+			<span style="color:#859900">width</span>: <span style="color:#2aa198;font-weight:bold">0</span>;
+			<span style="color:#859900">height</span>: <span style="color:#2aa198;font-weight:bold">0</span>;
+		}</code></pre></div>
+<p>这种办法通过增加一个HTML元素迫使外部容器撑开。不过这个办法会增加额外的标签使HTML结构看起来不够简洁。</p></li>
+
+<li><p>使用after伪类：</p></li>
+</ol>
+
+<p>使用after伪类和内容声明在指定的现在内容末尾添加新的内容。经常的做法就是添加一个“点”，因为它比较小不太引人注意。然后我们再利用它来清除浮动（闭合浮动元素），并隐藏这个内容：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">&lt;<span style="color:#268bd2;font-weight:bold">div</span> <span style="color:#268bd2;font-weight:bold">class</span>=<span style="color:#2aa198">&#34;clear&#34;</span>&gt;&lt;/<span style="color:#268bd2;font-weight:bold">div</span>&gt;
+<span style="color:#268bd2;font-weight:bold">css</span>: .<span style="color:#cb4b16">clear</span>:<span style="color:#268bd2">after</span> {
+        <span style="color:#859900">content</span>:<span style="color:#2aa198">&#34;.&#34;</span>;  
+        <span style="color:#859900">height</span>:<span style="color:#2aa198;font-weight:bold">0</span>;  
+        <span style="color:#859900">visibility</span>:<span style="color:#859900;font-weight:bold">hidden</span>;  
+        <span style="color:#859900">display</span>:<span style="color:#859900;font-weight:bold">block</span>;  
+        <span style="color:#859900">clear</span>:<span style="color:#859900;font-weight:bold">both</span>;  
+    }
+    //<span style="color:#268bd2;font-weight:bold">为兼容IE6</span>,<span style="color:#268bd2;font-weight:bold">IE7</span>，<span style="color:#268bd2;font-weight:bold">因为ie6</span>,<span style="color:#268bd2;font-weight:bold">ie7不能用after伪类</span>。<span style="color:#268bd2;font-weight:bold">加上下面代码</span>
+   .<span style="color:#cb4b16">clearfix</span>{<span style="color:#268bd2">zoom</span>:<span style="color:#2aa198;font-weight:bold">1</span>}</code></pre></div>
+<ol>
+<li>再父级中也加入float：</li>
+</ol>
+
+<p>但是这种方法带来的别外一个问题就是和父级相邻的下一个元素会受到它的影响位置会产生变化，所以使用这种方法一定要小心。</p>
+
+<ol>
+<li>父级加具体高度值：</li>
+</ol>
+
+<p>这个方法比较实用，不过对于自适应内容高度就很尴尬了。</p>
+
+<ol>
+<li>父级加入overflow:hidden；</li>
+</ol>
+
+<p>overflow值设置为hidden或者auto同样可以清理浮动.</p>
+
+<blockquote>
+<p>这种方法不需要添加额外的标记。但是使用overflow的时候一定要小心，因为它会影响浏览器的表现。另外，在Internet Explorer 6中单纯地设置overflow为hidden或者auto并不能有效清除浮动（闭合浮动元素），还要指定“.out”的一个维度，即要么给它指定一个宽度，要么指定一个高度：</p>
+</blockquote>
+
+<p>.out {
+     overflow:auto;
+     width:100%;
+}
+<img src="http://shunfengche.oss-cn-shenzhen.aliyuncs.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-10-13%20%E4%B8%8B%E5%8D%888.11.39.png" alt="image" /></p>
+
+<hr />
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E9%9D%A2%E8%AF%95/">面试</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/js/">js</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f&amp;text=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%ba%8c&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%ba%8c" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%ba%8c" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f&amp;title=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%ba%8c" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%259D%25A2%25E8%25AF%2595%25E6%2580%25BB%25E7%25BB%2593%25E4%25BA%258C%2f&amp;description=%e9%9d%a2%e8%af%95%e6%80%bb%e7%bb%93%e4%ba%8c" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+            <li class="next">
+              <a href="https://driverzhang.github.io/post/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93%E4%B8%89/" data-toggle="tooltip" data-placement="top" title="面试总结三">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
