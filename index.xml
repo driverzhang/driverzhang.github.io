@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 19 Sep 2018 21:11:34 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Sep 2018 00:41:32 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go并发编程系列01：你好,并发</title>
+      <link>https://driverzhang.github.io/post/go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%9701%E4%BD%A0%E5%A5%BD%E5%B9%B6%E5%8F%91/</link>
+      <pubDate>Mon, 24 Sep 2018 00:41:32 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%9701%E4%BD%A0%E5%A5%BD%E5%B9%B6%E5%8F%91/</guid>
+      <description>&lt;p&gt;最近对Go语言的并发编程有一些新认识和学习，所以想记录下开了这个系列文章 &lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>博客转移hexo到hugo</title>
