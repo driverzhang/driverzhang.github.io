@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go语言核心36讲 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2/</link>
+    <description>Recent content in Go语言核心36讲 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Wed, 26 Sep 2018 18:46:20 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go语言核心36讲 09字段的操作与约束</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-09%E5%AD%97%E6%AE%B5%E7%9A%84%E6%93%8D%E4%BD%9C%E4%B8%8E%E7%BA%A6%E6%9D%9F/</link>
+      <pubDate>Wed, 26 Sep 2018 18:46:20 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-09%E5%AD%97%E6%AE%B5%E7%9A%84%E6%93%8D%E4%BD%9C%E4%B8%8E%E7%BA%A6%E6%9D%9F/</guid>
+      <description>&lt;p&gt;字典（map）存储的不是单一值的集合，而是键值对的集合。(键 - 元素对) &lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-040606程序实体</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</link>
+      <pubDate>Sat, 08 Sep 2018 14:37:53 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/</guid>
+      <description>04.05.06 | 程序实体知识点汇总 04 程序实体哪些事（上） 问题1： 声明变量有几种方式  var :=  问题解析： 考点：  #### 1. 类型推断   简单地说，类型推断是一种编程语言在编译期自动解释表达式类型的能力。
+ var name = &amp;#34;zhang&amp;#34; 这里利用了 Go 语言自身的类型推断省去了 string 它只能用于对变量或常量的初始化。
+ #### 2. 短变量声明用法  知识扩展 1. ==Go 语言的类型推断可以带来哪些好处==？  通过使用 Go 语言的类型推断，而节省下来的键盘敲击次数几乎可以忽略不计。但它真正的好处往往体现在我们写代码之后的事情上， 比如代码的 重构。
+ 重构： 通常把“不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。 重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。
+package main import ( &amp;#34;flag&amp;#34; &amp;#34;fmt&amp;#34; ) func main() { var name = getTheFlag() flag.Parse() fmt.Printf(&amp;#34;Hello, %v!\n&amp;#34;, *name) } func getTheFlag() *string { return flag.</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-02工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Fri, 24 Aug 2018 11:15:02 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-02%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;02-命令源码文件&#34;&gt;02 | 命令源码文件&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我们已经知道，环境变量 GOPATH 指向的是一个或多个工作区，而每个工作区中都会有以代码包为基本组织形式的源码文件。&lt;/p&gt;
+
+&lt;p&gt;这里的源码文件又分为三种，即：命令源码文件、库源码文件和测试源码文件，它们都有着不同的用途和编写规则。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-什么是命令源码文件-用途是什么-如何编写它&#34;&gt;1. 什么是命令源码文件，用途是什么？如何编写它&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-命令源码文件&#34;&gt;1.1 命令源码文件：&lt;/h3&gt;
+
+&lt;p&gt;==命令源码文件是程序的运行入口，是每个可独立运行的程序必须拥有的。==&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go语言核心36讲-01工作区和GOPATH</title>
+      <link>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</link>
+      <pubDate>Tue, 21 Aug 2018 16:27:56 +0000</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-01%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8Cgopath/</guid>
+      <description>&lt;h1 id=&#34;01-工作区和gopath&#34;&gt;01 | 工作区和GOPATH&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;说明： 该系列文章是个人购买了极客时间Go语言专栏由赫林老师著作的 Go语言核心36讲系列的个人总结归纳，算是自己对知识付费的一个负责吧。希望通过这样的笔记和该系列文章能加强自己对Go语言的核心知识的理解和运用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先我们去安装Go环境时都回去官网下载安装包的二进制包运行安装就可以使用了&lt;/p&gt;
+
+&lt;p&gt;然后，解压缩包、放置目录、配置环境变量，并通过在命令行中输入：&lt;/p&gt;
+
+&lt;p&gt;命令行运行下面命令：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
