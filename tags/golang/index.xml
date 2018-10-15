@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 26 Sep 2018 18:46:20 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Oct 2018 15:08:42 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>大厂1号面试</title>
+      <link>https://driverzhang.github.io/post/%E5%A4%A7%E5%8E%821%E5%8F%B7%E9%9D%A2%E8%AF%95/</link>
+      <pubDate>Mon, 15 Oct 2018 15:08:42 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%A4%A7%E5%8E%821%E5%8F%B7%E9%9D%A2%E8%AF%95/</guid>
+      <description>&lt;p&gt;如果你觉得到了技术瓶颈，我的建议是投大厂简历然后去面试，在面试过程中你会发现你的不足。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Go语言核心36讲 09字段的操作与约束</title>
