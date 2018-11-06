@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>微服务 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</link>
+    <description>Recent content in 微服务 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Tue, 06 Nov 2018 23:05:52 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RPC与Grpc（上部）</title>
+      <link>https://driverzhang.github.io/post/rpc%E4%B8%8Egrpc%E4%B8%8A%E9%83%A8/</link>
+      <pubDate>Tue, 06 Nov 2018 23:05:52 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/rpc%E4%B8%8Egrpc%E4%B8%8A%E9%83%A8/</guid>
+      <description>&lt;p&gt;我们的微服务就是基于grpc进行远程调用的，而grpc是一款优秀的跨语言 RPC 调用框架 &lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

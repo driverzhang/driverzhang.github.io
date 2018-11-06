@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 31 Oct 2018 22:20:37 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Nov 2018 23:05:52 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>RPC与Grpc（上部）</title>
+      <link>https://driverzhang.github.io/post/rpc%E4%B8%8Egrpc%E4%B8%8A%E9%83%A8/</link>
+      <pubDate>Tue, 06 Nov 2018 23:05:52 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/rpc%E4%B8%8Egrpc%E4%B8%8A%E9%83%A8/</guid>
+      <description>&lt;p&gt;我们的微服务就是基于grpc进行远程调用的，而grpc是一款优秀的跨语言 RPC 调用框架 &lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>通过channel控制goroutine数量形成协程池</title>
