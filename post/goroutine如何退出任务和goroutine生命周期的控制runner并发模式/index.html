@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)</title>
+  <meta property="og:title" content="goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)" />
+  <meta name="twitter:title" content="goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)" />
+  <meta name="description" content="关于goroutine的生命周期及其控制过程">
+  <meta property="og:description" content="关于goroutine的生命周期及其控制过程">
+  <meta name="twitter:description" content="关于goroutine的生命周期及其控制过程">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/goroutine%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA%E4%BB%BB%E5%8A%A1%E5%92%8Cgoroutine%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E6%8E%A7%E5%88%B6runner%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/goroutine%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA%E4%BB%BB%E5%8A%A1%E5%92%8Cgoroutine%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E6%8E%A7%E5%88%B6runner%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)</h1>
+                
+                  
+                    <h2 class="post-subheading">关于goroutine的生命周期及其控制过程</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 18, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>开了goroutine如何才能退出呢？如何控制它并了解其生命周期？这里包括主动退出和外部的被动退出</p>
+
+<h1 id="一-如何退出goroutine">一. 如何退出goroutine？</h1>
+
+<h2 id="1-主动自己退出">1. 主动自己退出：</h2>
+
+<ol>
+<li>经过多少时间后主动退出 （channel）</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">wg</span> <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">WaitGroup</span>
+    <span style="color:#268bd2">quit</span> := <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Tick</span>(<span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span> * <span style="color:#2aa198;font-weight:bold">2</span>) <span style="color:#93a1a1;font-style:italic">// 给个定时器
+</span><span style="color:#93a1a1;font-style:italic"></span>
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Add</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+    <span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+        <span style="color:#859900">defer</span> <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Done</span>()
+        &lt;-<span style="color:#268bd2">quit</span>
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;over goroutine&#34;</span>)
+        <span style="color:#859900">return</span>
+    }()
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Wait</span>()
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;over all&#34;</span>)
+}</code></pre></div>
+<ol>
+<li>通过context通知goroutine退出：</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">wg</span> <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">WaitGroup</span>
+    <span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">cancel</span> := <span style="color:#268bd2">context</span>.<span style="color:#268bd2">WithTimeout</span>(<span style="color:#268bd2">context</span>.<span style="color:#268bd2">Background</span>(), <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>*<span style="color:#2aa198;font-weight:bold">2</span>)
+    <span style="color:#859900">defer</span> <span style="color:#268bd2">cancel</span>()
+
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Add</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+    <span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+        <span style="color:#859900">defer</span> <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Done</span>()
+        &lt;-<span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Done</span>()
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;over goroutine&#34;</span>)
+        <span style="color:#859900">return</span>
+    }()
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Wait</span>()
+
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;over all&#34;</span>)
+}</code></pre></div>
+<h2 id="2-外部被动退出">2. 外部被动退出：</h2>
+
+<p>我们可以通过外部操作接收信号方式来退出：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+   <span style="color:#859900">var</span> <span style="color:#268bd2">wg</span> <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">WaitGroup</span>
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Add</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+    <span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+        <span style="color:#859900">defer</span> <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Done</span>()
+        <span style="color:#268bd2">ch</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Signal</span>)
+        <span style="color:#268bd2">signal</span>.<span style="color:#268bd2">Notify</span>(<span style="color:#268bd2">ch</span>, <span style="color:#268bd2">syscall</span>.<span style="color:#268bd2">SIGINT</span>, <span style="color:#268bd2">syscall</span>.<span style="color:#268bd2">SIGTERM</span>)
+        &lt;-<span style="color:#268bd2">ch</span>
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;over&#34;</span>)
+        <span style="color:#859900">return</span>
+    }()
+    <span style="color:#268bd2">wg</span>.<span style="color:#268bd2">Wait</span>()
+}</code></pre></div>
+<hr />
+
+<h1 id="二-goroutine的生命周期之runner并发模式">二. goroutine的生命周期之runner并发模式</h1>
+
+<blockquote>
+<p>ruuner 用于展示如何使用通道来监视程序的执行时间，如果程序运行时间太长，也可以用 runner 包来终止程序。</p>
+
+<p>当开发者需要调度后台吹了任务的程序的时候，这种模式会很有用。这个程序可能会作为 cron 作业执行，或者在基于定时任务的云环境（iron.io）里执行。</p>
+</blockquote>
+
+<p>在设计上，可以实现以下几点：</p>
+
+<ul>
+<li><p>程序可以在分配的时间内完成工作，正常终止；</p></li>
+
+<li><p>程序没有及时完成工作，“自杀”；</p></li>
+
+<li><p>接收到操作系统发送的中断事件，程序立刻试图清理状态并停止工作。</p></li>
+</ul>
+
+<p>完整代码实现如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">//统一错误处理
+</span><span style="color:#93a1a1;font-style:italic">//超时错误信息，会在任务执行超时时返回
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">ErrTimeOut</span> = <span style="color:#268bd2">errors</span>.<span style="color:#268bd2">New</span>(<span style="color:#2aa198">&#34;received timeout&#34;</span>)
+<span style="color:#93a1a1;font-style:italic">//中断错误信号，会在接收到操作系统的事件时返回
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">var</span> <span style="color:#268bd2">ErrInterrupt</span> = <span style="color:#268bd2">errors</span>.<span style="color:#268bd2">New</span>(<span style="color:#2aa198">&#34;received interrupt&#34;</span>)
+
+<span style="color:#93a1a1;font-style:italic">// Runner 在给定的超时时间内执行一组任务
+</span><span style="color:#93a1a1;font-style:italic">// 并且在操作系统发送中断信号时结束这些任务
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">Runner</span> <span style="color:#859900">struct</span> {
+   <span style="color:#93a1a1;font-style:italic">//从操作系统发送信号
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">interrupt</span> <span style="color:#859900">chan</span> <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Signal</span>
+   <span style="color:#93a1a1;font-style:italic">//报告处理任务已完成
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">complete</span> <span style="color:#859900">chan</span> <span style="color:#859900;font-weight:bold">error</span>
+   <span style="color:#93a1a1;font-style:italic">//报告处理任务已经超时
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">timeout</span> &lt;- <span style="color:#859900">chan</span> <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Time</span>
+   <span style="color:#93a1a1;font-style:italic">//持有一组以索引为顺序的依次执行的以int类型id为参数的函数
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">tasks</span> [] <span style="color:#859900">func</span>(<span style="color:#268bd2">id</span> <span style="color:#859900;font-weight:bold">int</span>)
+}
+
+ <span style="color:#93a1a1;font-style:italic">// New 函数返回一个新的准备使用的Runner,d:自定义分配的时间
+</span><span style="color:#93a1a1;font-style:italic"></span> <span style="color:#93a1a1;font-style:italic">// 初始化结构体参数
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">New</span>(<span style="color:#268bd2">d</span> <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Duration</span>) *<span style="color:#268bd2">Runner</span>{
+   <span style="color:#859900">return</span> &amp;<span style="color:#268bd2">Runner</span>{
+      <span style="color:#268bd2">interrupt</span>:<span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Signal</span>,<span style="color:#2aa198;font-weight:bold">1</span>),
+      <span style="color:#268bd2">complete</span>:<span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#859900;font-weight:bold">error</span>),
+      <span style="color:#93a1a1;font-style:italic">//会在另一线程经过时间段d后向返回值发送当时的时间。
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#93a1a1;font-style:italic">// 因为 task 字段的零值是 nil，已经满足初始化的要求，所以没有被明确初始化。
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#268bd2">timeout</span>:<span style="color:#268bd2">time</span>.<span style="color:#268bd2">After</span>(<span style="color:#268bd2">d</span>),
+   }
+}
+
+<span style="color:#93a1a1;font-style:italic">//将一个任务加入到Runner中
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">Runner</span>)<span style="color:#268bd2">Add</span>(<span style="color:#268bd2">tasks</span> ...<span style="color:#859900">func</span>(<span style="color:#268bd2">id</span> <span style="color:#859900;font-weight:bold">int</span>))  {
+   <span style="color:#268bd2">r</span>.<span style="color:#268bd2">tasks</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">tasks</span>,<span style="color:#268bd2">tasks</span>...)
+}
+
+<span style="color:#93a1a1;font-style:italic">//开始执行所有任务，并监控通道事件
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">Runner</span>)<span style="color:#268bd2">Start</span>()<span style="color:#859900;font-weight:bold">error</span>  {
+   <span style="color:#93a1a1;font-style:italic">//监控所有的中断信号
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">signal</span>.<span style="color:#268bd2">Notify</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">interrupt</span>,<span style="color:#268bd2">os</span>.<span style="color:#268bd2">Interrupt</span>)
+   <span style="color:#93a1a1;font-style:italic">//使用不同的goroutine执行不同的任务
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+      <span style="color:#268bd2">r</span>.<span style="color:#268bd2">complete</span> &lt;- <span style="color:#268bd2">r</span>.<span style="color:#268bd2">run</span>()
+   }()
+   <span style="color:#93a1a1;font-style:italic">//使用 select 语句来监控goroutine的通信
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#859900">select</span> {
+      <span style="color:#93a1a1;font-style:italic">//等待任务完成
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#859900">case</span> <span style="color:#268bd2">err</span> := &lt;- <span style="color:#268bd2">r</span>.<span style="color:#268bd2">complete</span>:
+         <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+      <span style="color:#93a1a1;font-style:italic">//任务超时
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#859900">case</span> &lt;- <span style="color:#268bd2">r</span>.<span style="color:#268bd2">timeout</span>:
+         <span style="color:#859900">return</span> <span style="color:#268bd2">ErrTimeOut</span>
+   }
+}
+
+<span style="color:#93a1a1;font-style:italic">//执行每一个已注册的任务
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">Runner</span>) <span style="color:#268bd2">run</span>() <span style="color:#859900;font-weight:bold">error</span> {
+   <span style="color:#859900">for</span> <span style="color:#268bd2">id</span>, <span style="color:#268bd2">task</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">r</span>.<span style="color:#268bd2">tasks</span> {
+      <span style="color:#93a1a1;font-style:italic">//检测操作系统的中断信号
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#859900">if</span> <span style="color:#268bd2">r</span>.<span style="color:#268bd2">gotInterrupt</span>() {
+         <span style="color:#859900">return</span> <span style="color:#268bd2">ErrInterrupt</span>
+      }
+      <span style="color:#93a1a1;font-style:italic">//执行已注册的任务
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#268bd2">task</span>(<span style="color:#268bd2">id</span>)
+   }
+   <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">//检测是否收到了中断信号
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">Runner</span>)<span style="color:#268bd2">gotInterrupt</span>()<span style="color:#859900;font-weight:bold">bool</span>  {
+   <span style="color:#859900">select</span> {
+   <span style="color:#93a1a1;font-style:italic">//当中断事件被触发时
+</span><span style="color:#93a1a1;font-style:italic"></span>      <span style="color:#859900">case</span> &lt;- <span style="color:#268bd2">r</span>.<span style="color:#268bd2">interrupt</span>:
+         <span style="color:#93a1a1;font-style:italic">//停止接收后续的任何信号
+</span><span style="color:#93a1a1;font-style:italic"></span>         <span style="color:#268bd2">signal</span>.<span style="color:#268bd2">Stop</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">interrupt</span>)
+      <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">true</span>
+      <span style="color:#93a1a1;font-style:italic">//继续执行
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#859900">default</span>:
+      <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">false</span>
+   }
+}</code></pre></div>
+<h2 id="main-go演示runner测试">main.go演示Runner测试</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// timeout 规定了必须在多少秒内处理完成
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">const</span> <span style="color:#268bd2">timeout</span> = <span style="color:#2aa198;font-weight:bold">3</span> * <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+   <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;Starting work.&#34;</span>)
+
+   <span style="color:#93a1a1;font-style:italic">// 为本次执行分配超时时间
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">r</span> := <span style="color:#268bd2">New</span>(<span style="color:#268bd2">timeout</span>)
+
+   <span style="color:#93a1a1;font-style:italic">// 加入要执行的任务
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#268bd2">r</span>.<span style="color:#268bd2">Add</span>(<span style="color:#268bd2">createTask</span>(), <span style="color:#268bd2">createTask</span>(), <span style="color:#268bd2">createTask</span>())
+   <span style="color:#93a1a1;font-style:italic">// 执行任务并处理结果
+</span><span style="color:#93a1a1;font-style:italic"></span>   <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">Start</span>(); <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+      <span style="color:#859900">switch</span> <span style="color:#268bd2">err</span> {
+      <span style="color:#859900">case</span> <span style="color:#268bd2">ErrTimeOut</span>:
+         <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;Terminating due to timeout.&#34;</span>)
+         <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Exit</span>(<span style="color:#2aa198;font-weight:bold">1</span>)
+      <span style="color:#859900">case</span> <span style="color:#268bd2">ErrInterrupt</span>:
+         <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;Terminating due to interrupt.&#34;</span>)
+         <span style="color:#268bd2">os</span>.<span style="color:#268bd2">Exit</span>(<span style="color:#2aa198;font-weight:bold">2</span>)
+      }
+   }
+   <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;Process ended.&#34;</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">//createTask 返回一个根据 id 休眠指定秒数的示例任务
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">createTask</span>() <span style="color:#859900">func</span>(<span style="color:#859900;font-weight:bold">int</span>) {
+   <span style="color:#859900">return</span> <span style="color:#859900">func</span>(<span style="color:#268bd2">id</span> <span style="color:#859900;font-weight:bold">int</span>) {
+      <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;Processor - Task #%d.&#34;</span>, <span style="color:#268bd2">id</span>)
+      <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Sleep</span>(<span style="color:#268bd2">time</span>.<span style="color:#268bd2">Duration</span>(<span style="color:#268bd2">id</span>) * <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>)
+   }
+}</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f&amp;text=goroutine%e5%a6%82%e4%bd%95%e9%80%80%e5%87%ba%e4%bb%bb%e5%8a%a1%e5%92%8cgoroutine%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e7%9a%84%e6%8e%a7%e5%88%b6%28runner%e5%b9%b6%e5%8f%91%e6%a8%a1%e5%bc%8f%29&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f&amp;title=goroutine%e5%a6%82%e4%bd%95%e9%80%80%e5%87%ba%e4%bb%bb%e5%8a%a1%e5%92%8cgoroutine%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e7%9a%84%e6%8e%a7%e5%88%b6%28runner%e5%b9%b6%e5%8f%91%e6%a8%a1%e5%bc%8f%29" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f&amp;title=goroutine%e5%a6%82%e4%bd%95%e9%80%80%e5%87%ba%e4%bb%bb%e5%8a%a1%e5%92%8cgoroutine%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e7%9a%84%e6%8e%a7%e5%88%b6%28runner%e5%b9%b6%e5%8f%91%e6%a8%a1%e5%bc%8f%29" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f&amp;title=goroutine%e5%a6%82%e4%bd%95%e9%80%80%e5%87%ba%e4%bb%bb%e5%8a%a1%e5%92%8cgoroutine%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e7%9a%84%e6%8e%a7%e5%88%b6%28runner%e5%b9%b6%e5%8f%91%e6%a8%a1%e5%bc%8f%29" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgoroutine%25E5%25A6%2582%25E4%25BD%2595%25E9%2580%2580%25E5%2587%25BA%25E4%25BB%25BB%25E5%258A%25A1%25E5%2592%258Cgoroutine%25E7%2594%259F%25E5%2591%25BD%25E5%2591%25A8%25E6%259C%259F%25E7%259A%2584%25E6%258E%25A7%25E5%2588%25B6runner%25E5%25B9%25B6%25E5%258F%2591%25E6%25A8%25A1%25E5%25BC%258F%2f&amp;description=goroutine%e5%a6%82%e4%bd%95%e9%80%80%e5%87%ba%e4%bb%bb%e5%8a%a1%e5%92%8cgoroutine%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f%e7%9a%84%e6%8e%a7%e5%88%b6%28runner%e5%b9%b6%e5%8f%91%e6%a8%a1%e5%bc%8f%29" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/rpc%E4%B8%8Egrpc%E4%B8%8A%E9%83%A8/" data-toggle="tooltip" data-placement="top" title="RPC与Grpc（上部）">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

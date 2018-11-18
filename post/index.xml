@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Tue, 06 Nov 2018 23:05:52 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Nov 2018 18:58:11 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)</title>
+      <link>https://driverzhang.github.io/post/goroutine%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA%E4%BB%BB%E5%8A%A1%E5%92%8Cgoroutine%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E6%8E%A7%E5%88%B6runner%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Sun, 18 Nov 2018 18:58:11 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/goroutine%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA%E4%BB%BB%E5%8A%A1%E5%92%8Cgoroutine%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E6%8E%A7%E5%88%B6runner%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;p&gt;开了goroutine如何才能退出呢？如何控制它并了解其生命周期？这里包括主动退出和外部的被动退出&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>RPC与Grpc（上部）</title>
