@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 18 Nov 2018 18:58:11 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 27 Nov 2018 21:39:12 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>【译】Golang友好的设计API参数可选项</title>
+      <link>https://driverzhang.github.io/post/golang%E5%8F%8B%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1api%E5%8F%82%E6%95%B0%E5%8F%AF%E9%80%89%E9%A1%B9/</link>
+      <pubDate>Tue, 27 Nov 2018 21:39:12 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%8F%8B%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1api%E5%8F%82%E6%95%B0%E5%8F%AF%E9%80%89%E9%A1%B9/</guid>
+      <description>&lt;p&gt;最近无意间进入到一位 Go 社区大佬的博客，看见了这样一片博文，主要讲Golang的API设计特别是对于函数方法的可选参数相关的点，所以自己试着进行翻译吧。Functional options for friendly APIs &lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)</title>

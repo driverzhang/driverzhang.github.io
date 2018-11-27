@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>【译】Golang友好的设计API参数可选项</title>
+  <meta property="og:title" content="【译】Golang友好的设计API参数可选项" />
+  <meta name="twitter:title" content="【译】Golang友好的设计API参数可选项" />
+  <meta name="description" content="翻译一篇老外大佬的文章，他的这篇核心观点也是Go语言创始人之一 Rob Pike 提出的。">
+  <meta property="og:description" content="翻译一篇老外大佬的文章，他的这篇核心观点也是Go语言创始人之一 Rob Pike 提出的。">
+  <meta name="twitter:description" content="翻译一篇老外大佬的文章，他的这篇核心观点也是Go语言创始人之一 Rob Pike 提出的。">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%8F%8B%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1api%E5%8F%82%E6%95%B0%E5%8F%AF%E9%80%89%E9%A1%B9/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%8F%8B%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1api%E5%8F%82%E6%95%B0%E5%8F%AF%E9%80%89%E9%A1%B9/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>【译】Golang友好的设计API参数可选项</h1>
+                
+                  
+                    <h2 class="post-subheading">翻译一篇老外大佬的文章，他的这篇核心观点也是Go语言创始人之一 Rob Pike 提出的。</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 27, 2018
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>最近无意间进入到一位 Go 社区大佬的博客，看见了这样一片博文，主要讲Golang的API设计特别是对于函数方法的可选参数相关的点，所以自己试着进行翻译吧。Functional options for friendly APIs </p>
+
+<blockquote>
+<p>注意： 凡是（）中的文字说明都是个人意见，与原作者无任何关系。</p>
+</blockquote>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-032414.png" alt="image" /></p>
+
+<p>我想用一个场景故事来作为我文章的开始。</p>
+
+<p>时间节点在2014年底，你的公司很明确的选择了用Go语言来作为贵公司正在研发的一种新型的分布式网络产品。</p>
+
+<p>而你的任务就是编写一些关键的服务组件，就像这样的代码：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-17-212315.png" alt="image" /></p>
+
+<p>便于观看代码如下（亲手码的）：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">page gplusplus
+
+import &#34;net&#34;
+
+type Server struct {
+    listener net.Listener
+}
+
+func (s *Server) Add() net.Addr
+func (s *Server) Shutdown()
+
+// NewServer returns a new Server listenering on addr.
+func NewServer(addr string) (*Server, error) {
+    l, err := net.Listen(&#34;tcp&#34;, addr)
+    if err !=nil {
+        return nil, err
+    }
+    
+    srv := Server{listener: l}
+    go src.run()
+    return &amp;srv, nil
+}</pre></div>
+<p>上图代码中，有一些未导出的字段需要初始化，并且必须启动 goroutine 来为传入的请求提供服务。</p>
+
+<p>嗯，该代码包拥有简单的API，并且使用非常简单。</p>
+
+<p>但是，在你公布第一个测试版本发布不久后，一些功能需求就被提出来了（对，你要开始拓展你的代码了，因为产生了这该死的需求）：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-032706.png" alt="image" /></p>
+
+<ul>
+<li>移动客户端访问很慢或者无法访问-你需要添加能够断开这些访问过慢的客户。</li>
+<li>在这种高安全意识的大环境中，你的错误跟踪需要满足能够支持安全链接的需求,TLS安全传输层协议。</li>
+<li>然后，您从一个在非常小的VPS（（Virtual Private Server 虚拟专用服务器）上运行服务器的用户收到报告。他们需要一种方法来限制并发的客户端数量。</li>
+<li>接下来就是，防止有人刻意DOS，对来自僵尸网络所针对的一组用户的并发连接进行速率限制的请求。</li>
+</ul>
+
+<p>而现在，你就需要修改你的 API 以包含所有这些功能需求。</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-032801.png" alt="image" /></p>
+
+<p>所以你就打算如下设计你的函数功能：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">NewServer</span>(<span style="color:#268bd2">addr</span> <span style="color:#859900;font-weight:bold">string</span>,
+<span style="color:#268bd2">clientTimeout</span> <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Duration</span>, 
+<span style="color:#268bd2">maxcoons</span>, <span style="color:#268bd2">maxconcurrent</span> <span style="color:#859900;font-weight:bold">int</span>, 
+<span style="color:#268bd2">cert</span> *<span style="color:#268bd2">tls</span>.<span style="color:#268bd2">Cert</span>){
+    <span style="color:#93a1a1;font-style:italic">// XXXX.......
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>当你无法满足以上所有需求时，就表示你的事情进展的并不顺利。</p>
+
+<p>想一想，谁使用过像这样的API？谁又曾写过像这样的API？</p>
+
+<p>很显然，这样的解决方案既麻烦又脆弱。它也不是很容易被理解易读。</p>
+
+<p>你的这种函数的写法，作为一个新手看到了也不会明白知道哪些参数是可选的，哪些参数是必传的。</p>
+
+<p>例如，如果我想创建一个服务器实例进行测试，我是否需要提供真正的TLS证书？如果没有，我会提供什么？</p>
+
+<p>如果我不知道也不关心参数 maxconns or maxconcurrent 那我到底要传什么值呢？是不是应该直接传int类型就给个 0 好了？但是根据上面的功能函数的实际意义，我传0的话就代表了这可能会限制你的总并发连接数为零。</p>
+
+<p>在我看来，那样的 API 还是很容易写出来的；只要你能让你的调用者去可靠并正确的使用你的API。</p>
+
+<p>所以现在我已经找出问题的关键了，让我们来看看一些解决方案吧：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-032912.png" alt="image" /></p>
+
+<ul>
+<li>第一种解决方案，可以是创建一组函数，而不是尝试提供必须满足每个功能需求的单个函数里面塞满了入参。</li>
+</ul>
+
+<p>用以上方案，当调用者需要安全服务时，他们就可以调用 TLS 相关函数了。</p>
+
+<p>如果他们需要空闲链接建立最大持续时间时，可以调用超时函数 timenOut。</p>
+
+<p>但是正如你所见的，这种写法逐个分开提供所有功能需求会变得很难维护和扩展。</p>
+
+<p>让我们来看看下一种方案：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033016.png" alt="image" /></p>
+
+<ul>
+<li>第二种解决方案，上图代码中的方案是种很常见的通过定义一种可配置的结构体变量作为入参。</li>
+</ul>
+
+<p>这样搞的优点在于：</p>
+
+<p>使用这种可配置结构体的方法就可以随着要新增选项进而方便的扩展，而用于创建服务本身的公共API可以保持不变。</p>
+
+<p>一旦 NewServer 出现大量的参数时，这样的结构体定义就会呈现出一种很好的阅读文档的体验方式。</p>
+
+<p>更有利的是，它还使得调用者可以使用“零值”进行默认参数初始化操作。（其实这种方案也是我平时使用的方法，很多第三方包文件都是这样搞的。）</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033123.png" alt="image" /></p>
+
+<p>然而，这种模式并不完美！</p>
+
+<p>它的问题在于，这种默认情况下给定一个定值像是上面的0，那么如果对于该字段对应的该定值有特殊的含义就会出现问题。</p>
+
+<p>比如，在上图的结构体中 Port对应的默认值为0时，你想让 NewServer 返回 *Server 以监听端口8080。</p>
+
+<p>这种缺点在于，你无法明确地将 Port 设置为 0 ， 并且又想让操作系统自动选择一个空闲端口，因为显示的 0 与字段的 “零值”无法区分开。</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033220.png" alt="image" /></p>
+
+<p>大多数情况下，调用者使用你的API时都不想关心到底该传什么样的参数，所有他们会希望直接使用其默认行为。</p>
+
+<p>即使他们不打算更改任何配置参数，这些调用者仍然需要为第二个参数传递一些东西。</p>
+
+<p>因此，就会导致人们在阅读你写的测试或示例代码时，他们就是想找出如何来调用你的包，然后他们会看见这个十分奇葩的“空值”传入到你的包函数中去。（你会想问为什么我特么还要传一个没有意义的空值进去作为你包函数的入参，这样设计毫无意义@_@!!!）</p>
+
+<p>对我来说，仅仅有这种感觉就是不对的。（就是说，你这样设计的API让作者用起来不舒服）</p>
+
+<p>为什么要求调用该API的用户专门构造一个这样的空值传入，只是为了满足该API函数的入参签名？？？</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033508.png" alt="image" /></p>
+
+<p>这个空值问题的一个常见解决方案是将指针传递给该值，从而使调用者能够使用 nil 而不是构造空值。</p>
+
+<p>但在我看来，这样的解决方案具有上一个例子中的所有问题，而且还有所增加。</p>
+
+<p>我们仍然必须为这个函数的第二个参数传递一些东西，但是现在对于那些想要默认行为的人来说，这个值可能是nil。</p>
+
+<p>这里又出现了一个问题，对于传 nil 和传一个指针结构体空值有什么的区别呢？</p>
+
+<p>就像上图中的代码一样，对于传指针结构体值来说，调用者和包提供者也就是服务者，他们两者都可以对该值这进行共享操作（服务提供者可以更改包内部的配置这是正常的，但是调用者本不应该保留服务函数内部的配置的能力）。</p>
+
+<p>我觉得编写良好的API不应该要求调用者创建虚拟值来满足那些罕见的用例。</p>
+
+<p>我认为作为Go程序员，我们应该努力确保nil永远不是一个需要传递给任何公共函数的参数。（当然也包括更离谱的“空值”）</p>
+
+<p>当我们确实想要传递配置信息时，它应该是尽可能自我解释和表达。（就是让调用者很明确的知道我到底应该传入什么样的参数，又或者在想要使用默认值时根本就不用传参）</p>
+
+<p>所以现在考虑到这些要点，我想谈谈我认为更好的解决方案。（大佬的解决方案雏形出现了）</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033605.png" alt="image" /></p>
+
+<ul>
+<li>第三种解决方案（作者的雏形版），为了消除强制但又经常不会使用的配置值的问题，我们可以更改NewServer函数以接受可变数量的参数。而不是传递 nil 或一些 零值 作为您想要默认值的信号，函数的可变特性意味着您根本不需要传递任何东西。</li>
+</ul>
+
+<p>在我的书中这种方案解决了两大难题：</p>
+
+<ol>
+<li>默认行为的调用变得尽可能的简洁了</li>
+<li>NewServer 现在只接受 Config 值，不接受配置值的指针（没有指针操作，你就无法改变元数据），删除 nil 作为可能的参数，并确保调用者不能保留对服务函数内部配置的引用。</li>
+</ol>
+
+<p>我认为这是一个很大的进步。</p>
+
+<p>但是我如果我们喜欢钻牛角尖，那么它仍然会有一个问题&hellip;&hellip;</p>
+
+<p>对于包的服务者来说显然，你希望的是调用者最多只传入一个 Config 值，但由于函数签名是可变参数，因此必须编写实现以应对调用者传递多个可能相互矛盾的配置结构。</p>
+
+<p>有没有办法在需要时使用可变参数函数签名并提高配置参数的表现力？（说白了就是怎样才能解决上面提出的问题）</p>
+
+<p>解决方案如下所示：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033713.png" alt="image" /></p>
+
+<ul>
+<li>第四种方案诞生了：去前者的主要区别在于，这些示例都是Server的自定义，不是像前者直接使用存储在结构体重的配置参数，而是使用对Server值本身进行操作的函数。</li>
+</ul>
+
+<p>和以前一样，函数签名的可变性质为我们提供了默认情况下的严谨行为。</p>
+
+<p>当需要配置时，我就传递给NewServer一些函数（以函数作为参数传递），这些函数对Server值作为参数进行操作。</p>
+
+<p>超时功能 timeOut 函数 只是更改传递给它的任何* Server值的超时字段。</p>
+
+<p>tls 函数就有点复杂。它需要* Server值并将原始侦听器值包装在tls.Listener中，从而将其转换为安全侦听器。</p>
+
+<p>具体函数内部代码实现：</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-033937.png" alt="image" /></p>
+
+<p>在NewServer内部，应用这些选项就非常简单了。</p>
+
+<p>打开net.Listener之后，我们使用该侦听器声明一个Server实例。</p>
+
+<p>然后，对于提供给NewServer的每个选项函数，我们调用该函数，传入一个指向刚刚声明的Server值的指针。</p>
+
+<p>当然，如果没有提供选项函数，那么在这个循环中没有工作要做（就是根本不会进入到 for range 当中，从而也不会对srv的值对任何改变），所以srv没有改变。</p>
+
+<p>以上这就是全部内容。</p>
+
+<p>使用这种模式，我们为API带来的优点有：</p>
+
+<ul>
+<li>合理的默认值</li>
+<li>高度可配置的</li>
+<li>便于扩展添加功能需求</li>
+<li>自文档化，便于阅读</li>
+<li>对于新手调用者来调用是安全的</li>
+<li>并且永远不需要 nil 或 空值 来保持不恰当的函数签名</li>
+</ul>
+
+<hr />
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-034503.png" alt="image" /></p>
+
+<h3 id="总结">总结：</h3>
+
+<ul>
+<li>#### 功能选项允许您编写扩展性较强的API。</li>
+<li>#### 它们使默认用例很简单。</li>
+<li>#### 它们提供有意义的配置参数</li>
+<li>#### 最后，它们使您可以访问语言的全部功能来初始化复杂值。</li>
+</ul>
+
+<p>在这篇文章中，我提出了很多现有的API的配置模式，这些配置模式也是如今被大量运用的，并且在每个阶段我们都会提出如下问题：</p>
+
+<ul>
+<li>这可以变得更简单吗？</li>
+<li>这个参数是必要的吗？</li>
+<li>此功能函数的签名是否使其调用者易于安全的使用？</li>
+<li>这个API是否包含令人无法理解的问题或令人困惑的误导？</li>
+</ul>
+
+<p>我希望我能激励你做同样的事情。重新审视您过去编写的代码，并为自己提出相同的问题，从而改进它。</p>
+
+<p><img src="https://dave.cheney.net/wp-content/uploads/2014/10/Screenshot-from-2014-10-15-034543.png" alt="image" /></p>
+
+<p>相关资料链接：</p>
+
+<ol>
+<li><a href="https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis">原文章地址：</a> <a href="https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis">https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis</a></li>
+<li><a href="https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html">原论文地址：（Rob Pike）就是Go的亲爹之一！</a>
+<a href="https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html">https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html</a></li>
+</ol>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E8%AF%91%E6%96%87/">译文</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f&amp;text=%e3%80%90%e8%af%91%e3%80%91Golang%e5%8f%8b%e5%a5%bd%e7%9a%84%e8%ae%be%e8%ae%a1API%e5%8f%82%e6%95%b0%e5%8f%af%e9%80%89%e9%a1%b9&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f&amp;title=%e3%80%90%e8%af%91%e3%80%91Golang%e5%8f%8b%e5%a5%bd%e7%9a%84%e8%ae%be%e8%ae%a1API%e5%8f%82%e6%95%b0%e5%8f%af%e9%80%89%e9%a1%b9" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f&amp;title=%e3%80%90%e8%af%91%e3%80%91Golang%e5%8f%8b%e5%a5%bd%e7%9a%84%e8%ae%be%e8%ae%a1API%e5%8f%82%e6%95%b0%e5%8f%af%e9%80%89%e9%a1%b9" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f&amp;title=%e3%80%90%e8%af%91%e3%80%91Golang%e5%8f%8b%e5%a5%bd%e7%9a%84%e8%ae%be%e8%ae%a1API%e5%8f%82%e6%95%b0%e5%8f%af%e9%80%89%e9%a1%b9" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%258F%258B%25E5%25A5%25BD%25E7%259A%2584%25E8%25AE%25BE%25E8%25AE%25A1api%25E5%258F%2582%25E6%2595%25B0%25E5%258F%25AF%25E9%2580%2589%25E9%25A1%25B9%2f&amp;description=%e3%80%90%e8%af%91%e3%80%91Golang%e5%8f%8b%e5%a5%bd%e7%9a%84%e8%ae%be%e8%ae%a1API%e5%8f%82%e6%95%b0%e5%8f%af%e9%80%89%e9%a1%b9" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/goroutine%E5%A6%82%E4%BD%95%E9%80%80%E5%87%BA%E4%BB%BB%E5%8A%A1%E5%92%8Cgoroutine%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E6%8E%A7%E5%88%B6runner%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="goroutine如何退出任务和goroutine生命周期的控制(runner并发模式)">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
