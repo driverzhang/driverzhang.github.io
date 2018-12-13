@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0%E4%BC%AAai/</loc>
+    <lastmod>2018-12-13T22:26:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://driverzhang.github.io/post/golang%E5%8F%8B%E5%A5%BD%E7%9A%84%E8%AE%BE%E8%AE%A1api%E5%8F%82%E6%95%B0%E5%8F%AF%E9%80%89%E9%A1%B9/</loc>
     <lastmod>2018-11-27T21:39:12+08:00</lastmod>
   </url>
@@ -314,13 +319,13 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/golang/</loc>
-    <lastmod>2018-11-27T21:39:12+08:00</lastmod>
+    <lastmod>2018-12-13T22:26:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://driverzhang.github.io/</loc>
-    <lastmod>2018-11-27T21:39:12+08:00</lastmod>
+    <lastmod>2018-12-13T22:26:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -398,7 +403,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/post/</loc>
-    <lastmod>2018-11-27T21:39:12+08:00</lastmod>
+    <lastmod>2018-12-13T22:26:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   

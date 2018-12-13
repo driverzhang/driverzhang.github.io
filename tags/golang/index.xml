@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Tue, 27 Nov 2018 21:39:12 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 13 Dec 2018 22:26:00 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang实现伪AI？</title>
+      <link>https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0%E4%BC%AAai/</link>
+      <pubDate>Thu, 13 Dec 2018 22:26:00 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0%E4%BC%AAai/</guid>
+      <description>&lt;p&gt;最近网上流传某段子，就是蹭了下当下最火的AI大法的流量。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>【译】Golang友好的设计API参数可选项</title>
