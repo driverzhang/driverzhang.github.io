@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>知识点总结</title>
+  <meta property="og:title" content="知识点总结" />
+  <meta name="twitter:title" content="知识点总结" />
+  <meta name="description" content="一些面试取经后自己梳理的知识点总结 ">
+  <meta property="og:description" content="一些面试取经后自己梳理的知识点总结 ">
+  <meta name="twitter:description" content="一些面试取经后自己梳理的知识点总结 ">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>知识点总结</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 6, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>一些面试取经后自己梳理的知识点总结 </p>
+
+<h1 id="1-linux关键命令解释">1. Linux关键命令解释</h1>
+
+<h1 id="which">which</h1>
+
+<blockquote>
+<p>which 你的命令</p>
+</blockquote>
+
+<h3 id="作用">作用：</h3>
+
+<p>在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
+
+<p>也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令。</p>
+
+<h3 id="参数解释">参数解释：</h3>
+
+<ul>
+<li><p>-n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。</p></li>
+
+<li><p>-p 　与-n参数相同，但此处的包括了文件的路径。</p></li>
+
+<li><p>-w 　指定输出时栏位的宽度。</p></li>
+
+<li><p>-V 　显示版本信息</p></li>
+</ul>
+
+<h3 id="例子">例子：</h3>
+
+<p>#which mysql</p>
+
+<p>/usr/local/bin/mysql</p>
+
+<h1 id="scp">scp</h1>
+
+<h3 id="格式">格式：</h3>
+
+<blockquote>
+<p>scp [可选参数] file_source file_target</p>
+</blockquote>
+
+<ul>
+<li>-r： 递归复制整个目录。</li>
+<li>-v：详细方式显示输出。scp和ssh(1)会显示出整个过程的调试信息。这些信息用于调试连接，验证和配置问题。</li>
+<li>-c cipher： 以cipher将数据传输进行加密，这个选项将直接传递给ssh。</li>
+<li>-F ssh_config： 指定一个替代的ssh配置文件，此参数直接传递给ssh。</li>
+<li>-i identity_file： 从指定文件中读取传输时使用的密钥文件，此参数直接传递给ssh。</li>
+<li>-l limit： 限定用户所能使用的带宽，以Kbit/s为单位。</li>
+<li>-o ssh_option： 如果习惯于使用ssh_config(5)中的参数传递方式，</li>
+<li>-P port：注意是大写的P, port是指定数据传输用到的端口号</li>
+</ul>
+
+<h3 id="作用-1">作用：</h3>
+
+<p>scp命令用于Linux之间复制文件和目录。</p>
+
+<p>scp是 secure copy的缩写, scp是linux系统下基于ssh登陆进行安全的远程文件拷贝命令。</p>
+
+<h3 id="例子-1">例子：</h3>
+
+<p>从本地复制到远程：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">1. scp local_file remote_username@remote_ip:remote_folder 
+
+2. scp local_file remote_username@remote_ip:remote_file 
+
+3. scp local_file remote_ip:remote_folder 
+
+4. scp local_file remote_ip:remote_file </pre></div>
+<ul>
+<li>第1,2个指定了用户名，命令执行后需要再输入密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名；</li>
+<li>第3,4个没有指定用户名，命令执行后需要输入用户名和密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名；</li>
+</ul>
+
+<h1 id="mv">mv</h1>
+
+<h2 id="格式-1">格式：</h2>
+
+<table>
+<thead>
+<tr>
+<th>命令格式</th>
+<th>运行结果</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>mv 文件名 文件名</td>
+<td>将源文件名改为目标文件名</td>
+</tr>
+
+<tr>
+<td>mv 文件名 目录名</td>
+<td>将文件移动到目标目录</td>
+</tr>
+
+<tr>
+<td>mv 目录名 目录名</td>
+<td>目标目录已存在，将源目录移动到目标目录；目标目录不存在则改名</td>
+</tr>
+
+<tr>
+<td>mv 目录名 文件名</td>
+<td>出错</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="作用-2">作用：</h2>
+
+<p>用来为文件或目录改名、或将文件或目录移入其它位置。</p>
+
+<h2 id="例子-2">例子：</h2>
+
+<p>将文件 aaa 更名为 bbb :</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">mv aaa bbb</pre></div>
+<p>将info目录放入logs目录中。注意，如果logs目录不存在，则该命令将info改名为logs。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">mv info/ logs </pre></div>
+<p>再如将/usr/student下的所有文件和目录移到当前目录下，命令行为：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ mv /usr/student/*  . </pre></div>
+<h1 id="rm">rm</h1>
+
+<h2 id="格式-2">格式：</h2>
+
+<blockquote>
+<p>rm [options] name&hellip;</p>
+</blockquote>
+
+<ul>
+<li>-i 删除前逐一询问确认。</li>
+<li>-f 即使原档案属性设为唯读，亦直接删除，无需逐一确认。</li>
+<li>-r 将目录及以下之档案亦逐一删除。</li>
+</ul>
+
+<h2 id="作用-3">作用：</h2>
+
+<p>用于删除一个文件或者目录。</p>
+
+<h2 id="例子-3">例子：</h2>
+
+<p>删除文件可以直接使用rm命令，若删除目录则必须配合选项&rdquo;-r&rdquo;，例如：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># rm  test.txt 
+rm：是否删除 一般文件 &#34;test.txt&#34;? y  
+# rm  homework  
+rm: 无法删除目录&#34;homework&#34;: 是一个目录  
+# rm  -r  homework  
+rm：是否删除 目录 &#34;homework&#34;? y </pre></div>
+<p>删除当前目录下的所有文件及目录，命令行为：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rm  -r  * </pre></div>
+<p>删除当前目录下的所有文件及目录，并且是直接删除，无需逐一确认命令行为：（删库跑路大法）</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rm  -rf *</pre></div>
+<h1 id="kill">kill</h1>
+
+<h2 id="格式-3">格式：</h2>
+
+<blockquote>
+<p>kill [-s &lt;信息名称或编号&gt;][程序]　或　kill [-l &lt;信息编号&gt;]</p>
+</blockquote>
+
+<ul>
+<li>-l &lt;信息编号&gt; 　若不加&lt;信息编号&gt;选项，则-l参数会列出全部的信息名称。</li>
+<li>-s &lt;信息名称或编号&gt; 　指定要送出的信息。</li>
+<li>[程序] 　[程序]可以是程序的PID或是PGID，也可以是工作编号。</li>
+</ul>
+
+<h2 id="作用-4">作用：</h2>
+
+<p>kill命令用于删除执行中的程序或工作。</p>
+
+<p>kill可将指定的信息送至程序。预设的信息为SIGTERM(15)，可将指定程序终止。若仍无法终止该程序，可使用SIGKILL(9)信息尝试强制删除程序。程序或工作的编号可利用ps指令或jobs指令查看。</p>
+
+<h2 id="例子-4">例子：</h2>
+
+<p>杀死进程</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># kill 12345</pre></div>
+<p>强制杀死进程</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># kill -KILL 123456</pre></div>
+<p>彻底杀死进程</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># kill -9 123456</pre></div>
+<h1 id="tail">tail</h1>
+
+<blockquote>
+<p>tail [ -f ] [ -c Number | -n Number | -m Number | -b Number | -k Number ] [ File ]</p>
+</blockquote>
+
+<h3 id="作用-5">作用：</h3>
+
+<p>命令默认在屏幕上显示指定文件的末尾10行。</p>
+
+<p>依照要求将指定的文件的最后部分输出到标准设备，通常是终端，通俗讲来，就是把某个档案文件的最后几行显示到终端上，假设该档案有更新，tail会自己主动刷新，确保你看到最新的档案内容。</p>
+
+<h3 id="参数解释-1">参数解释：</h3>
+
+<ul>
+<li><p>-f 该参数用于监视File文件增长。</p></li>
+
+<li><p>-c Number 从 Number 字节位置读取指定文件。</p></li>
+
+<li><p>-n Number 从 Number 行位置读取指定文件。</p></li>
+
+<li><p>-m Number 从 Number 多字节字符位置读取指定文件，比方你的文件假设包括中文字，假设指定-c参数，可能导致截断，但使用-m则会避免该问题。</p></li>
+
+<li><p>-b Number 从 Number 表示的512字节块位置读取指定文件。</p></li>
+
+<li><p>-k Number 从 Number 表示的1KB块位置读取指定文件。</p></li>
+</ul>
+
+<p>File 指定操作的目标文件名称
+上述命令中，都涉及到number，假设不指定，默认显示10行。</p>
+
+<p>Number前面可使用正负号，表示该偏移从顶部还是从尾部開始计算。</p>
+
+<p>tail可运行文件一般在/usr/bin/以下。</p>
+
+<h3 id="例子-5">例子：</h3>
+
+<ol>
+<li><p>tail -f filename
+说明：监视filename文件的尾部内容（默认10行，相当于增加参数 -n 10），刷新显示在屏幕上。退出，按下CTRL+C。</p></li>
+
+<li><p>tail -n 20 filename
+说明：显示filename最后20行。</p></li>
+
+<li><p>tail -r -n 10 filename
+说明：逆序显示filename最后10行。</p></li>
+
+<li><p>tail -f test.log 说明：循环读取test.log的内容，只要test.log有新内容写入，将立即读取到标准输出</p></li>
+</ol>
+
+<hr />
+
+<h1 id="cat">cat</h1>
+
+<blockquote>
+<p>cat [op] file</p>
+</blockquote>
+
+<h3 id="说明">说明：</h3>
+
+<p>op 为命令参数，常用的有-b、-n、-s</p>
+
+<ul>
+<li>-b：对非空输出行编号</li>
+<li>-n：对输出的所有行编号,由1开始对所有输出的行数编号</li>
+<li>-s：有连续两行以上的空白行，就代换为一行的空白行</li>
+</ul>
+
+<h3 id="作用-6">作用：</h3>
+
+<ol>
+<li><p>（显示文件内容）一次显示整个文件:cat filename</p></li>
+
+<li><p>（创建文件）从键盘创建一个文件:cat &gt; filename 只能创建新文件,不能编辑已有文件.</p></li>
+
+<li><p>（合并文件）将几个文件合并为一个文件:cat file1 file2 &gt; file</p></li>
+</ol>
+
+<hr />
+
+<h2 id="chown">chown</h2>
+
+<ul>
+<li>-c或——changes：效果类似“-v”参数，但仅回报更改的部分；</li>
+<li>-f或&ndash;quite或——silent：不显示错误信息；</li>
+<li>-h或&ndash;no-dereference：只对符号连接的文件作修改，而不更改其他任何相关文件；</li>
+<li>-R或——recursive：递归处理，将指定目录下的所有文件及子目录一并处理；</li>
+<li>-v或——version：显示指令执行过程；</li>
+</ul>
+
+<h3 id="作用-7">作用：</h3>
+
+<p>只有文件主和超级用户才可以便用该命令。</p>
+
+<p>改变某个文件或目录的所有者和所属的组，该命令可以向某个用户授权，使该用户变成指定文件的所有者或者改变文件所属的组。用户可以是用户或者是用户D，用户组可以是组名或组id。文件名可以使由空格分开的文件列表，在文件名中可以包含通配符。</p>
+
+<h3 id="例子-6">例子：</h3>
+
+<p>将目录/usr/meng及其下面的所有文件、子目录的文件主改成 liu：</p>
+
+<p>chown -R liu /usr/meng</p>
+
+<hr />
+
+<h1 id="chmod">chmod</h1>
+
+<blockquote>
+<p>chmod [option] [mode] [file]</p>
+</blockquote>
+
+<h3 id="作用-8">作用：</h3>
+
+<p>用来改变文件或者目录的权限</p>
+
+<ul>
+<li>-r 可读、</li>
+<li>-w 可写、</li>
+<li>-x 可执行。</li>
+<li>+表示增加权限、</li>
+<li>-表示取消权限</li>
+<li>=表示唯一设定权限</li>
+<li>u 表示该文件的拥有者、</li>
+<li>g 表示与该文件的拥有者属于同一个群体(group)者、</li>
+<li>o 表示其他以外的人、</li>
+<li>a 表示这三者都是。</li>
+</ul>
+
+<h3 id="例子-7">例子：</h3>
+
+<blockquote>
+<p>chmod <a href="+,-,=">who</a> [mode] 文件名</p>
+
+<p>who：u,g,o,a</p>
+
+<p>mode：r,w,x的组合，可以是数字表示(其中r=4，w=2，x=1)</p>
+</blockquote>
+
+<p>chmod u+x file //给file的属主增加可执行权限</p>
+
+<p>chmod 777 file //给file所有权限</p>
+
+<hr />
+
+<h2 id="tar">==tar==</h2>
+
+<blockquote>
+<p>tar [主选项+辅选项] 文件或目录</p>
+</blockquote>
+
+<p>使用该命令时，主选项必须有，它告诉tar要做什么事情，辅选项是辅助使用的，可以选用。</p>
+
+<h3 id="主选项-一条命令以下5个参数只能有一个">主选项：【一条命令以下5个参数只能有一个】</h3>
+
+<ul>
+<li>-c: &ndash;create 新建一个压缩文档，即打包</li>
+<li>-x: &ndash;extract,&ndash;get解压文件</li>
+<li>-t: &ndash;list,查看压缩文档里的所有内容</li>
+<li>-r:&ndash;append 向压缩文档里追加文件</li>
+<li>-u:&ndash;update 更新原压缩包中的文件
+辅助选项：</li>
+<li>-z:是否同时具有gzip的属性？即是否需要用gzip压缩或解压？一般格式为xxx.tar.gz或xx.tgz</li>
+<li>-j：是否同时具有bzip2的属性？即是否需要用bzip2压缩或解压？一般格式为xx.tar.bz2</li>
+<li>-v:显示操作过程！这个参数很常用</li>
+<li>-f：使用文档名，注意，在f之后要立即接文档名，不要再加其他参数！</li>
+<li>-C:切换到指定目录</li>
+<li>&ndash;exclude FILE:在压缩过程中，不要将FILE打包</li>
+</ul>
+
+<h3 id="作用-9">作用：</h3>
+
+<p>Linux中很多压缩程序只能针对一个文件进行压缩，这样当你想要压缩一大堆文件时，你得先将这一大堆文件先打成一个包（tar命令），然后再用压缩程序进行压缩（gzip bzip2命令）。</p>
+
+<blockquote>
+<p>linux下最常用的打包程序就是tar了，使用tar程序打出来的包我们常称为tar包，tar包文件的命令通常都是以.tar结尾的。生成tar包后，就可以用其它的程序来进行压缩。</p>
+</blockquote>
+
+<h3 id="例子-8">例子：</h3>
+
+<h4 id="将img1和img2两个文件夹打包成img-tar-仅打包不压缩">将img1和img2两个文件夹打包成img.tar，仅打包不压缩：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -cvf img.tar img1 img2</pre></div>
+<h4 id="将img1和img2两个文件夹打包成img-tar-gz-打包后-以gzip压缩">将img1和img2两个文件夹打包成img.tar.gz，打包后，以gzip压缩：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -zcvf img.tar.gz img1 img2</pre></div>
+<h4 id="将img1和img2两个文件夹打包成img-tar-bz2-打包后-以bzip2来压缩">将img1和img2两个文件夹打包成img.tar.bz2，打包后，以bzip2来压缩：</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">tar -jcvf img.tar.bz2 img1 img2</pre></div>
+<hr />
+
+<h2 id="find">find</h2>
+
+<blockquote>
+<p>find pathname [op] &hellip;</p>
+
+<p>pathname为find命令所查找的目录路径。op为命令选项，常用的有-name、-mtime</p>
+</blockquote>
+
+<p>find命令在目录结构中搜索文件，并执行指定的操作。</p>
+
+<h2 id="grep">grep</h2>
+
+<p>它能使用正则表达式搜索文本，并把匹配的行打印出来</p>
+
+<p>用于过滤/搜索的特定字符。可使用正则表达式能多种命令配合使用</p>
+
+<h2 id="echo">echo</h2>
+
+<blockquote>
+<p>echo string 或 echo $variable</p>
+</blockquote>
+
+<h3 id="作用-10">作用：</h3>
+
+<p>将string或$variable的值输出到屏幕上</p>
+
+<h2 id="comm">comm</h2>
+
+<p>comm命令可以用于两个文件之间的比较，它有一些选项可以用来调整输出，以便执行交集、求差、以及差集操作。</p>
+
+<hr />
+
+<h1 id="2-golang-基础题">2. golang 基础题</h1>
+
+<h2 id="2-1-defer-与-return-的坑">2.1 defer 与 return 的坑</h2>
+
+<p>这篇文章总结的还可以，可以进行参考：
+<a href="https://blog.csdn.net/shenlanzifa/article/details/51540049">defer 使用小结与注意要点</a></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">result</span> <span style="color:#859900;font-weight:bold">int</span>) {
+    <span style="color:#859900">defer</span> <span style="color:#859900">func</span>() {
+        <span style="color:#268bd2">result</span>++
+    }()
+    <span style="color:#859900">return</span> <span style="color:#2aa198;font-weight:bold">0</span>
+}</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+     <span style="color:#268bd2">t</span> := <span style="color:#2aa198;font-weight:bold">5</span>
+     <span style="color:#859900">defer</span> <span style="color:#859900">func</span>() {
+       <span style="color:#268bd2">t</span> = <span style="color:#268bd2">t</span> + <span style="color:#2aa198;font-weight:bold">5</span>
+     }()
+     <span style="color:#859900">return</span> <span style="color:#268bd2">t</span>
+}</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+    <span style="color:#859900">defer</span> <span style="color:#859900">func</span>(<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+          <span style="color:#268bd2">r</span> = <span style="color:#268bd2">r</span> + <span style="color:#2aa198;font-weight:bold">5</span>
+    }(<span style="color:#268bd2">r</span>)
+    <span style="color:#859900">return</span> <span style="color:#2aa198;font-weight:bold">1</span>
+}</code></pre></div>
+<p>总结下来就是：
+- defer是在return之前执行的。这个在 <a href="https://golang.org/ref/spec#defer_statements">官方文档</a>中是明确说明了的；
+- return xxx这一条语句并不是一条原子指令!
+- 函数返回的过程：先给返回值赋值，然后调用defer表达式，最后才是返回到调用函数中。</p>
+
+<p>其实可以拆分下语句规则：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">返回值</span> = <span style="color:#268bd2">xxx</span>
+<span style="color:#268bd2">调用defer函数</span>
+<span style="color:#268bd2">空的return</span></code></pre></div>
+<p>接下来就可以改写了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">result</span> <span style="color:#859900;font-weight:bold">int</span>) {
+     <span style="color:#268bd2">result</span> = <span style="color:#2aa198;font-weight:bold">0</span>  <span style="color:#93a1a1;font-style:italic">//return语句不是一条原子调用，return xxx其实是赋值＋ret指令
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#859900">func</span>() { <span style="color:#93a1a1;font-style:italic">//defer被插入到return之前执行，也就是赋返回值和ret指令之间
+</span><span style="color:#93a1a1;font-style:italic"></span>         <span style="color:#268bd2">result</span>++
+     }()
+     <span style="color:#859900">return</span>
+     <span style="color:#93a1a1;font-style:italic">// 返回 1
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+     <span style="color:#268bd2">t</span> := <span style="color:#2aa198;font-weight:bold">5</span>
+     <span style="color:#268bd2">r</span> = <span style="color:#268bd2">t</span> <span style="color:#93a1a1;font-style:italic">//赋值指令
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#859900">func</span>() {        <span style="color:#93a1a1;font-style:italic">//defer被插入到赋值与返回之间执行，这个例子中返回值r没被修改过
+</span><span style="color:#93a1a1;font-style:italic"></span>         <span style="color:#268bd2">t</span> = <span style="color:#268bd2">t</span> + <span style="color:#2aa198;font-weight:bold">5</span>
+     }
+     <span style="color:#859900">return</span>        <span style="color:#93a1a1;font-style:italic">//空的return指令
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#93a1a1;font-style:italic">// 这个的结果是5。
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() (<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {
+     <span style="color:#268bd2">r</span> = <span style="color:#2aa198;font-weight:bold">1</span>  <span style="color:#93a1a1;font-style:italic">//给返回值赋值
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#859900">func</span>(<span style="color:#268bd2">r</span> <span style="color:#859900;font-weight:bold">int</span>) {        <span style="color:#93a1a1;font-style:italic">//这里改的r是传值传进去的r，不会改变要返回的那个r值
+</span><span style="color:#93a1a1;font-style:italic"></span>          <span style="color:#268bd2">r</span> = <span style="color:#268bd2">r</span> + <span style="color:#2aa198;font-weight:bold">5</span>
+     }(<span style="color:#268bd2">r</span>)
+     <span style="color:#859900">return</span>        <span style="color:#93a1a1;font-style:italic">//空的return
+</span><span style="color:#93a1a1;font-style:italic"></span>     <span style="color:#93a1a1;font-style:italic">// 这个例子的结果是1。
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<h2 id="2-2-defer-函数调用与-panic">2.2 defer 函数调用与 panic</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">f1</span>() 
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">f1</span>() {
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f1-begin&#34;</span>)
+    <span style="color:#268bd2">f2</span>()
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f1-end&#34;</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">f2</span>() {
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f2-begin&#34;</span>)
+    <span style="color:#268bd2">f3</span>()
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f2-end&#34;</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">f3</span>() {
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f3-begin&#34;</span>)
+    <span style="color:#cb4b16">panic</span>(<span style="color:#2aa198;font-weight:bold">0</span>)
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f3-end&#34;</span>)
+}</code></pre></div>
+<p>上面三个函数嵌套调用相当于就是如下代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f1-begin&#34;</span>) <span style="color:#93a1a1;font-style:italic">// defer 先进后出
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f2-begin&#34;</span>)
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f3-begin&#34;</span>)
+    <span style="color:#cb4b16">panic</span>(<span style="color:#2aa198;font-weight:bold">0</span>) <span style="color:#93a1a1;font-style:italic">// panic 之后的代码不再执行
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f3-end&#34;</span>)
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f2-end&#34;</span>)
+    <span style="color:#859900">defer</span> <span style="color:#cb4b16">println</span>(<span style="color:#2aa198">&#34;f1-end&#34;</span>)
+}</code></pre></div>
+<p>所有最终打印如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">f3</span>-<span style="color:#268bd2">begin</span>
+<span style="color:#268bd2">f2</span>-<span style="color:#268bd2">begin</span>
+<span style="color:#268bd2">f1</span>-<span style="color:#268bd2">begin</span>
+<span style="color:#268bd2">panic</span>: <span style="color:#2aa198;font-weight:bold">0</span></code></pre></div>
+<h2 id="2-3-对结构体内部属性操作记得带上-初始化">2.3 对结构体内部属性操作记得带上&amp;初始化</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">type</span> <span style="color:#268bd2">Object</span> <span style="color:#859900">interface</span>{}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">Reader</span> <span style="color:#859900">interface</span> {
+    <span style="color:#268bd2">ReadTobuffer</span>()
+    <span style="color:#268bd2">Buffer</span>() <span style="color:#859900;font-weight:bold">string</span>
+}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">read</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">buffer</span> <span style="color:#859900;font-weight:bold">string</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> <span style="color:#268bd2">read</span>) <span style="color:#268bd2">ReadTobuffer</span>() { <span style="color:#93a1a1;font-style:italic">// 这里加上 *read 
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">r</span>.<span style="color:#268bd2">buffer</span> = <span style="color:#2aa198">&#34;hello&#34;</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> <span style="color:#268bd2">read</span>) <span style="color:#268bd2">Buffer</span>() <span style="color:#859900;font-weight:bold">string</span> {
+    <span style="color:#859900">return</span> <span style="color:#268bd2">r</span>.<span style="color:#268bd2">buffer</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">doSometing</span>(<span style="color:#268bd2">obj</span> <span style="color:#268bd2">Object</span>) {
+    <span style="color:#268bd2">reader</span>, <span style="color:#268bd2">ok</span> := <span style="color:#268bd2">obj</span>.(<span style="color:#268bd2">Reader</span>)
+    <span style="color:#859900">if</span> !<span style="color:#268bd2">ok</span> {
+        <span style="color:#cb4b16">panic</span>(<span style="color:#2aa198">&#34;invaild type&#34;</span>)
+    }
+
+    <span style="color:#268bd2">reader</span>.<span style="color:#268bd2">ReadTobuffer</span>()
+
+    <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;%+v&#34;</span>, <span style="color:#268bd2">reader</span>) <span style="color:#93a1a1;font-style:italic">//  零值 &amp;{buffer:}
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">buf</span> := <span style="color:#268bd2">reader</span>.<span style="color:#268bd2">Buffer</span>()
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">buf</span>)
+
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">r</span> = <span style="color:#268bd2">read</span>{} <span style="color:#93a1a1;font-style:italic">// 这里该加上&amp;read{}
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">doSometing</span>(<span style="color:#268bd2">r</span>)
+}</code></pre></div>
+<p>如上代码打印输出结果：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">空值（stirng对应的零值）</pre></div>
+<h2 id="2-4-goroutine-channel">2.4 goroutine + channel</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">var</span> <span style="color:#268bd2">sem</span> = <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">5</span>)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">Request</span> <span style="color:#859900;font-weight:bold">int</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">init</span>() {
+    <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">5</span>; <span style="color:#268bd2">i</span>++ {
+        <span style="color:#268bd2">sem</span> &lt;- <span style="color:#2aa198;font-weight:bold">1</span>
+    }
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">handle</span>(<span style="color:#268bd2">r</span> <span style="color:#268bd2">Request</span>) {
+    &lt;-<span style="color:#268bd2">sem</span>
+    <span style="color:#268bd2">process</span>(<span style="color:#268bd2">r</span>)
+    <span style="color:#268bd2">sem</span> &lt;- <span style="color:#2aa198;font-weight:bold">1</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">process</span>(<span style="color:#268bd2">r</span> <span style="color:#268bd2">Request</span>) {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;process:&#34;</span>, <span style="color:#268bd2">r</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">Serve</span>(<span style="color:#268bd2">queue</span> <span style="color:#859900">chan</span> <span style="color:#268bd2">Request</span>) {
+    <span style="color:#859900">for</span> {
+        <span style="color:#268bd2">req</span>, <span style="color:#268bd2">ok</span> := &lt;-<span style="color:#268bd2">queue</span>
+        <span style="color:#859900">if</span> <span style="color:#268bd2">ok</span> {
+            <span style="color:#859900">go</span> <span style="color:#268bd2">handle</span>(<span style="color:#268bd2">req</span>)
+        } <span style="color:#859900">else</span> {
+            <span style="color:#268bd2">log</span>.<span style="color:#268bd2">Error</span>(<span style="color:#2aa198">&#34;over&#34;</span>) <span style="color:#93a1a1;font-style:italic">// close(queue)  后则进入此逻辑
+</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#859900">break</span>
+        }
+    }
+
+    <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Sleep</span>(<span style="color:#2aa198;font-weight:bold">2</span> * <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">queue</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#268bd2">Request</span>)
+    <span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+        <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">5</span>; <span style="color:#268bd2">i</span>++ {
+            <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Sleep</span>(<span style="color:#2aa198;font-weight:bold">1</span> * <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>)
+            <span style="color:#268bd2">queue</span> &lt;- <span style="color:#268bd2">Request</span>(<span style="color:#268bd2">i</span>)
+        }
+        <span style="color:#cb4b16">close</span>(<span style="color:#268bd2">queue</span>) <span style="color:#93a1a1;font-style:italic">// 如果不关闭通道则会一直等待
+</span><span style="color:#93a1a1;font-style:italic"></span>    }()
+    <span style="color:#268bd2">Serve</span>(<span style="color:#268bd2">queue</span>)
+}</code></pre></div>
+<p>最终打印如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">process: 0
+process: 1
+process: 2
+process: 3
+process: 4
+over</pre></div>
+<h2 id="2-5-加分题-unsafe-pointer-与-uintptr">2.5  (加分题)*** unsafe.Pointer 与 uintptr</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">s</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">byte</span>, <span style="color:#2aa198;font-weight:bold">200</span>)
+    <span style="color:#268bd2">ptr</span> := <span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Pointer</span>(&amp;<span style="color:#268bd2">s</span>[<span style="color:#2aa198;font-weight:bold">0</span>])
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%T\n&#34;</span>, <span style="color:#268bd2">s</span>) 
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%T\n&#34;</span>, <span style="color:#268bd2">ptr</span>)
+    <span style="color:#268bd2">s1</span> := ((*[<span style="color:#2aa198;font-weight:bold">1</span> &lt;&lt; <span style="color:#2aa198;font-weight:bold">10</span>]<span style="color:#859900;font-weight:bold">byte</span>)(<span style="color:#268bd2">ptr</span>))[:<span style="color:#2aa198;font-weight:bold">200</span>]
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%T, %d, %d\n&#34;</span>, <span style="color:#268bd2">s1</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">s1</span>), <span style="color:#cb4b16">cap</span>(<span style="color:#268bd2">s1</span>))
+
+    <span style="color:#859900">var</span> <span style="color:#268bd2">sl</span> = <span style="color:#859900">struct</span> {
+        <span style="color:#268bd2">add</span> <span style="color:#859900;font-weight:bold">uintptr</span>
+        <span style="color:#268bd2">len</span> <span style="color:#859900;font-weight:bold">int</span>
+        <span style="color:#268bd2">cap</span> <span style="color:#859900;font-weight:bold">int</span>
+    }{<span style="color:#cb4b16">uintptr</span>(<span style="color:#268bd2">ptr</span>), <span style="color:#2aa198;font-weight:bold">200</span>, <span style="color:#2aa198;font-weight:bold">512</span>}
+    <span style="color:#268bd2">s2</span> := *(*[]<span style="color:#859900;font-weight:bold">byte</span>)(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Pointer</span>(&amp;<span style="color:#268bd2">sl</span>)) <span style="color:#93a1a1;font-style:italic">// unsafe.Pointer 用于不同指正类型转换
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%T, %d, %d\n&#34;</span>, <span style="color:#268bd2">s2</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">s2</span>), <span style="color:#cb4b16">cap</span>(<span style="color:#268bd2">s2</span>))
+}</code></pre></div>
+<p>打印如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">[]uint8
+unsafe.Pointer
+[]uint8, 200, 1024
+[]uint8, 200, 512</pre></div>
+<h2 id="2-6-取地址值始终取得最后一个问题">2.6 取地址值始终取得最后一个问题：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">type</span> <span style="color:#268bd2">student</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">Name</span> <span style="color:#859900;font-weight:bold">string</span>
+    <span style="color:#268bd2">Age</span>  <span style="color:#859900;font-weight:bold">int</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">pase_student</span>() <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]*<span style="color:#268bd2">student</span> {
+    <span style="color:#268bd2">m</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]*<span style="color:#268bd2">student</span>)
+    <span style="color:#268bd2">stus</span> := []<span style="color:#268bd2">student</span>{
+        {<span style="color:#268bd2">Name</span>: <span style="color:#2aa198">&#34;zhou&#34;</span>, <span style="color:#268bd2">Age</span>: <span style="color:#2aa198;font-weight:bold">24</span>},
+        {<span style="color:#268bd2">Name</span>: <span style="color:#2aa198">&#34;li&#34;</span>, <span style="color:#268bd2">Age</span>: <span style="color:#2aa198;font-weight:bold">23</span>},
+        {<span style="color:#268bd2">Name</span>: <span style="color:#2aa198">&#34;wang&#34;</span>, <span style="color:#268bd2">Age</span>: <span style="color:#2aa198;font-weight:bold">22</span>},
+    }
+
+    <span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">stu</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">stus</span> {
+        <span style="color:#268bd2">m</span>[<span style="color:#268bd2">stu</span>.<span style="color:#268bd2">Name</span>] = &amp;<span style="color:#268bd2">stu</span>
+    }
+    
+    <span style="color:#93a1a1;font-style:italic">// 正确修改如下
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// for i := 0; i &lt; len(stus); i++ {
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">//  m[stus[i].Name] = &amp;stus[i]
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#93a1a1;font-style:italic">// }
+</span><span style="color:#93a1a1;font-style:italic"></span>
+    <span style="color:#859900">return</span> <span style="color:#268bd2">m</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">students</span> := <span style="color:#268bd2">pase_student</span>()
+    <span style="color:#859900">for</span> <span style="color:#268bd2">k</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">students</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;key = %s, value = %v\n&#34;</span>, <span style="color:#268bd2">k</span>, <span style="color:#268bd2">v</span>)
+    }
+}
+<span style="color:#2aa198">````</span>
+
+<span style="color:#268bd2">打印输出如下</span>：
+
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">zhou</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">wang</span> <span style="color:#2aa198;font-weight:bold">22</span>}
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">li</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">wang</span> <span style="color:#2aa198;font-weight:bold">22</span>}
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">wang</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">wang</span> <span style="color:#2aa198;font-weight:bold">22</span>}
+
+
+<span style="color:#268bd2">正确打印结果如下</span>：
+
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">zhou</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">zhou</span> <span style="color:#2aa198;font-weight:bold">24</span>}
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">li</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">li</span> <span style="color:#2aa198;font-weight:bold">23</span>}
+    <span style="color:#268bd2">key</span> = <span style="color:#268bd2">wang</span>, <span style="color:#268bd2">value</span> = &amp;{<span style="color:#268bd2">wang</span> <span style="color:#2aa198;font-weight:bold">22</span>}
+---
+
+
+# <span style="color:#2aa198;font-weight:bold">3.</span> <span style="color:#268bd2">搜索旋转排序数组</span>
+
+
+## <span style="color:#268bd2">题目需求</span>：
+
+<span style="color:#268bd2">假设按照升序排序的数组在预先未知的某个点上进行了旋转</span>。
+
+( <span style="color:#268bd2">例如</span>，<span style="color:#268bd2">数组</span> [<span style="color:#2aa198;font-weight:bold">0</span>,<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>,<span style="color:#2aa198;font-weight:bold">4</span>,<span style="color:#2aa198;font-weight:bold">5</span>,<span style="color:#2aa198;font-weight:bold">6</span>,<span style="color:#2aa198;font-weight:bold">7</span>] <span style="color:#268bd2">可能变为</span> [<span style="color:#2aa198;font-weight:bold">4</span>,<span style="color:#2aa198;font-weight:bold">5</span>,<span style="color:#2aa198;font-weight:bold">6</span>,<span style="color:#2aa198;font-weight:bold">7</span>,<span style="color:#2aa198;font-weight:bold">0</span>,<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>] )。
+
+<span style="color:#268bd2">搜索一个给定的目标值</span>，<span style="color:#268bd2">如果数组中存在这个目标值</span>，<span style="color:#268bd2">则返回它的索引</span>，<span style="color:#268bd2">否则返回</span> -<span style="color:#2aa198;font-weight:bold">1</span> 。
+
+<span style="color:#268bd2">你可以假设数组中不存在重复的元素</span>。
+
+### <span style="color:#268bd2">你的算法时间复杂度必须是</span> <span style="color:#268bd2">O</span>(<span style="color:#268bd2">log</span> <span style="color:#268bd2">n</span>) <span style="color:#268bd2">级别</span>。（<span style="color:#268bd2">其实就是用二分查找法</span>）
+
+
+## <span style="color:#268bd2">示例</span> <span style="color:#2aa198;font-weight:bold">1</span>:
+
+<span style="color:#268bd2">输入</span>: <span style="color:#268bd2">nums</span> = [<span style="color:#2aa198;font-weight:bold">4</span>,<span style="color:#2aa198;font-weight:bold">5</span>,<span style="color:#2aa198;font-weight:bold">6</span>,<span style="color:#2aa198;font-weight:bold">7</span>,<span style="color:#2aa198;font-weight:bold">0</span>,<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>], <span style="color:#268bd2">target</span> = <span style="color:#2aa198;font-weight:bold">0</span>
+
+<span style="color:#268bd2">输出</span>: <span style="color:#2aa198;font-weight:bold">4</span>
+
+
+## <span style="color:#268bd2">示例</span> <span style="color:#2aa198;font-weight:bold">2</span>:
+
+<span style="color:#268bd2">输入</span>: <span style="color:#268bd2">nums</span> = [<span style="color:#2aa198;font-weight:bold">4</span>,<span style="color:#2aa198;font-weight:bold">5</span>,<span style="color:#2aa198;font-weight:bold">6</span>,<span style="color:#2aa198;font-weight:bold">7</span>,<span style="color:#2aa198;font-weight:bold">0</span>,<span style="color:#2aa198;font-weight:bold">1</span>,<span style="color:#2aa198;font-weight:bold">2</span>], <span style="color:#268bd2">target</span> = <span style="color:#2aa198;font-weight:bold">3</span>
+
+<span style="color:#268bd2">输出</span>: -<span style="color:#2aa198;font-weight:bold">1</span>
+
+
+&gt; <span style="color:#268bd2">这道题的关键</span>，<span style="color:#268bd2">想象自己有一把刀</span>，<span style="color:#268bd2">每次去切数组</span>，<span style="color:#268bd2">一定有一边是有序数组</span>，<span style="color:#268bd2">另外一边无序</span>，<span style="color:#268bd2">如果在有序数组范围内</span>，<span style="color:#268bd2">执行二分查找即可</span>，<span style="color:#268bd2">否则继续切</span>
+
+<span style="color:#2aa198">``</span>`<span style="color:#859900">go</span>
+<span style="color:#859900">func</span> <span style="color:#268bd2">search</span>(<span style="color:#268bd2">nums</span> []<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">target</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#268bd2">low</span> := <span style="color:#2aa198;font-weight:bold">0</span>
+    <span style="color:#268bd2">hight</span> := <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">nums</span>) - <span style="color:#2aa198;font-weight:bold">1</span>
+    <span style="color:#859900">for</span> <span style="color:#268bd2">low</span> &lt;= <span style="color:#268bd2">hight</span> {
+        <span style="color:#268bd2">mid</span> := (<span style="color:#268bd2">low</span> + <span style="color:#268bd2">hight</span>) / <span style="color:#2aa198;font-weight:bold">2</span>
+        <span style="color:#859900">if</span> <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] == <span style="color:#268bd2">target</span> {
+            <span style="color:#859900">return</span> <span style="color:#268bd2">mid</span>
+        }
+
+        <span style="color:#859900">if</span> <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">low</span>] &lt;= <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] { <span style="color:#93a1a1;font-style:italic">// 有序数组在左边
+</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#859900">if</span> <span style="color:#268bd2">target</span> &gt;= <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">low</span>] &amp;&amp; <span style="color:#268bd2">target</span> &lt; <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] {
+                <span style="color:#268bd2">hight</span> = <span style="color:#268bd2">mid</span> - <span style="color:#2aa198;font-weight:bold">1</span>
+            } <span style="color:#859900">else</span> {
+                <span style="color:#268bd2">low</span> = <span style="color:#268bd2">mid</span> + <span style="color:#2aa198;font-weight:bold">1</span>
+            }
+        } <span style="color:#859900">else</span> { <span style="color:#93a1a1;font-style:italic">// 有序数组在右边
+</span><span style="color:#93a1a1;font-style:italic"></span>            <span style="color:#859900">if</span> <span style="color:#268bd2">target</span> &lt;= <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">hight</span>] &amp;&amp; <span style="color:#268bd2">target</span> &gt; <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] { 
+                <span style="color:#268bd2">low</span> = <span style="color:#268bd2">mid</span> + <span style="color:#2aa198;font-weight:bold">1</span>
+            } <span style="color:#859900">else</span> {
+                <span style="color:#268bd2">hight</span> = <span style="color:#268bd2">mid</span> - <span style="color:#2aa198;font-weight:bold">1</span>
+            }
+        }
+    }
+
+    <span style="color:#859900">return</span> -<span style="color:#2aa198;font-weight:bold">1</span>
+}</code></pre></div>
+<p>也可以递归拆分写法调用：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">search</span>(<span style="color:#268bd2">nums</span> []<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">target</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#859900">return</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">nums</span>)-<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">target</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// 递归写法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span> []<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#268bd2">left</span>, <span style="color:#268bd2">right</span>, <span style="color:#268bd2">target</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#859900">if</span> <span style="color:#268bd2">left</span> &gt; <span style="color:#268bd2">right</span> {
+        <span style="color:#859900">return</span> -<span style="color:#2aa198;font-weight:bold">1</span>
+    }
+    <span style="color:#268bd2">mid</span> := (<span style="color:#268bd2">left</span> + <span style="color:#268bd2">right</span>) / <span style="color:#2aa198;font-weight:bold">2</span>
+    <span style="color:#859900">if</span> <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] == <span style="color:#268bd2">target</span> {
+        <span style="color:#859900">return</span> <span style="color:#268bd2">mid</span>
+    }
+    <span style="color:#859900">if</span> <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] &lt; <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">right</span>] {
+        <span style="color:#859900">if</span> <span style="color:#268bd2">target</span> &gt; <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] &amp;&amp; <span style="color:#268bd2">target</span> &lt;= <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">right</span>] {
+            <span style="color:#859900">return</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span>, <span style="color:#268bd2">mid</span>+<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">right</span>, <span style="color:#268bd2">target</span>)
+        }
+        <span style="color:#859900">return</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span>, <span style="color:#268bd2">left</span>, <span style="color:#268bd2">mid</span>-<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">target</span>)
+    } <span style="color:#859900">else</span> {
+        <span style="color:#859900">if</span> <span style="color:#268bd2">target</span> &lt; <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">mid</span>] &amp;&amp; <span style="color:#268bd2">target</span> &gt;= <span style="color:#268bd2">nums</span>[<span style="color:#268bd2">left</span>] {
+            <span style="color:#859900">return</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span>, <span style="color:#268bd2">left</span>, <span style="color:#268bd2">mid</span>-<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">target</span>)
+        }
+        <span style="color:#859900">return</span> <span style="color:#268bd2">twoSearch</span>(<span style="color:#268bd2">nums</span>, <span style="color:#268bd2">mid</span>+<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#268bd2">right</span>, <span style="color:#268bd2">target</span>)
+    }
+}</code></pre></div>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/linux/">linux</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f&amp;text=%e7%9f%a5%e8%af%86%e7%82%b9%e6%80%bb%e7%bb%93&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e7%9f%a5%e8%af%86%e7%82%b9%e6%80%bb%e7%bb%93" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e7%9f%a5%e8%af%86%e7%82%b9%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f&amp;title=%e7%9f%a5%e8%af%86%e7%82%b9%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%259F%25A5%25E8%25AF%2586%25E7%2582%25B9%25E6%2580%25BB%25E7%25BB%2593%2f&amp;description=%e7%9f%a5%e8%af%86%e7%82%b9%e6%80%bb%e7%bb%93" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0%E4%BC%AAai/" data-toggle="tooltip" data-placement="top" title="Golang实现伪AI？">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
