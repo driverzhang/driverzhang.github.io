@@ -7,10 +7,27 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 06 Jan 2019 15:50:05 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 23 Jan 2019 20:09:48 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>mqtt服务安装</title>
+      <link>https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/</link>
+      <pubDate>Wed, 23 Jan 2019 20:09:48 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/</guid>
+      <description>&lt;p&gt;公司目前用的 EMQ  作为 mqtt 的服务器启动&lt;/p&gt;
+
+&lt;h1 id=&#34;emq&#34;&gt;EMQ&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;百万级分布式开源物联网MQTT消息服务器&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>知识点总结</title>
