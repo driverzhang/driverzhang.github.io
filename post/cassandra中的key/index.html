@@ -5,34 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>mqtt服务安装</title>
-  <meta property="og:title" content="mqtt服务安装" />
-  <meta name="twitter:title" content="mqtt服务安装" />
-  <meta name="description" content="公司目前用的 EMQ  作为 mqtt 的服务器启动
-
-EMQ
-
-
-百万级分布式开源物联网MQTT消息服务器
-
+  <title>Cassandra中的key</title>
+  <meta property="og:title" content="Cassandra中的key" />
+  <meta name="twitter:title" content="Cassandra中的key" />
+  <meta name="description" content="最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：
 
 ">
-  <meta property="og:description" content="公司目前用的 EMQ  作为 mqtt 的服务器启动
-
-EMQ
-
-
-百万级分布式开源物联网MQTT消息服务器
-
+  <meta property="og:description" content="最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：
 
 ">
-  <meta name="twitter:description" content="公司目前用的 EMQ  作为 mqtt 的服务器启动
-
-EMQ
-
-
-百万级分布式开源物联网MQTT消息服务器
-
+  <meta name="twitter:description" content="最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：
 
 ">
   <meta name="author" content="Gopherzhang"/>
@@ -40,12 +22,12 @@ EMQ
   <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Gopherzhang" />
 
   <meta name="generator" content="Hugo 0.48" />
-  <link rel="canonical" href="https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/" />
   <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -197,13 +179,13 @@ EMQ
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>mqtt服务安装</h1>
+              <h1>Cassandra中的key</h1>
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 23, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 30, 2019
   
   
   
@@ -224,70 +206,160 @@ EMQ
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>公司目前用的 EMQ  作为 mqtt 的服务器启动</p>
-
-<h1 id="emq">EMQ</h1>
-
-<blockquote>
-<p>百万级分布式开源物联网MQTT消息服务器</p>
-</blockquote>
+        <p>最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：</p>
 
 <p></p>
 
-<p>基于高并发的Erlang/OTP语言平台设计，支持百万级连接和分布式集群，发布订阅模式的开源MQTT消息服务器</p>
+<ul>
+<li>github.com/gocql/gocql</li>
+<li>github.com/gocassa/gocassa</li>
+</ul>
 
-<p>完整支持MQTT V3.1/V3.1.1协议规范，扩展支持WebSocket、Stomp、CoAP、MQTT-SN或私有TCP协议</p>
+<p>其中 gocassa 就是基于gocql 进行二次抽象封装的，个人觉得作者抽象的很到位，按照不同建表方式对应有各种操作方法。</p>
 
-<p><img src="http://www.emqtt.com/docs/v2/_images/emqtt.png" alt="image" /></p>
+<p>在我看gocassa过程中，对于建立表格时候需要实现建立好对应的索引以便于进行聚合查询等操作（这也是与MySQL这种关系型数据库的区别所在）。</p>
 
-<h2 id="mac-安装是个坑">Mac 安装是个坑。</h2>
+<h2 id="cassandra之中一共包含下面5种key">Cassandra之中一共包含下面5种Key:</h2>
 
-<p>具体 <a href="https://github.com/emqx/emqx/issues/2171"> issue 参考</a></p>
+<h4 id="1-primary-key">1. Primary Key</h4>
 
-<p>就是会报一个</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">Node &#39;emqx@127.0.0.1&#39; not responding to pings&#34;</pre></div>
-<p>然后没办法，就换了个服务Mosquitto。</p>
+<h4 id="2-partition-key">2. Partition Key</h4>
 
-<p>当你成功安装并启动成功 Mosquitto后，再来启动EMQ,就会出现奇迹又特么能启动了！！！</p>
+<h4 id="3-composite-key">3. Composite Key</h4>
 
-<p>于是EMQ 会有个UI 界面 启动成功后访问 <a href="http://127.0.0.1:18083/">http://127.0.0.1:18083/</a> ，输入账号 admin， 密码 public ，如下图所示：</p>
+<h4 id="4-compound-key">4. Compound Key</h4>
 
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1fzgo9ttlahj31fs0p8adp.jpg" alt="" /></p>
+<h4 id="5-clustering-key">5. Clustering Key</h4>
 
-<p>。</p>
+<p>Primary key 是用来获取某一行的数据， 可以是一列或者多列（复合列 composite）</p>
 
-<h1 id="mosquitto">Mosquitto</h1>
+<h3 id="primary-partition-key-clustering-key-clustering-key-可选">Primary = Partition Key  + [Clustering Key] （Clustering Key 可选）</h3>
 
-<p>上面留了个坑 如何安装 Mosquitto。</p>
+<h3 id="primary-key-中的字段组成一体不能重复">primary key 中的字段组成一体不能重复。</h3>
+
+<hr />
+
+<h1 id="partition-key">Partition Key</h1>
+
+<p>看如下示例：</p>
+
+<p>单一型：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> <span style="color:#268bd2">sample</span> (
+  <span style="color:#268bd2">id</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">name</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> (<span style="color:#268bd2">id</span>)
+);
+
+
+<span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> <span style="color:#268bd2">users</span> (
+  <span style="color:#268bd2">id</span> <span style="color:#cb4b16">int</span>,
+  <span style="color:#268bd2">name</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">uid</span> <span style="color:#cb4b16">int</span>,
+  <span style="color:#268bd2">adress</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> (<span style="color:#268bd2">id</span>, <span style="color:#268bd2">name</span>, <span style="color:#268bd2">uid</span>)
+);</code></pre></div>
+<p>id ==&gt; Partition Key (单一)</p>
+
+<p>name, uid ==&gt; Clustering Key</p>
+
+<p>复合型：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> <span style="color:#268bd2">sample1</span> (
+  <span style="color:#268bd2">id</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">name</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> ((<span style="color:#268bd2">id</span>, <span style="color:#268bd2">name</span>))
+);
+
+<span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> <span style="color:#268bd2">users</span> (
+  <span style="color:#268bd2">id</span> <span style="color:#cb4b16">int</span>,
+  <span style="color:#268bd2">name</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">uid</span> <span style="color:#cb4b16">int</span>,
+  <span style="color:#268bd2">adress</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> ((<span style="color:#268bd2">id</span>, <span style="color:#268bd2">name</span>), <span style="color:#268bd2">uid</span>)
+);</code></pre></div>
+<p>id, name ==&gt; Partition Key (复合)</p>
+
+<p>uid ==&gt; Clustering Key</p>
+
+<h1 id="clustering-key">Clustering Key</h1>
+
+<p>Cassandra中所有的数据都只能根据Primary Key中的字段来排序,</p>
+
+<p>因此, 如果想根据某个column来排序, 必须将改 column 加到 Primary key 中,</p>
+
+<p>如 primary key (id, c1, c2 ,c3), 其中 id 是 partition key,</p>
+
+<p>c1, c2 ,c3是Clustering Key.</p>
 
 <blockquote>
-<p>Mosquitto是一款实现了 MQTT v3.1 协议的开源消息代理软件，提供轻量级的，支持发布/订阅的的消息推送模式，使设备对设备之间的短消息通信简单易用</p>
+<p>(如果想用id和c1作为partition key, 只需添加括号: primary key ((id, c1), c2 ,c3)).</p>
 </blockquote>
 
-<p>MQTT官网：<a href="http://mqtt.org/">点这里</a></p>
+<h2 id="示例">示例：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> <span style="color:#268bd2">sample3</span> (
+  <span style="color:#268bd2">id</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">gmt_create</span> <span style="color:#cb4b16">bigint</span>,
+  <span style="color:#268bd2">name</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#268bd2">score</span> <span style="color:#cb4b16">text</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> ((<span style="color:#268bd2">id</span>), <span style="color:#268bd2">gmt_create</span>)
+);</code></pre></div>
+<p>在该表中插入若干纪录后, 使用select *查询该表, 得到如下纪录:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">id  | gmt_create | name  | score
+-----+------------+-------+--------
+ id3 |       1925 | name3 | score3
+ id3 |       1926 | name4 | score4
+ id1 |       1923 | name1 | score1
+ id2 |       1924 | name2 | score2</pre></div>
+<p>cql表中有四条记录, 其中id=id3有两条记录, 那么是否意味着cassandra中有四行来保存这些记录呢?用Cssandra-Cli来查询:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">RowKey: id3
+    =&gt; (name=1925:, value=, timestamp=1442494070376000)
+    =&gt; (name=1925:name, value=6e616d6533, timestamp=1442494070376000)
+    =&gt; (name=1925:score, value=73636f726533, timestamp=1442494070376000)
+    =&gt; (name=1926:, value=, timestamp=1442494335821000)
+    =&gt; (name=1926:name, value=6e616d6534, timestamp=1442494335821000)
+    =&gt; (name=1926:score, value=73636f726534, timestamp=1442494335821000)
+    -------------------
+    RowKey: id1
+    =&gt; (name=1923:, value=, timestamp=1442494039343000)
+    =&gt; (name=1923:name, value=6e616d6531, timestamp=1442494039343000)
+    =&gt; (name=1923:score, value=73636f726531, timestamp=1442494039343000)
+    -------------------
+    RowKey: id2
+    =&gt; (name=1924:, value=, timestamp=1442494054817000)
+    =&gt; (name=1924:name, value=6e616d6532, timestamp=1442494054817000)
+    =&gt; (name=1924:score, value=73636f726532, timestamp=1442494054817000)
 
-<p>## 用 brew 安装 Mosquitto</p>
+    3 Rows Returned.</pre></div>
+<p>可以看到, cassandra中只用3行来保存数据, 其中id=id3到两条记录被保存在同一行上. 事实上, 当存在clustering key时, 当partition key相同而clustering key不同时, 其纪录是保存在同一行上的,</p>
 
-<p>具体可以参考 <a href="https://blog.csdn.net/robinson_911/article/details/70477776">文章</a></p>
+<p>而每一个 column 的 name 责由 clustering 的值 + &ldquo;:&rdquo; + 原来的 column name 构成</p>
 
-<p>如果你mac 没有安装 brew , 可以参考 这篇<a href="https://www.jianshu.com/p/22820319f71b">国内镜像安装</a>， 注意官方推荐安装方法很慢，而且容易死掉。</p>
+<p>(如sample3中, column score的name = 1923:score),</p>
 
-<p>## 启动配置本地文件</p>
+<p>sample3在cassandra中的存储结构如下图所示:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">          +-------------+----------------+-------------------+----------------------+
+        |             |  name = 1925:  |  name=1925:name   |    name=1925:score   |
+        |             |  value =       |  value=6e616d6533 |  value=73636f726533  |
+        |             |  timestamp     |     timestamp     |       timestamp      |
+        |    id 3     +----------------+-------------------+----------------------+
+        |             |  name = 1926:  |  name=1926:name   |    name=1926:score   |
+        |             |  value=        |  value=6e616d6534 |  value=73636f726534  |
+        |             |  timestamp     |     timestamp     |       timestamp      |
+        +-------------+----------------+-------------------+----------------------+
+        |             |  name = 1923:  |  name=1923:name   |    name=1923:score   |
+        |    id 1     |  value =       |  value=6e616d6531 |  value=73636f726531  |
+        |             |  timestamp     |     timestamp     |       timestamp      |
+        +-------------+----------------+-------------------+----------------------+
+        |             |  name = 1924:  |  name=1924:name   |    name=1924:score   |
+        |    id 2     |  value =       |  value=6e616d6532 |  value=73636f726532  |
+        |             |  timestamp     |     timestamp     |       timestamp      |
+        +-------------+----------------+-------------------+----------------------+</pre></div>
 
-<p>如果你的mac 使用brew 命令安装，则你可以进入系统目录：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cd /usr/local/Cellar/mosquitto/1.5.5/etc/mosquitto</pre></div>
-<p>然后找到 mosquitto.conf 文件编辑即可：</p>
-
-<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fzgoi3yzyoj30um0dok4b.jpg" alt="" /></p>
-
-<p>### 启动服务  brew services start mosquitto</p>
-
-<p>### 停止服务  brew services stop mosquitto</p>
-
-<p>这个时候当我完成了 mosquitto安装 再回头去上面安装启动EMQ 居然又成功了，有毒啊！！！</p>
-
-<p>完事，终于可以启动 公司的web 可执行文件了！！！</p>
-
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/cassandra/">cassandra</a>&nbsp;
+            
+          </div>
         
 
         
@@ -298,7 +370,7 @@ EMQ
 
 
 <li>
-    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f&amp;text=mqtt%e6%9c%8d%e5%8a%a1%e5%ae%89%e8%a3%85&amp;via="
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f&amp;text=Cassandra%e4%b8%ad%e7%9a%84key&amp;via="
        target="_blank" alt="" title="Share on Twitter">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -309,7 +381,7 @@ EMQ
 
 
 <li>
-    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f" target="_blank" title="Share on Google Plus">
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f" target="_blank" title="Share on Google Plus">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
@@ -319,7 +391,7 @@ EMQ
 
 
 <li>
-    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f" target="_blank" title="Share on Facebook">
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f" target="_blank" title="Share on Facebook">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -329,7 +401,7 @@ EMQ
 
 
 <li>
-    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f&amp;title=mqtt%e6%9c%8d%e5%8a%a1%e5%ae%89%e8%a3%85" target="_blank" title="Share on Reddit">
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f&amp;title=Cassandra%e4%b8%ad%e7%9a%84key" target="_blank" title="Share on Reddit">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
@@ -339,7 +411,7 @@ EMQ
 
 
 <li>
-    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f&amp;title=mqtt%e6%9c%8d%e5%8a%a1%e5%ae%89%e8%a3%85" target="_blank"
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f&amp;title=Cassandra%e4%b8%ad%e7%9a%84key" target="_blank"
        title="Share on LinkedIn">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -350,7 +422,7 @@ EMQ
 
 
 <li>
-    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f&amp;title=mqtt%e6%9c%8d%e5%8a%a1%e5%ae%89%e8%a3%85" target="_blank"
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f&amp;title=Cassandra%e4%b8%ad%e7%9a%84key" target="_blank"
        title="Share on StumbleUpon">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -361,7 +433,7 @@ EMQ
 
 
 <li>
-    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E9%2580%2589%25E6%258B%25A9mqtt%25E6%259C%258D%25E5%258A%25A1%25E5%25AE%2589%25E8%25A3%2585%2f&amp;description=mqtt%e6%9c%8d%e5%8a%a1%e5%ae%89%e8%a3%85" target="_blank"
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fcassandra%25E4%25B8%25AD%25E7%259A%2584key%2f&amp;description=Cassandra%e4%b8%ad%e7%9a%84key" target="_blank"
        title="Share on Pinterest">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -379,13 +451,9 @@ EMQ
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://driverzhang.github.io/post/%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" data-toggle="tooltip" data-placement="top" title="知识点总结">&larr; Previous Post</a>
+              <a href="https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/" data-toggle="tooltip" data-placement="top" title="mqtt服务安装">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/" data-toggle="tooltip" data-placement="top" title="Cassandra中的key">Next Post &rarr;</a>
-            </li>
           
         </ul>
       

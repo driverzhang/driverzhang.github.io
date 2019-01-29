@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Fri, 28 Sep 2018 10:28:56 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Jan 2019 00:31:15 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cassandra</title>
+      <link>https://driverzhang.github.io/tags/cassandra/</link>
+      <pubDate>Wed, 30 Jan 2019 00:31:15 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/tags/cassandra/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Docker</title>

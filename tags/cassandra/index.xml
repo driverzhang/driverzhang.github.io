@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cassandra on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/cassandra/</link>
+    <description>Recent content in Cassandra on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Wed, 30 Jan 2019 00:31:15 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/cassandra/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Cassandra中的key</title>
+      <link>https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/</link>
+      <pubDate>Wed, 30 Jan 2019 00:31:15 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/</guid>
+      <description>&lt;p&gt;最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

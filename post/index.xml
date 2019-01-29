@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 23 Jan 2019 20:09:48 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 30 Jan 2019 00:31:15 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cassandra中的key</title>
+      <link>https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/</link>
+      <pubDate>Wed, 30 Jan 2019 00:31:15 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/</guid>
+      <description>&lt;p&gt;最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>mqtt服务安装</title>
