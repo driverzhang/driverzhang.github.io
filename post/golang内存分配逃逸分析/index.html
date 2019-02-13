@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang内存分配逃逸分析</title>
+  <meta property="og:title" content="Golang内存分配逃逸分析" />
+  <meta name="twitter:title" content="Golang内存分配逃逸分析" />
+  <meta name="description" content="一. golang 的内存分配逃逸 于堆和栈
+
+
+注意我们此处谈到的堆和栈是对操作系统中的，这个和数据结构中的堆和栈还是又一定区别的。
+
+
+">
+  <meta property="og:description" content="一. golang 的内存分配逃逸 于堆和栈
+
+
+注意我们此处谈到的堆和栈是对操作系统中的，这个和数据结构中的堆和栈还是又一定区别的。
+
+
+">
+  <meta name="twitter:description" content="一. golang 的内存分配逃逸 于堆和栈
+
+
+注意我们此处谈到的堆和栈是对操作系统中的，这个和数据结构中的堆和栈还是又一定区别的。
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang内存分配逃逸分析</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on February 13, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="一-golang-的内存分配逃逸-于堆和栈">一. golang 的内存分配逃逸 于堆和栈</h1>
+
+<blockquote>
+<p>注意我们此处谈到的堆和栈是对操作系统中的，这个和数据结构中的堆和栈还是又一定区别的。</p>
+</blockquote>
+
+<p></p>
+
+<h2 id="1-关于-堆和栈">1. 关于 堆和栈</h2>
+
+<p>栈 可以简单得理解成一次函数调用内部申请到的内存，它们会随着函数的返回把内存还给系统。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">F</span>() {
+	<span style="color:#268bd2">temp</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20</span>)
+	...
+}</code></pre></div>
+<p>类似于上面代码里面的temp变量，只是内函数内部申请的临时变量，并不会作为返回值返回，它就是被编译器申请到栈里面。</p>
+
+<h3 id="申请到-栈内存-好处-函数返回直接释放-不会引起垃圾回收-对性能没有影响">申请到 栈内存 好处：函数返回直接释放，不会引起垃圾回收，对性能没有影响。</h3>
+
+<p>再来看看堆得情况之一如下代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">F</span>() []<span style="color:#859900;font-weight:bold">int</span>{
+	<span style="color:#268bd2">a</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20</span>)
+	<span style="color:#859900">return</span> <span style="color:#268bd2">a</span>
+}</code></pre></div>
+<p>而上面这段代码，申请的代码一模一样，但是申请后作为返回值返回了，编译器会认为变量之后还会被使用，当函数返回之后并不会将其内存归还，那么它就会被申请到 堆 上面了。</p>
+
+<h3 id="申请到堆上面的内存才会引起垃圾回收-如果这个过程-特指垃圾回收不断被触发-过于高频就会导致-gc-压力过大-程序性能出问题">申请到堆上面的内存才会引起垃圾回收，如果这个过程（特指垃圾回收不断被触发）过于高频就会导致 gc 压力过大，程序性能出问题。</h3>
+
+<p>我们再看看如下几个例子：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">F</span>() {
+	<span style="color:#268bd2">a</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20</span>)     <span style="color:#93a1a1;font-style:italic">// 栈 空间小
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">b</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20000</span>) <span style="color:#93a1a1;font-style:italic">// 堆 空间过大
+</span><span style="color:#93a1a1;font-style:italic"></span> 
+	<span style="color:#268bd2">l</span> := <span style="color:#2aa198;font-weight:bold">20</span>
+	<span style="color:#268bd2">c</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">l</span>) <span style="color:#93a1a1;font-style:italic">// 堆 动态分配不定空间
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<h3 id="像是-b-这种-即使是临时变量-申请过大也会在堆上面申请">像是 b 这种 即使是临时变量，申请过大也会在堆上面申请。</h3>
+
+<h3 id="对于-c-编译器对于这种不定长度的申请方式-也会在堆上面申请-即使申请的长度很短">对于 c 编译器对于这种不定长度的申请方式，也会在堆上面申请，即使申请的长度很短。</h3>
+
+<h2 id="2-逃逸分析-escape-analysis">2. 逃逸分析（Escape analysis）</h2>
+
+<blockquote>
+<p>所谓逃逸分析（Escape analysis）是指由编译器决定内存分配的位置，不需要程序员指定。</p>
+</blockquote>
+
+<p>在函数中申请一个新的对象：</p>
+
+<ul>
+<li><p>如果分配 在栈中，则函数执行结束可自动将内存回收；</p></li>
+
+<li><p>如果分配在堆中，则函数执行结束可交给GC（垃圾回收）处理;</p></li>
+</ul>
+
+<blockquote>
+<p>注意，对于函数外部没有引用的对象，也有可能放到堆中，比如内存过大超过栈的存储能力。</p>
+</blockquote>
+
+<h2 id="3-逃逸场景-什么情况才分配到堆中">3. 逃逸场景（什么情况才分配到堆中）</h2>
+
+<h3 id="3-1-指针逃逸">3.1 指针逃逸</h3>
+
+<p>Go可以返回局部变量指针，这其实是一个典型的变量逃逸案例，示例代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">Student</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">Name</span> <span style="color:#859900;font-weight:bold">string</span>
+    <span style="color:#268bd2">Age</span>  <span style="color:#859900;font-weight:bold">int</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">StudentRegister</span>(<span style="color:#268bd2">name</span> <span style="color:#859900;font-weight:bold">string</span>, <span style="color:#268bd2">age</span> <span style="color:#859900;font-weight:bold">int</span>) *<span style="color:#268bd2">Student</span> {
+    <span style="color:#268bd2">s</span> := <span style="color:#cb4b16">new</span>(<span style="color:#268bd2">Student</span>) <span style="color:#93a1a1;font-style:italic">//局部变量s逃逸到堆
+</span><span style="color:#93a1a1;font-style:italic"></span>
+    <span style="color:#268bd2">s</span>.<span style="color:#268bd2">Name</span> = <span style="color:#268bd2">name</span>
+    <span style="color:#268bd2">s</span>.<span style="color:#268bd2">Age</span> = <span style="color:#268bd2">age</span>
+
+    <span style="color:#859900">return</span> <span style="color:#268bd2">s</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">StudentRegister</span>(<span style="color:#2aa198">&#34;Jim&#34;</span>, <span style="color:#2aa198;font-weight:bold">18</span>)
+}</code></pre></div>
+<p>虽然 在函数 StudentRegister() 内部 s 为局部变量，其值通过函数返回值返回，s 本身为一指针，其指向的内存地址不会是栈而是堆，这就是典型的逃逸案例。</p>
+
+<p>终端运行命令查看逃逸分析日志：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go build -gcflags=-m</pre></div>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1g04xkehoe8j30l80aa7ab.jpg" alt="" /></p>
+
+<p>可见在StudentRegister()函数中，也即代码第9行显示&rdquo;escapes to heap&rdquo;，代表该行内存分配发生了逃逸现象。</p>
+
+<h3 id="3-2-栈空间不足逃逸-空间开辟过大">3.2 栈空间不足逃逸（空间开辟过大）</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">Slice</span>() {
+    <span style="color:#268bd2">s</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">1000</span>, <span style="color:#2aa198;font-weight:bold">1000</span>)
+
+    <span style="color:#859900">for</span> <span style="color:#268bd2">index</span>, <span style="color:#268bd2">_</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">s</span> {
+        <span style="color:#268bd2">s</span>[<span style="color:#268bd2">index</span>] = <span style="color:#268bd2">index</span>
+    }
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">Slice</span>()
+}</code></pre></div>
+<p>上面代码Slice()函数中分配了一个1000个长度的切片，是否逃逸取决于栈空间是否足够大。
+直接查看编译提示，如下：</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g04xn62r3gj30pd050whm.jpg" alt="" /></p>
+
+<p>所以只是1000的长度还不足以发生逃逸现象。然后就x10倍吧</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">Slice</span>() {
+    <span style="color:#268bd2">s</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">10000</span>, <span style="color:#2aa198;font-weight:bold">10000</span>)
+
+    <span style="color:#859900">for</span> <span style="color:#268bd2">index</span>, <span style="color:#268bd2">_</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">s</span> {
+        <span style="color:#268bd2">s</span>[<span style="color:#268bd2">index</span>] = <span style="color:#268bd2">index</span>
+    }
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">Slice</span>()
+}</code></pre></div>
+<p>分析如下：</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g04xpbqx37j30nu04uju8.jpg" alt="" /></p>
+
+<p>当切片长度扩大到10000时就会逃逸。</p>
+
+<p>实际上当栈空间不足以存放当前对象时或无法判断当前切片长度时会将对象分配到堆中。</p>
+
+<h3 id="3-3-动态类型逃逸-不确定长度大小">3.3 动态类型逃逸（不确定长度大小）</h3>
+
+<p>很多函数参数为interface类型，比如fmt.Println(a &hellip;interface{})，编译期间很难确定其参数的具体类型，也能产生逃逸。</p>
+
+<p>如下代码所示：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;fmt&#34;</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">s</span> := <span style="color:#2aa198">&#34;Escape&#34;</span>
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">s</span>)
+}</code></pre></div>
+<p>逃逸分下如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">D:\SourceCode\GoExpert\src&gt;go build -gcflags=-m
+# _/D_/SourceCode/GoExpert/src
+.\main.go:7: s escapes to heap
+.\main.go:7: main ... argument does not escape</pre></div>
+<p>又或者像前面提到的例子：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">F</span>() {
+	<span style="color:#268bd2">a</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20</span>)     <span style="color:#93a1a1;font-style:italic">// 栈 空间小
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">b</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">20000</span>) <span style="color:#93a1a1;font-style:italic">// 堆 空间过大 逃逸
+</span><span style="color:#93a1a1;font-style:italic"></span> 
+	<span style="color:#268bd2">l</span> := <span style="color:#2aa198;font-weight:bold">20</span>
+	<span style="color:#268bd2">c</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">l</span>) <span style="color:#93a1a1;font-style:italic">// 堆 动态分配不定空间 逃逸
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<h3 id="3-4-闭包引用对象逃逸">3.4 闭包引用对象逃逸</h3>
+
+<p>Fibonacci数列的函数：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;fmt&#34;</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">Fibonacci</span>() <span style="color:#859900">func</span>() <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> := <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">1</span>
+    <span style="color:#859900">return</span> <span style="color:#859900">func</span>() <span style="color:#859900;font-weight:bold">int</span> {
+        <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> = <span style="color:#268bd2">b</span>, <span style="color:#268bd2">a</span>+<span style="color:#268bd2">b</span>
+        <span style="color:#859900">return</span> <span style="color:#268bd2">a</span>
+    }
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">f</span> := <span style="color:#268bd2">Fibonacci</span>()
+
+    <span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">10</span>; <span style="color:#268bd2">i</span>++ {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;Fibonacci: %d\n&#34;</span>, <span style="color:#268bd2">f</span>())
+    }
+}</code></pre></div>
+<p>输出如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> ~/go/src/gitHub/test/pool  go run main.go
+Fibonacci: 1
+Fibonacci: 1
+Fibonacci: 2
+Fibonacci: 3
+Fibonacci: 5
+Fibonacci: 8
+Fibonacci: 13
+Fibonacci: 21
+Fibonacci: 34
+Fibonacci: 55</pre></div>
+<p>逃逸如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> ~/go/src/gitHub/test/pool  go build -gcflags=-m
+# gitHub/test/pool
+./main.go:7:9: can inline Fibonacci.func1
+./main.go:7:9: func literal escapes to heap
+./main.go:7:9: func literal escapes to heap
+./main.go:8:10: &amp;b escapes to heap
+./main.go:6:5: moved to heap: b
+./main.go:8:13: &amp;a escapes to heap
+./main.go:6:2: moved to heap: a
+./main.go:17:34: f() escapes to heap
+./main.go:17:13: main ... argument does not escape</pre></div>
+<p>Fibonacci()函数中原本属于局部变量的a和b由于闭包的引用，不得不将二者放到堆上，以致产生逃逸。</p>
+
+<h3 id="逃逸分析的作用是什么呢">逃逸分析的作用是什么呢？</h3>
+
+<ol>
+<li><p>逃逸分析的好处是为了减少gc的压力，不逃逸的对象分配在栈上，当函数返回时就回收了资源，不需要gc标记清除。</p></li>
+
+<li><p>逃逸分析完后可以确定哪些变量可以分配在栈上，栈的分配比堆快，性能好(逃逸的局部变量会在堆上分配 ,而没有发生逃逸的则有编译器在栈上分配)。</p></li>
+
+<li><p>同步消除，如果你定义的对象的方法上有同步锁，但在运行时，却只有一个线程在访问，此时逃逸分析后的机器码，会去掉同步锁运行。</p></li>
+</ol>
+
+<h3 id="逃逸总结">逃逸总结：</h3>
+
+<ul>
+<li><p>栈上分配内存比在堆中分配内存有更高的效率</p></li>
+
+<li><p>栈上分配的内存不需要GC处理</p></li>
+
+<li><p>堆上分配的内存使用完毕会交给GC处理</p></li>
+
+<li><p>逃逸分析目的是决定内分配地址是栈还是堆</p></li>
+
+<li><p>逃逸分析在编译阶段完成</p></li>
+</ul>
+
+<p>提问：函数传递指针真的比传值效率高吗？</p>
+
+<blockquote>
+<p>我们知道传递指针可以减少底层值的拷贝，可以提高效率，但是如果拷贝的数据量小，由于指针传递会产生逃逸，可能会使用堆，也可能会增加GC的负担，所以传递指针不一定是高效的。</p>
+</blockquote>
+
+<p>在官网 (golang.org) FAQ 上有一个关于变量分配的问题如下：</p>
+
+<blockquote>
+<p>From a correctness standpoint, you don’t need to know. Each variable in Go exists as long as there are references to it. The storage location chosen by the implementation is irrelevant to the semantics of the language.</p>
+
+<p>The storage location does have an effect on writing efficient programs. When possible, the Go compilers will allocate variables that are local to a function in that function’s stack frame.</p>
+
+<p>However, if the compiler cannot prove that the variable is not referenced after the function returns, then the compiler must allocate the variable on the garbage-collected heap to avoid dangling pointer errors. Also, if a local variable is very large, it might make more sense to store it on the heap rather than the stack.</p>
+
+<p>In the current compilers, if a variable has its address taken, that variable is a candidate for allocation on the heap. However, a basic escape analysis recognizes some cases when such variables will not live past the return from the function and can reside on the stack.</p>
+</blockquote>
+
+<p>翻译如下：</p>
+
+<p>如何得知变量是分配在栈（stack）上还是堆（heap）上？</p>
+
+<p>准确地说，你并不需要知道。Golang 中的变量只要被引用就一直会存活，存储在堆上还是栈上由内部实现决定而和具体的语法没有关系。</p>
+
+<p>知道变量的存储位置确实和效率编程有关系。如果可能，Golang 编译器会将函数的局部变量分配到函数栈帧（stack frame）上。 然而，如果编译器不能确保变量在函数 return之后不再被引用，编译器就会将变量分配到堆上。而且，如果一个局部变量非常大，那么它也应该被分配到堆上而不是栈上。</p>
+
+<p>当前情况下，如果一个变量被取地址，那么它就有可能被分配到堆上。然而，还要对这些变量做逃逸分析，如果函数return之后，变量不再被引用，则将其分配到栈上。</p>
+
+<hr />
+
+<h1 id="二-golang-临时对象池sync-pool">二. golang 临时对象池sync.Pool</h1>
+
+<h2 id="1-内存碎片化问题">1. 内存碎片化问题：</h2>
+
+<p>实际项目基本都是通过</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">c := make([]int, 0, l)</pre></div>
+<p>来申请内存，长度都是不确定的，自然而然这些变量都会申请到堆上面了。</p>
+
+<p>Golang使用的垃圾回收算法是『标记——清除』。</p>
+
+<p>简单得说，就是程序要从操作系统申请一块比较大的内存，内存分成小块，通过链表链接。</p>
+
+<p>每次程序申请内存，就从链表上面遍历每一小块，找到符合的就返回其地址，没有合适的就从操作系统再申请。如果申请内存次数较多，而且申请的大小不固定，就会引起内存碎片化的问题。</p>
+
+<p>申请的堆内存并没有用完，但是用户申请的内存的时候却没有合适的空间提供。这样会遍历整个链表，还会继续向操作系统申请内存。这就能解释我一开始描述的问题，申请一块内存变成了慢语句。</p>
+
+<hr />
+
+<h2 id="2-为了解决以上问题引入-临时对象池sync-pool">2. 为了解决以上问题引入 临时对象池sync.Pool</h2>
+
+<p>由于此部分篇幅可能较长所以我打算另外开一篇文章来写，敬请期待。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f&amp;text=Golang%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e9%80%83%e9%80%b8%e5%88%86%e6%9e%90&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f&amp;title=Golang%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e9%80%83%e9%80%b8%e5%88%86%e6%9e%90" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f&amp;title=Golang%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e9%80%83%e9%80%b8%e5%88%86%e6%9e%90" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f&amp;title=Golang%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e9%80%83%e9%80%b8%e5%88%86%e6%9e%90" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2586%2585%25E5%25AD%2598%25E5%2588%2586%25E9%2585%258D%25E9%2580%2583%25E9%2580%25B8%25E5%2588%2586%25E6%259E%2590%2f&amp;description=Golang%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d%e9%80%83%e9%80%b8%e5%88%86%e6%9e%90" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/" data-toggle="tooltip" data-placement="top" title="Cassandra中的key">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
