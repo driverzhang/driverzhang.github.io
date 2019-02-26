@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>微服务的服务发布、发现注册于注册中心一把梭</title>
+  <meta property="og:title" content="微服务的服务发布、发现注册于注册中心一把梭" />
+  <meta name="twitter:title" content="微服务的服务发布、发现注册于注册中心一把梭" />
+  <meta name="description" content="服务发布和引用
+
+服务发布者如何发布一个服务？（接口文档，服务接口地址等）
+
+服务调用者如何引用这个服务？（引用地址，接口文档参数和返回数据等）
+
+">
+  <meta property="og:description" content="服务发布和引用
+
+服务发布者如何发布一个服务？（接口文档，服务接口地址等）
+
+服务调用者如何引用这个服务？（引用地址，接口文档参数和返回数据等）
+
+">
+  <meta name="twitter:description" content="服务发布和引用
+
+服务发布者如何发布一个服务？（接口文档，服务接口地址等）
+
+服务调用者如何引用这个服务？（引用地址，接口文档参数和返回数据等）
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E5%8F%91%E7%8E%B0%E6%B3%A8%E5%86%8C%E4%BA%8E%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E4%B8%80%E6%8A%8A%E6%A2%AD/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E5%8F%91%E7%8E%B0%E6%B3%A8%E5%86%8C%E4%BA%8E%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E4%B8%80%E6%8A%8A%E6%A2%AD/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>微服务的服务发布、发现注册于注册中心一把梭</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on February 26, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="服务发布和引用">服务发布和引用</h1>
+
+<p>服务发布者如何发布一个服务？（接口文档，服务接口地址等）</p>
+
+<p>服务调用者如何引用这个服务？（引用地址，接口文档参数和返回数据等）</p>
+
+<p></p>
+
+<p>最常见的服务发布和引用有大概三种形式：</p>
+
+<ul>
+<li><p>RESTful API</p></li>
+
+<li><p>XML 配置</p></li>
+
+<li><p>IDL 文件</p></li>
+</ul>
+
+<h2 id="1-restful-api">1. RESTful API</h2>
+
+<p>主要用作 HTTP 或者 HTTPS 协议的接口定义。在单体服务中也是广泛应用的。</p>
+
+<p>来看一个 微博开源服务化项目 <a href="https://github.com/weibocom/motan-go">Motan go语言版本</a> 的 RESTful API的例子：</p>
+
+<h3 id="server-使用实例">server 使用实例：</h3>
+
+<p>通过yaml配置需要导出的服务，来指定导出的服务配置等参数：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> #config of registries
+motan-registry: #motan-registry 区用来配置不同的注册中心，多个注册中心以id进行区分
+  direct-registry: # 注册中心id，service引用时需与此id相同
+    protocol: direct   # 注册中心协议，也即注册中心类型。此处为便于测试使用直连注册中心，实际注册时不发生注册行为。
+
+#conf of services
+motan-service:
+  mytest-motan2:
+    path: com.weibo.motan.demo.service.MotanDemoService # 服务名称
+    group: motan-demo-rpc #服务所属group
+    protocol: motan2
+    registry: direct-registry
+    serialization: simple #目前golang版本仅支持simple序列化方式，其他序列化方式会逐步提供
+    ref : &#34;main.MotanDemoService&#34; #golang中对service的具体实现类引用。此处为`包名.类名`方式引用，也可以使用自定义的id，需要与注册服务实现类时的id参数一致
+    export: &#34;motan2:8100&#34; #对外提供服务的端口。不同service可以使用相同export端口，前提条件为协议与序列化等配置必须相同。</pre></div>
+<p>然后，实现一个service并对外导出服务代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+        <span style="color:#2aa198">&#34;fmt&#34;</span>
+        <span style="color:#2aa198">&#34;time&#34;</span>
+
+        <span style="color:#268bd2">motan</span> <span style="color:#2aa198">&#34;github.com/weibocom/motan-go&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+        <span style="color:#268bd2">runServerDemo</span>()
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">runServerDemo</span>() {
+        <span style="color:#268bd2">mscontext</span> := <span style="color:#268bd2">motan</span>.<span style="color:#268bd2">GetMotanServerContext</span>(<span style="color:#2aa198">&#34;serverdemo.yaml&#34;</span>) <span style="color:#93a1a1;font-style:italic">//通过配置文件获取配置信息。所有的导出服务推荐只使用一个配置文件进行配置。
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">mscontext</span>.<span style="color:#268bd2">RegisterService</span>(&amp;<span style="color:#268bd2">MotanDemoService</span>{}, <span style="color:#2aa198">&#34;&#34;</span>) <span style="color:#93a1a1;font-style:italic">// 注册具体service实现类，可以在注册时指定别名，配置中可以通过别名进行引用。如果不使用别名，则通过`包名.类名`进行引用。 
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">mscontext</span>.<span style="color:#268bd2">Start</span>(<span style="color:#859900;font-weight:bold">nil</span>) <span style="color:#93a1a1;font-style:italic">// 注册完所有服务实现类后，通过start启动所有服务，完成服务注册
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Sleep</span>(<span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span> * <span style="color:#2aa198;font-weight:bold">50000000</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// service 具体实现类
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">MotanDemoService</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">m</span> *<span style="color:#268bd2">MotanDemoService</span>) <span style="color:#268bd2">Hello</span>(<span style="color:#268bd2">name</span> <span style="color:#859900;font-weight:bold">string</span>) <span style="color:#859900;font-weight:bold">string</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;MotanDemoService hello:%s\n&#34;</span>, <span style="color:#268bd2">name</span>)
+        <span style="color:#859900">return</span> <span style="color:#2aa198">&#34;hello &#34;</span> + <span style="color:#268bd2">name</span>
+}</code></pre></div>
+<h3 id="client调用示例">Client调用示例</h3>
+
+<p>同样也有个配置文件：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">#config of registries
+motan-registry:
+  direct-registry: # registry id 
+    protocol: direct   # registry type. 
+    host: 127.0.0.1 
+    port: 9981 
+
+#conf of refers
+motan-refer:
+  mytest-motan2:
+    path: com.weibo.motan.demo.service.MotanDemoService # e.g. service name for subscribe
+    group: motan-demo-rpc # group name
+    protocol: motan2 # rpc protocol
+    registry: direct-registry
+    requestTimeout: 1000
+    serialization: simple
+    haStrategy: failover
+    loadbalance: roundrobin</pre></div>
+<p>再来看看client实现的代码：</p>
+
+<p>同步调用：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+        <span style="color:#2aa198">&#34;fmt&#34;</span>
+
+        <span style="color:#268bd2">motan</span> <span style="color:#2aa198">&#34;github.com/weibocom/motan-go&#34;</span>
+        <span style="color:#268bd2">motancore</span> <span style="color:#2aa198">&#34;github.com/weibocom/motan-go/core&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+        <span style="color:#268bd2">runClientDemo</span>()
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">runClientDemo</span>() {
+        <span style="color:#268bd2">mccontext</span> := <span style="color:#268bd2">motan</span>.<span style="color:#268bd2">GetClientContext</span>(<span style="color:#2aa198">&#34;clientdemo.yaml&#34;</span>)
+        <span style="color:#268bd2">mccontext</span>.<span style="color:#268bd2">Start</span>(<span style="color:#859900;font-weight:bold">nil</span>)
+        <span style="color:#268bd2">mclient</span> := <span style="color:#268bd2">mccontext</span>.<span style="color:#268bd2">GetClient</span>(<span style="color:#2aa198">&#34;mytest-motan2&#34;</span>)
+
+        <span style="color:#859900">var</span> <span style="color:#268bd2">reply</span> <span style="color:#859900;font-weight:bold">string</span>
+        <span style="color:#268bd2">err</span> := <span style="color:#268bd2">mclient</span>.<span style="color:#268bd2">Call</span>(<span style="color:#2aa198">&#34;hello&#34;</span>, <span style="color:#2aa198">&#34;Ray&#34;</span>, &amp;<span style="color:#268bd2">reply</span>)  <span style="color:#93a1a1;font-style:italic">// sync call
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+                <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;motan call fail! err:%v\n&#34;</span>, <span style="color:#268bd2">err</span>)
+        } <span style="color:#859900">else</span> {
+                <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;motan call success! reply:%s\n&#34;</span>, <span style="color:#268bd2">reply</span>)
+        }
+}</code></pre></div>
+<p>异步调用：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">runClientDemo</span>() {
+        <span style="color:#268bd2">mccontext</span> := <span style="color:#268bd2">motan</span>.<span style="color:#268bd2">GetClientContext</span>(<span style="color:#2aa198">&#34;clientdemo.yaml&#34;</span>)
+        <span style="color:#268bd2">mccontext</span>.<span style="color:#268bd2">Start</span>(<span style="color:#859900;font-weight:bold">nil</span>)
+        <span style="color:#268bd2">mclient</span> := <span style="color:#268bd2">mccontext</span>.<span style="color:#268bd2">GetClient</span>(<span style="color:#2aa198">&#34;mytest-motan2&#34;</span>)
+
+        <span style="color:#859900">var</span> <span style="color:#268bd2">reply</span> <span style="color:#859900;font-weight:bold">string</span>
+         <span style="color:#93a1a1;font-style:italic">// async call
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">result</span> := <span style="color:#268bd2">mclient</span>.<span style="color:#268bd2">Go</span>(<span style="color:#2aa198">&#34;hello&#34;</span>, <span style="color:#2aa198">&#34;Ray&#34;</span>, &amp;<span style="color:#268bd2">reply</span>, <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> *<span style="color:#268bd2">motancore</span>.<span style="color:#268bd2">AsyncResult</span>, <span style="color:#2aa198;font-weight:bold">1</span>))
+        <span style="color:#268bd2">res</span> := &lt;-<span style="color:#268bd2">result</span>.<span style="color:#268bd2">Done</span>
+        <span style="color:#859900">if</span> <span style="color:#268bd2">res</span>.<span style="color:#268bd2">Error</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+                <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;motan async call fail! err:%v\n&#34;</span>, <span style="color:#268bd2">res</span>.<span style="color:#268bd2">Error</span>)
+        } <span style="color:#859900">else</span> {
+                <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;motan async call success! reply:%+v\n&#34;</span>, <span style="color:#268bd2">reply</span>)
+        }
+}     </code></pre></div>
+<p>以上就是服务消费者就可以通过 HTTP 协议调用服务了，因为 HTTP 协议本身是一个公开的协议，对于服务消费者来说几乎没有学习成本，所以比较适合用作跨业务平台之间的服务协议。</p>
+
+<p>比如你有一个服务，不仅需要在业务部门内部提供服务，还需要向其他业务部门提供服务，甚至开放给外网提供服务，这时候采用 HTTP 协议就比较合适，也省去了沟通服务协议的成本。</p>
+
+<h2 id="2-xml-配置">2. XML 配置</h2>
+
+<p>接下来讲下 XML 配置方式，这种方式的服务发布和引用主要分三个步骤：</p>
+
+<ul>
+<li><p>服务提供者定义接口，并实现接口。</p></li>
+
+<li><p>服务提供者进程启动时，通过加载 server.xml 配置文件将接口暴露出去。</p></li>
+
+<li><p>服务消费者进程启动时，通过加载 client.xml 配置文件来引入要调用的接口。</p></li>
+</ul>
+
+<blockquote>
+<p>主要是对server.xml 和 client.xml 进行加载调用接口即可，这里不再写代码实例了.</p>
+</blockquote>
+
+<p>通过在服务提供者和服务消费者之间维持一份对等的 XML 配置文件，来保证服务消费者按照服务提供者的约定来进行服务调用。</p>
+
+<p>在这种方式下，如果服务提供者变更了接口定义，不仅需要更新服务提供者加载的接口描述文件 server.xml，还需要同时更新服务消费者加载的接口描述文件 client.xml。</p>
+
+<p>一般是私有 RPC 框架会选择 XML 配置这种方式来描述接口，因为私有 RPC 协议的性能要比 HTTP 协议高，所以在对性能要求比较高的场景下，采用 XML 配置的方式比较合适。</p>
+
+<p>但这种方式对业务代码侵入性比较高，XML 配置有变更的时候，服务消费者和服务提供者都要更新，所以适合公司内部联系比较紧密的业务之间采用。如果要应用到跨部门之间的业务调用，一旦有 XML 配置变更，需要花费大量精力去协调不同部门做升级工作。</p>
+
+<p>比如，一次底层服务的接口升级，需要所有相关的调用方都升级，为此花费了大量时间去协调沟通不同部门之间的升级工作，最后经历了大半年才最终完成。</p>
+
+<p>所以对于 XML 配置方式的服务描述，一旦应用到多个部门之间的接口格式约定，如果有变更，最好是新增接口，不到万不得已不要对原有的接口格式做变更。</p>
+
+<h2 id="3-idl-文件">3. IDL 文件</h2>
+
+<p>IDL 就是接口描述语言（interface description language）的缩写，通过一种中立的方式来描述接口，使得在不同的平台上运行的对象和不同语言编写的程序可以相互通信交流。</p>
+
+<p>比如你用 go 语言实现提供的一个服务，也能被 PHP/java 等语言调用。</p>
+
+<p>也就是说 IDL 主要是用作跨语言平台的服务之间的调用，有两种最常用的 IDL：</p>
+
+<ul>
+<li><p>一个是 Facebook 开源的 Thrift 协议</p></li>
+
+<li><p>另一个是 Google 开源的 gRPC 协议</p></li>
+</ul>
+
+<p>由于项目中使用过grpc，所有就以grpc为例看看demo：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><span style="color:#268bd2">syntax</span> = <span style="color:#2aa198">&#34;proto3&#34;</span>;
+<span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">pb</span>;
+
+<span style="color:#93a1a1;font-style:italic">// 声明请求参数
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">message</span> <span style="color:#268bd2">HelloRq</span> {
+    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">name</span> = <span style="color:#2aa198;font-weight:bold">1</span>;
+}
+
+<span style="color:#93a1a1;font-style:italic">// 声明返回数据参数
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">message</span> <span style="color:#268bd2">HelloRp</span> {
+    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">message</span> = <span style="color:#2aa198;font-weight:bold">1</span>;
+}
+
+<span style="color:#93a1a1;font-style:italic">// 声明定义的 服务名称
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">service</span> <span style="color:#268bd2">Test</span> {
+<span style="color:#93a1a1;font-style:italic">// 声明 调用方法函数名称结合出入参数
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">rpc</span> <span style="color:#268bd2">SayHello</span> (<span style="color:#268bd2">HelloRq</span>) <span style="color:#268bd2">returns</span> (<span style="color:#268bd2">HelloRp</span>) {}
+    <span style="color:#268bd2">rpc</span> <span style="color:#268bd2">SayHelloAgain</span> (<span style="color:#268bd2">HelloRq</span>) <span style="color:#268bd2">returns</span> (<span style="color:#268bd2">HelloRp</span>) {}
+
+}</pre></div>
+<p>利用生成protoc 插件 行脚本命令：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rm -rf pb
+mkdir pb
+cd proto
+protoc --go_out=plugins=grpc:../pb *
+cd ../</pre></div>
+<p>于是就会在你的项目目录中看见如下：</p>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1g0ih0n9idyj30c502nq37.jpg" alt="" /></p>
+
+<p>需要注意的是，该过程需要在server端 和client 端 都要进行操作。</p>
+
+<p>由此可见，gRPC 协议的服务描述是通过 proto 文件来定义接口的，然后再使用 protoc 来生成不同语言平台的客户端和服务端代码，从而具备跨语言服务调用能力。</p>
+
+<p>有一点特别需要注意的是，在描述接口定义时，IDL 文件需要对接口返回值进行详细定义。</p>
+
+<h4 id="如果接口返回值的字段比较多-并且经常变化时-采用-idl-文件方式的接口定义就不太合适了">如果接口返回值的字段比较多，并且经常变化时，采用 IDL 文件方式的接口定义就不太合适了。</h4>
+
+<ul>
+<li>一方面可能会造成 IDL 文件过大难以维护，</li>
+<li>另一方面只要 IDL 文件中定义的接口返回值有变更，都需要同步所有的服务消费者都更新，管理成本就太高了。</li>
+</ul>
+
+<p>比如你的业务项目中某些接口返回字段就有好几十上百个，并且有些字段还不固定，返回字段是业务自定义的，这种情况下采用 Protobuf 文件来描述的话就很麻烦了，也就在不在合适。</p>
+
+<h2 id="总结">总结：</h2>
+
+<p>我们介绍了服务描述最常见的三种方式：RESTful API、XML 配置以及 IDL 文件。</p>
+
+<p>具体采用哪种服务描述方式是根据实际情况决定的，通常情况下，如果只是企业内部之间的服务调用，并且都是 Java 语言的话（Dubbo），选择 XML 配置方式是最简单的。</p>
+
+<p>如果企业内部存在多个服务，并且服务采用的是不同语言平台，建议使用 IDL 文件方式进行描述服务。</p>
+
+<p>如果还存在对外开放服务调用的情形的话，使用 RESTful API 方式则更加通用。</p>
+
+<table>
+<thead>
+<tr>
+<th>服务描述方式</th>
+<th>使用场景</th>
+<th>缺点</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>RESTful API</td>
+<td>跨语言平台，组织内外皆可</td>
+<td>HTTP作为通信协议相比TCP，性能较差</td>
+</tr>
+
+<tr>
+<td>XML 配置</td>
+<td>Java平台，一般作用内部</td>
+<td>不支持跨语言</td>
+</tr>
+
+<tr>
+<td>IDL 文件</td>
+<td>跨语言平台，组织内外皆可</td>
+<td>修改或者删除PB字段不能向前兼容（增加字段可以）</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h1 id="服务注册和发现">服务注册和发现</h1>
+
+<blockquote>
+<p>经过上面的过程，假设你已经发布了个服务了，并且还部署到了服务器上，请问 在你不告诉我地址Ip和接口的情况下我该如何调用你的服务和接口呢？或者说如何知道你部署的这台机器的地址呢？</p>
+</blockquote>
+
+<p>我们假设一个场景吧，比如是拆迁户配了很多套房子，然后你想把你某些房子租出来换点资源，但是你自己贴公告就显得有点效率低了，如果我离你的区域比较远又想租你们那边区域的房子而且还不想走过来自己找房源。</p>
+
+<p>那么这个时候，你就需要找个中介公司，你把你的那些房子都挂在他那里，中介公司会帮你挂出来，然后我们才能通过这网上中介发布的房源信息找到你的房源，完事儿。</p>
+
+<p>那么同理，你把你的发布的服务需要挂在一个类似“中介”的地方，我们称之为 注册中心。</p>
+
+<p>下面聊聊 注册中心的原理和实现方式。</p>
+
+<h2 id="注册中心原理">注册中心原理：</h2>
+
+<p>在微服务架构下，主要有三种角色：</p>
+
+<ul>
+<li>服务提供者（RPC Server）、</li>
+<li>服务消费者（RPC Client）、</li>
+<li>服务注册中心（Registry）</li>
+</ul>
+
+<p>三者的交互关系请看下面这张图，我来简单解释一下。</p>
+
+<p><img src="https://static001.geekbang.org/resource/image/75/d9/757231c3cde3d1e2fb805c861ea7a1d9.jpg" alt="image" /></p>
+
+<ul>
+<li>RPC Server 提供服务，在启动时，根据服务发布文件 server.xml 中的配置的信息，向 Registry 注册自身服务，并向 Registry 定期发送心跳汇报存活状态。（注册自己，发送心跳）</li>
+<li>RPC Client 调用服务，在启动时，根据服务引用文件 client.xml 中配置的信息，向 Registry 订阅服务，把 Registry 返回的服务节点列表缓存在本地内存中，并与 RPC Sever 建立连接。（订阅服务，缓存服务节点列表）</li>
+<li>当 RPC Server 节点发生变更时，Registry 会同步变更，RPC Client 感知后会刷新本地内存中缓存的服务节点列表。（同步变更，更新缓存列表）</li>
+<li>RPC Client 从本地缓存的服务节点列表中，基于负载均衡算法选择一台 RPC Sever 发起调用。（负载调用服务）</li>
+</ul>
+
+<h2 id="注册中心实现方式">注册中心实现方式：</h2>
+
+<blockquote>
+<p>注册中心的实现主要涉及几个问题：注册中心需要提供哪些接口，该如何部署；如何存储服务信息；如何监控服务提供者节点的存活；如果服务提供者节点有变化如何通知服务消费者，以及如何控制注册中心的访问权限。</p>
+</blockquote>
+
+<h3 id="1-注册中心-api">1. 注册中心 API</h3>
+
+<p>注册中心必须实现几个最基本的 API 接口：</p>
+
+<ul>
+<li>服务注册接口：用于服务的注册调用 （服务提供者）</li>
+<li>服务反注册接口：用于服务的注销删除（服务提供者）</li>
+<li>心跳汇报接口：用于服务汇报心跳存活（服务提供者）</li>
+<li>服务订阅接口：获取可用的服务提供者节点列表 （服务消费者）</li>
+<li>服务变更查询接口：重新获取最新可用的服务节点列表 （服务消费者</li>
+<li>服务查询接口：查询注册中心当前注册了哪些服务信息 （服务注册中心）</li>
+<li>服务修改接口：修改注册中心某一服务信息（服务注册中心）</li>
+</ul>
+
+<h3 id="2-集群部署">2. 集群部署</h3>
+
+<blockquote>
+<p>注册中心作为服务提供者和服务消费者之间沟通的桥梁，它的重要性不言而喻。所以注册中心一般都是采用集群部署来保证高可用性，并通过分布式一致性协议来确保集群中不同节点之间的数据保持一致。</p>
+</blockquote>
+
+<p>以开源注册中心 ZooKeeper 为例，ZooKeeper 集群中包含多个节点，服务提供者和服务消费者可以同任意一个节点通信，因为它们的数据一定是相同的，这是为什么呢？这就要从 ZooKeeper 的工作原理说起：</p>
+
+<ul>
+<li>每个 Server 在内存中存储了一份数据，Client 的读请求可以请求任意一个 Server。</li>
+<li>ZooKeeper 启动时，将从实例中选举一个 leader（Paxos 协议）。</li>
+<li>Leader 负责处理数据更新等操作（ZAB 协议）。</li>
+<li>一个更新操作成功，当且仅当大多数 Server 在内存中成功修改 。</li>
+</ul>
+
+<p>通过上面这种方式，ZooKeeper 保证了高可用性以及数据一致性。</p>
+
+<p><img src="https://static001.geekbang.org/resource/image/0c/6f/0c3e56272b08e58461e38bbbfd6c796f.jpg" alt="image" /></p>
+
+<p>当然开源的注册中心类似还有 consul、Etcd</p>
+
+<p><img src="http://s1.51cto.com/images/20180129/1517236804404091.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="image" /></p>
+
+<h3 id="3-目录存储">3. 目录存储</h3>
+
+<p>ZooKeeper，注册中心存储服务信息一般采用层次化的目录结构：</p>
+
+<p><img src="https://static001.geekbang.org/resource/image/8f/1e/8f28fca07e7455229763a0a214f5db1e.jpeg" alt="image" /></p>
+
+<h3 id="4-服务健康状态检测">4. 服务健康状态检测</h3>
+
+<p>注册中心除了要支持最基本的服务注册和服务订阅功能以外，还必须具备对服务提供者节点的健康状态检测功能，这样才能保证注册中心里保存的服务节点都是可用的。</p>
+
+<h3 id="5-服务状态变更通知">5. 服务状态变更通知</h3>
+
+<p>一旦注册中心探测到有服务提供者节点新加入或者被剔除，就必须立刻通知所有订阅该服务的服务消费者，刷新本地缓存的服务节点信息，确保服务调用不会请求不可用的服务提供者节点。</p>
+
+<h3 id="6-白名单机制">6. 白名单机制</h3>
+
+<p>在实际的微服务测试和部署时，通常包含多套环境，比如生产环境一套、测试环境一套。开发在进行业务自测、测试在进行回归测试时，一般都是用测试环境，部署的 RPC Server 节点注册到测试的注册中心集群。但经常会出现开发或者测试在部署时，错误的把测试环境下的服务节点注册到了线上注册中心集群，这样的话线上流量就会调用到测试环境下的 RPC Server 节点，可能会造成意想不到的后果。</p>
+
+<p>为了防止这种情况发生，注册中心需要提供一个保护机制，你可以把注册中心想象成一个带有门禁的房间，只有拥有门禁卡的 RPC Server 才能进入。在实际应用中，注册中心可以提供一个白名单机制，只有添加到注册中心白名单内的 RPC Server，才能够调用注册中心的注册接口，这样的话可以避免测试环境中的节点意外跑到线上环境中去。</p>
+
+<h2 id="总结-1">总结：</h2>
+
+<p>注册中心可以说是实现服务化的关键，因为服务化之后，服务提供者和服务消费者不在同一个进程中运行，实现了解耦，这就需要一个纽带去连接服务提供者和服务消费者，而注册中心就正好承担了这一角色。</p>
+
+<p>此外，服务提供者可以任意伸缩即增加节点或者减少节点，通过服务健康状态检测，注册中心可以保持最新的服务节点信息，并将变化通知给订阅服务的服务消费者。</p>
+
+<p>注册中心一般采用分布式集群部署，来保证高可用性，并且为了实现异地多活，有的注册中心还采用多 IDC 部署，这就对数据一致性产生了很高的要求，这些都是注册中心在实现时必须要解决的问题。</p>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h1 id="服务注册中心选型">服务注册中心选型</h1>
+
+<p>当下主流的服务注册与发现的解决方案，主要有两种：</p>
+
+<ul>
+<li><p>应用内注册与发现：注册中心提供服务端和客户端的 SDK，业务应用通过引入注册中心提供的 SDK，通过 SDK 与注册中心交互，来实现服务的注册和发现。（Netflix 开源的 Eureka）</p></li>
+
+<li><p>应用外注册与发现：业务应用本身不需要通过 SDK 与注册中心打交道，而是通过其他方式与注册中心交互，间接完成服务注册与发现。（Consul、zookeeper、etcd）</p></li>
+</ul>
+
+<p>由于篇幅问题，关于注册中心 会另外开文章进行介绍。</p>
+
+<p><a href="https://draveness.me/etcd-introduction">高可用分布式存储 etcd 的实现原理</a></p>
+
+<p><a href="https://draveness.me/zookeeper-chubby">详解分布式协调服务 ZooKeeper</a></p>
+
+<p><a href="https://time.geekbang.org/column/article/39797">Consul</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">微服务架构</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f&amp;text=%e5%be%ae%e6%9c%8d%e5%8a%a1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%8f%91%e5%b8%83%e3%80%81%e5%8f%91%e7%8e%b0%e6%b3%a8%e5%86%8c%e4%ba%8e%e6%b3%a8%e5%86%8c%e4%b8%ad%e5%bf%83%e4%b8%80%e6%8a%8a%e6%a2%ad&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f&amp;title=%e5%be%ae%e6%9c%8d%e5%8a%a1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%8f%91%e5%b8%83%e3%80%81%e5%8f%91%e7%8e%b0%e6%b3%a8%e5%86%8c%e4%ba%8e%e6%b3%a8%e5%86%8c%e4%b8%ad%e5%bf%83%e4%b8%80%e6%8a%8a%e6%a2%ad" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f&amp;title=%e5%be%ae%e6%9c%8d%e5%8a%a1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%8f%91%e5%b8%83%e3%80%81%e5%8f%91%e7%8e%b0%e6%b3%a8%e5%86%8c%e4%ba%8e%e6%b3%a8%e5%86%8c%e4%b8%ad%e5%bf%83%e4%b8%80%e6%8a%8a%e6%a2%ad" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f&amp;title=%e5%be%ae%e6%9c%8d%e5%8a%a1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%8f%91%e5%b8%83%e3%80%81%e5%8f%91%e7%8e%b0%e6%b3%a8%e5%86%8c%e4%ba%8e%e6%b3%a8%e5%86%8c%e4%b8%ad%e5%bf%83%e4%b8%80%e6%8a%8a%e6%a2%ad" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25BE%25AE%25E6%259C%258D%25E5%258A%25A1%25E7%259A%2584%25E6%259C%258D%25E5%258A%25A1%25E5%258F%2591%25E5%25B8%2583%25E5%258F%2591%25E7%258E%25B0%25E6%25B3%25A8%25E5%2586%258C%25E4%25BA%258E%25E6%25B3%25A8%25E5%2586%258C%25E4%25B8%25AD%25E5%25BF%2583%25E4%25B8%2580%25E6%258A%258A%25E6%25A2%25AD%2f&amp;description=%e5%be%ae%e6%9c%8d%e5%8a%a1%e7%9a%84%e6%9c%8d%e5%8a%a1%e5%8f%91%e5%b8%83%e3%80%81%e5%8f%91%e7%8e%b0%e6%b3%a8%e5%86%8c%e4%ba%8e%e6%b3%a8%e5%86%8c%e4%b8%ad%e5%bf%83%e4%b8%80%e6%8a%8a%e6%a2%ad" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" data-toggle="tooltip" data-placement="top" title="Golang内存分配逃逸分析">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
