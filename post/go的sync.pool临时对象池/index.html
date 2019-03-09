@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Go的sync</title>
+  <meta property="og:title" content="Go的sync" />
+  <meta name="twitter:title" content="Go的sync" />
+  <meta name="description" content="sync.Pool临时对象池
+
+关于 pool 的由来可以参考：
+
+
+github issues
+文章
+
+
+">
+  <meta property="og:description" content="sync.Pool临时对象池
+
+关于 pool 的由来可以参考：
+
+
+github issues
+文章
+
+
+">
+  <meta name="twitter:description" content="sync.Pool临时对象池
+
+关于 pool 的由来可以参考：
+
+
+github issues
+文章
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/go%E7%9A%84sync.pool%E4%B8%B4%E6%97%B6%E5%AF%B9%E8%B1%A1%E6%B1%A0/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/go%E7%9A%84sync.pool%E4%B8%B4%E6%97%B6%E5%AF%B9%E8%B1%A1%E6%B1%A0/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Go的sync</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on March 10, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="sync-pool临时对象池">sync.Pool临时对象池</h1>
+
+<p>关于 pool 的由来可以参考：</p>
+
+<ul>
+<li><a href="https://github.com/golang/go/issues/4720">github issues</a></li>
+<li><a href="https://my.oschina.net/u/115763/blog/282376">文章</a></li>
+</ul>
+
+<p></p>
+
+<h2 id="sync-pool-的作用及为什么要用到它">sync.Pool 的作用及为什么要用到它</h2>
+
+<p>Rob Pike  扩展了sync.pool 类型的文档，并且将其目的描述得更清楚：</p>
+
+<blockquote>
+<p>Pool设计用意是在全局变量里维护的释放链表，尤其是被多个 goroutine 同时访问的全局变量。使用Pool代替自己写的释放链表，可以让程序运行的时候，在恰当的场景下从池里重用某项值。sync.Pool一种合适的方法是，为临时缓冲区创建一个池，多个客户端使用这个缓冲区来共享全局资源。另一方面，如果释放链表是某个对象的一部分，并由这个对象维护，而这个对象只由一个客户端使用，在这个客户端工作完成后释放链表，那么用Pool实现这个释放链表是不合适的。</p>
+</blockquote>
+
+<p>“临时对象”的意思是：不需要持久使用的某一类值。</p>
+
+<p>这类值对于程序来说可有可无，但如果有的话会明显更好。它们的创建和销毁可以在任何时候发生，并且完全不会影响到程序的功能。</p>
+
+<p>sync.Pool主要是为了重用对象，一方面缩短了申请空间的时间，另一方面，还减轻了GC的压力。</p>
+
+<h4 id="不过它是一个临时对象池-为什么这么说呢-因为对象池中的对象会被gc回收-所以说-有状态的对象-比如数据库连接是不能够用sync-pool来实现的">不过它是一个临时对象池，为什么这么说呢？因为对象池中的对象会被GC回收。所以说，有状态的对象，比如数据库连接是不能够用sync.Pool来实现的。</h4>
+
+<blockquote>
+<p>gc触发的时机：2分钟或者内存占用达到一个阈值（当前堆内存占用是上次gc后对内存占用的两倍，当GOGC=100时）</p>
+</blockquote>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h2 id="pool-类型数据结构及其两个方法">Pool 类型数据结构及其两个方法</h2>
+
+<p>如下是 pool 类型的数据结构：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">type</span> <span style="color:#268bd2">Pool</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">noCopy</span> <span style="color:#268bd2">noCopy</span>
+
+	<span style="color:#268bd2">local</span>     <span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Pointer</span> <span style="color:#93a1a1;font-style:italic">// local fixed-size per-P pool, actual type is [P]poolLocal ；[P]poolLocal 数组指针 
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">localSize</span> <span style="color:#859900;font-weight:bold">uintptr</span>        <span style="color:#93a1a1;font-style:italic">// size of the local array，数组大小
+</span><span style="color:#93a1a1;font-style:italic"></span>
+	<span style="color:#93a1a1;font-style:italic">// New optionally specifies a function to generate
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// a value when Get would otherwise return nil.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// It may not be changed concurrently with calls to Get.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">New</span> <span style="color:#859900">func</span>() <span style="color:#859900">interface</span>{}
+}
+
+<span style="color:#93a1a1;font-style:italic">// Local per-P Pool appendix.
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">poolLocalInternal</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">private</span> <span style="color:#859900">interface</span>{}   <span style="color:#93a1a1;font-style:italic">// Can be used only by the respective P.；私有缓存区
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">shared</span>  []<span style="color:#859900">interface</span>{} <span style="color:#93a1a1;font-style:italic">// Can be used by any P.；公共缓存区
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Mutex</span>                 <span style="color:#93a1a1;font-style:italic">// Protects shared.
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">poolLocal</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">poolLocalInternal</span>
+
+	<span style="color:#93a1a1;font-style:italic">// Prevents false sharing on widespread platforms with
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 128 mod (cache line size) = 0 .
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">pad</span> [<span style="color:#2aa198;font-weight:bold">128</span> - <span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#268bd2">poolLocalInternal</span>{})%<span style="color:#2aa198;font-weight:bold">128</span>]<span style="color:#859900;font-weight:bold">byte</span>
+}</code></pre></div>
+<p>Pool是提供给外部使用的对象。其中的local成员的真实类型是一个poolLocal数组，localSize是数组长度。poolLocal是真正保存数据的地方。priveate保存了一个临时对象，shared是保存临时对象的数组。</p>
+
+<p>为什么Pool中需要这么多poolLocal对象呢？实际上，Pool是给每个线程分配了一个poolLocal对象。也就是说local数组的长度，就是工作线程的数量(size := runtime.GOMAXPROCS(0))。当多线程在并发读写的时候，通常情况下都是在自己线程的poolLocal中存取数据。当自己线程的poolLocal中没有数据时，才会尝试加锁去其他线程的poolLocal中“偷”数据。</p>
+
+<h3 id="sync-pool-类型只有两个方法-put-和-get">sync.Pool 类型只有两个方法——Put 和 Get。</h3>
+
+<p>Put 是将临时对象放回当前池中，用于存放的作用。</p>
+
+<p>Get 用于从当前的池中获取临时对象，返回一个Interface{}。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> *<span style="color:#268bd2">Pool</span>) <span style="color:#268bd2">Put</span>(<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}){
+    ......
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> *<span style="color:#268bd2">Pool</span>) <span style="color:#268bd2">Get</span>() <span style="color:#859900">interface</span>{}{
+    ......
+}</code></pre></div>
+<p>其中特别说一下这个Get方法，它是去池中获取临时对象，从池中选择一个任意项，将其从池中删除，然后将其返回给调用者。</p>
+
+<p>所以 Get 把返回的对象从池子里面删除。所以用完了的对象，还是得重新放回池子。</p>
+
+<p>如果我们在使用Get申请新对象时pool中没有可用的对象，那么就会返回nil，除非设置了sync.Pool的New func。</p>
+
+<p>我们来看看具体Get的源码解释：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> *<span style="color:#268bd2">Pool</span>) <span style="color:#268bd2">Get</span>() <span style="color:#859900">interface</span>{} {
+	<span style="color:#859900">if</span> <span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enabled</span> {
+		<span style="color:#268bd2">race</span>.<span style="color:#268bd2">Disable</span>()
+	}
+	<span style="color:#268bd2">l</span> := <span style="color:#268bd2">p</span>.<span style="color:#268bd2">pin</span>()
+	<span style="color:#268bd2">x</span> := <span style="color:#268bd2">l</span>.<span style="color:#268bd2">private</span>
+	<span style="color:#268bd2">l</span>.<span style="color:#268bd2">private</span> = <span style="color:#859900;font-weight:bold">nil</span>
+	<span style="color:#268bd2">runtime_procUnpin</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Lock</span>()
+		<span style="color:#268bd2">last</span> := <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>) - <span style="color:#2aa198;font-weight:bold">1</span>
+		<span style="color:#859900">if</span> <span style="color:#268bd2">last</span> &gt;= <span style="color:#2aa198;font-weight:bold">0</span> {
+			<span style="color:#268bd2">x</span> = <span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>[<span style="color:#268bd2">last</span>]
+			<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span> = <span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>[:<span style="color:#268bd2">last</span>]
+		}
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Unlock</span>()
+		<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+			<span style="color:#268bd2">x</span> = <span style="color:#268bd2">p</span>.<span style="color:#268bd2">getSlow</span>()
+		}
+	}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enabled</span> {
+		<span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enable</span>()
+		<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+			<span style="color:#268bd2">race</span>.<span style="color:#268bd2">Acquire</span>(<span style="color:#268bd2">poolRaceAddr</span>(<span style="color:#268bd2">x</span>))
+		}
+	}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> == <span style="color:#859900;font-weight:bold">nil</span> &amp;&amp; <span style="color:#268bd2">p</span>.<span style="color:#268bd2">New</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">x</span> = <span style="color:#268bd2">p</span>.<span style="color:#268bd2">New</span>()
+	}
+	<span style="color:#859900">return</span> <span style="color:#268bd2">x</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> *<span style="color:#268bd2">Pool</span>) <span style="color:#268bd2">getSlow</span>() (<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) {
+	<span style="color:#93a1a1;font-style:italic">// See the comment in pin regarding ordering of the loads.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">size</span> := <span style="color:#268bd2">atomic</span>.<span style="color:#268bd2">LoadUintptr</span>(&amp;<span style="color:#268bd2">p</span>.<span style="color:#268bd2">localSize</span>) <span style="color:#93a1a1;font-style:italic">// load-acquire
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">local</span> := <span style="color:#268bd2">p</span>.<span style="color:#268bd2">local</span>                         <span style="color:#93a1a1;font-style:italic">// load-consume
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// Try to steal one element from other procs.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">pid</span> := <span style="color:#268bd2">runtime_procPin</span>()
+	<span style="color:#268bd2">runtime_procUnpin</span>()
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">size</span>); <span style="color:#268bd2">i</span>++ {
+		<span style="color:#268bd2">l</span> := <span style="color:#268bd2">indexLocal</span>(<span style="color:#268bd2">local</span>, (<span style="color:#268bd2">pid</span>+<span style="color:#268bd2">i</span>+<span style="color:#2aa198;font-weight:bold">1</span>)%<span style="color:#cb4b16">int</span>(<span style="color:#268bd2">size</span>))
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Lock</span>()
+		<span style="color:#268bd2">last</span> := <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>) - <span style="color:#2aa198;font-weight:bold">1</span>
+		<span style="color:#859900">if</span> <span style="color:#268bd2">last</span> &gt;= <span style="color:#2aa198;font-weight:bold">0</span> {
+			<span style="color:#268bd2">x</span> = <span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>[<span style="color:#268bd2">last</span>]
+			<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span> = <span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>[:<span style="color:#268bd2">last</span>]
+			<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Unlock</span>()
+			<span style="color:#859900">break</span>
+		}
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Unlock</span>()
+	}
+	<span style="color:#859900">return</span> <span style="color:#268bd2">x</span>
+}</code></pre></div>
+<ol>
+<li>Get()获取对象时：优先从 private 空间获取 -&gt; 没有则加锁从 share 空间获取 ( 从尾部开始获取)-&gt; 没有再 new func 新的对象 (此对象不会放回池中)直接返回给调用者</li>
+</ol>
+
+<p>为什么这里要锁住。答案在getSlow中。因为当shared中没有数据的时候，会尝试去其他的poolLocal的shared中偷数据。</p>
+
+<ol>
+<li>注意：Get 操作后 (在返回之前就会将它从池中删除)，缓存对象彻底与 Pool 失去引用关联，需要自行 Put 放回。</li>
+</ol>
+
+<p>放回到池中的对象会被GC回收。</p>
+
+<p>但当你Get 的时候，是任意获取对象的，也就是说有可能是当前池中被放回的资源，也有可能是最后被New 出来的资源。</p>
+
+<p>也就是说我们不能对从对象池申请到的对象值做任何假设，可能是New新生成的，可能是被某个协程修改过放回来的这当中会被入坑。</p>
+
+<p>在来看看Put具体源码解释：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// Put adds x to the pool.
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> *<span style="color:#268bd2">Pool</span>) <span style="color:#268bd2">Put</span>(<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) {
+	<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span>
+	}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enabled</span> {
+		<span style="color:#859900">if</span> <span style="color:#268bd2">fastrand</span>()%<span style="color:#2aa198;font-weight:bold">4</span> == <span style="color:#2aa198;font-weight:bold">0</span> {
+			<span style="color:#93a1a1;font-style:italic">// Randomly drop x on floor.
+</span><span style="color:#93a1a1;font-style:italic"></span>			<span style="color:#859900">return</span>
+		}
+		<span style="color:#268bd2">race</span>.<span style="color:#268bd2">ReleaseMerge</span>(<span style="color:#268bd2">poolRaceAddr</span>(<span style="color:#268bd2">x</span>))
+		<span style="color:#268bd2">race</span>.<span style="color:#268bd2">Disable</span>()
+	}
+	<span style="color:#268bd2">l</span> := <span style="color:#268bd2">p</span>.<span style="color:#268bd2">pin</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">l</span>.<span style="color:#268bd2">private</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">private</span> = <span style="color:#268bd2">x</span>
+		<span style="color:#268bd2">x</span> = <span style="color:#859900;font-weight:bold">nil</span>
+	}
+	<span style="color:#268bd2">runtime_procUnpin</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">x</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Lock</span>()
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">l</span>.<span style="color:#268bd2">shared</span>, <span style="color:#268bd2">x</span>)
+		<span style="color:#268bd2">l</span>.<span style="color:#268bd2">Unlock</span>()
+	}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enabled</span> {
+		<span style="color:#268bd2">race</span>.<span style="color:#268bd2">Enable</span>()
+	}
+}</code></pre></div>
+<p>Put() 优先放入 private 空间 -&gt; 其次再考虑 share 空间</p>
+
+<p>Pool 高效的设计的地方就在于将数据分散在了各个真正并发的线程中，每个线程优先从自己的poolLocal中获取数据，很大程度上降低了锁竞争。　</p>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h2 id="sync-pool实际调用">sync.Pool实际调用：</h2>
+
+<h3 id="1-最简单的数据存放">1. 最简单的数据存放：</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+ 
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+	<span style="color:#2aa198">&#34;sync&#34;</span>
+)
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">p</span>:=&amp;<span style="color:#268bd2">sync</span>.<span style="color:#268bd2">Pool</span>{
+		<span style="color:#268bd2">New</span>: <span style="color:#859900">func</span>() <span style="color:#859900">interface</span>{}{
+			<span style="color:#859900">return</span> <span style="color:#2aa198;font-weight:bold">0</span>
+		},
+	}
+	<span style="color:#268bd2">p</span>.<span style="color:#268bd2">Put</span>(<span style="color:#2aa198">&#34;jiangzhou&#34;</span>)
+	<span style="color:#268bd2">p</span>.<span style="color:#268bd2">Put</span>(<span style="color:#2aa198;font-weight:bold">123456</span>)
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">p</span>.<span style="color:#268bd2">Get</span>())
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">p</span>.<span style="color:#268bd2">Get</span>())
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">p</span>.<span style="color:#268bd2">Get</span>())
+}</code></pre></div>
+<p>输出：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">jiangzhou
+123456
+0</pre></div>
+<h2 id="2-临时使用一些大型结构体-可以用pool来减少gc">2.临时使用一些大型结构体，可以用Pool来减少GC。</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;sync&#34;</span>
+	<span style="color:#2aa198">&#34;time&#34;</span>
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+ 
+<span style="color:#859900">type</span> <span style="color:#268bd2">structR6</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">B1</span> [<span style="color:#2aa198;font-weight:bold">100000</span>]<span style="color:#859900;font-weight:bold">int</span>
+}
+<span style="color:#859900">var</span> <span style="color:#268bd2">r6Pool</span> = <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">Pool</span>{
+	<span style="color:#268bd2">New</span>: <span style="color:#859900">func</span>() <span style="color:#859900">interface</span>{} {
+		<span style="color:#859900">return</span> <span style="color:#cb4b16">new</span>(<span style="color:#268bd2">structR6</span>)
+	},
+}
+<span style="color:#859900">func</span> <span style="color:#268bd2">usePool</span>() {
+	<span style="color:#268bd2">startTime</span> := <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>()
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">10000</span>; <span style="color:#268bd2">i</span>++ {
+		<span style="color:#268bd2">sr6</span> := <span style="color:#268bd2">r6Pool</span>.<span style="color:#268bd2">Get</span>().(*<span style="color:#268bd2">structR6</span>)
+		<span style="color:#268bd2">sr6</span>.<span style="color:#268bd2">B1</span>[<span style="color:#2aa198;font-weight:bold">0</span>] = <span style="color:#2aa198;font-weight:bold">0</span>
+		<span style="color:#268bd2">r6Pool</span>.<span style="color:#268bd2">Put</span>(<span style="color:#268bd2">sr6</span>)
+	}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;pool Used:&#34;</span>, <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Since</span>(<span style="color:#268bd2">startTime</span>))
+}
+<span style="color:#859900">func</span> <span style="color:#268bd2">standard</span>() {
+	<span style="color:#268bd2">startTime</span> := <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>()
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#2aa198;font-weight:bold">10000</span>; <span style="color:#268bd2">i</span>++ {
+		<span style="color:#859900">var</span> <span style="color:#268bd2">sr6</span> <span style="color:#268bd2">structR6</span>
+		<span style="color:#268bd2">sr6</span>.<span style="color:#268bd2">B1</span>[<span style="color:#2aa198;font-weight:bold">0</span>] = <span style="color:#2aa198;font-weight:bold">0</span>
+	}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;standard Used:&#34;</span>, <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Since</span>(<span style="color:#268bd2">startTime</span>))
+}
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">standard</span>()
+	<span style="color:#268bd2">usePool</span>()
+}</code></pre></div>
+<p>输出：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">standard Used: 263.24691ms
+pool Used: 733.61µs</pre></div>
+<p>很明显，运用临时池存放再调用要省事的多。</p>
+
+<p>一个含有100000个int值的结构体，在标准方法中，每次均新建，重复10000次，一共需要耗费263.24691ms；</p>
+
+<p>如果用完的struct可以废物利用，放回pool中。需要新的结构体的时候，尝试去pool中取，而不是重新生成，重复10000次仅需要733.61µs。注意单位哦。</p>
+
+<p>这样简单的操作，却节约了99.75%的时间，也节约了各方面的资源。最重要的是它可以有效减少GC CPU和GC Pause。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#93a1a1;font-style:italic">//我们创建一个Pool，并实现New()函数
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">sp</span> := <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">Pool</span>{
+		<span style="color:#93a1a1;font-style:italic">//New()函数的作用是当我们从Pool中Get()对象时，如果Pool为空，则先通过New创建一个对象，插入Pool中，然后返回对象。
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">New</span>: <span style="color:#859900">func</span>() <span style="color:#859900">interface</span>{} {
+			<span style="color:#859900">return</span> <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int</span>, <span style="color:#2aa198;font-weight:bold">16</span>)
+		},
+	}
+	<span style="color:#268bd2">item</span> := <span style="color:#268bd2">sp</span>.<span style="color:#268bd2">Get</span>()
+	<span style="color:#93a1a1;font-style:italic">//打印可以看到，我们通过New返回的大小为16的[]int
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;item : &#34;</span>, <span style="color:#268bd2">item</span>)
+ 
+	<span style="color:#93a1a1;font-style:italic">//然后我们对item进行操作
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">//New()返回的是interface{}，我们需要通过类型断言来转换
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">item</span>.([]<span style="color:#859900;font-weight:bold">int</span>)); <span style="color:#268bd2">i</span>++ {
+		<span style="color:#268bd2">item</span>.([]<span style="color:#859900;font-weight:bold">int</span>)[<span style="color:#268bd2">i</span>] = <span style="color:#268bd2">i</span>
+	}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;item : &#34;</span>, <span style="color:#268bd2">item</span>)
+ 
+	<span style="color:#93a1a1;font-style:italic">//使用完后，我们把item放回池中，让对象可以重用
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">sp</span>.<span style="color:#268bd2">Put</span>(<span style="color:#268bd2">item</span>)
+ 
+	<span style="color:#93a1a1;font-style:italic">//再次从池中获取对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">item2</span> := <span style="color:#268bd2">sp</span>.<span style="color:#268bd2">Get</span>()
+	<span style="color:#93a1a1;font-style:italic">//注意这里获取的对象就是上面我们放回池中的对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;item2 : &#34;</span>, <span style="color:#268bd2">item2</span>)
+	<span style="color:#93a1a1;font-style:italic">//我们再次获取对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">item3</span> := <span style="color:#268bd2">sp</span>.<span style="color:#268bd2">Get</span>()
+	<span style="color:#93a1a1;font-style:italic">//因为池中的对象已经没有了，所以又重新通过New()创建一个新对象，放入池中，然后返回
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">//所以item3是大小为16的空[]int
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;item3 : &#34;</span>, <span style="color:#268bd2">item3</span>)
+ 
+	<span style="color:#93a1a1;font-style:italic">//测试sync.Pool保存socket长连接池
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">//testTcpConnPool()
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>输出如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">item :  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+item :  [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]
+item2 :  [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15]
+item3 :  [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]</pre></div>
+<h3 id="注意-pool不适用于有状态的数据">注意 Pool不适用于有状态的数据</h3>
+
+<p>上面提到过：</p>
+
+<h4 id="因为对象池中的对象会被gc回收-所以说-有状态的对象-比如数据库连接-socket长连接等-是不能够用sync-pool来实现的">因为对象池中的对象会被GC回收。所以说，有状态的对象，比如数据库连接、socket长连接等 是不能够用sync.Pool来实现的</h4>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+ 
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;sync&#34;</span>
+	<span style="color:#2aa198">&#34;net&#34;</span>
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+	<span style="color:#2aa198">&#34;runtime&#34;</span>
+)
+ 
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">sp2</span> := <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">Pool</span>{
+		<span style="color:#268bd2">New</span>: <span style="color:#859900">func</span>() <span style="color:#859900">interface</span>{} {
+			<span style="color:#268bd2">conn</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">net</span>.<span style="color:#268bd2">Dial</span>(<span style="color:#2aa198">&#34;tcp&#34;</span>, <span style="color:#2aa198">&#34;127.0.0.1:8888&#34;</span>);
+			<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+				<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+			}
+			<span style="color:#859900">return</span> <span style="color:#268bd2">conn</span>
+		},
+	}
+	<span style="color:#268bd2">buf</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">byte</span>, <span style="color:#2aa198;font-weight:bold">1024</span>)
+	<span style="color:#93a1a1;font-style:italic">//获取对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">conn</span> := <span style="color:#268bd2">sp2</span>.<span style="color:#268bd2">Get</span>().(<span style="color:#268bd2">net</span>.<span style="color:#268bd2">Conn</span>)
+	<span style="color:#93a1a1;font-style:italic">//使用对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">conn</span>.<span style="color:#268bd2">Write</span>([]<span style="color:#cb4b16">byte</span>(<span style="color:#2aa198">&#34;GET / HTTP/1.1 \r\n\r\n&#34;</span>))
+	<span style="color:#268bd2">n</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">conn</span>.<span style="color:#268bd2">Read</span>(<span style="color:#268bd2">buf</span>)
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;conn read : &#34;</span>, <span style="color:#cb4b16">string</span>(<span style="color:#268bd2">buf</span>[:<span style="color:#268bd2">n</span>]))
+	<span style="color:#93a1a1;font-style:italic">//打印conn的地址
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;coon地址：&#34;</span>,<span style="color:#268bd2">conn</span>)
+	<span style="color:#93a1a1;font-style:italic">//把对象放回池中
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">sp2</span>.<span style="color:#268bd2">Put</span>(<span style="color:#268bd2">conn</span>)
+	<span style="color:#93a1a1;font-style:italic">//我们人为的进行一次垃圾回收
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">runtime</span>.<span style="color:#268bd2">GC</span>()
+	<span style="color:#93a1a1;font-style:italic">//再次获取池中的对象
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">conn2</span> := <span style="color:#268bd2">sp2</span>.<span style="color:#268bd2">Get</span>().(<span style="color:#268bd2">net</span>.<span style="color:#268bd2">Conn</span>)
+	<span style="color:#93a1a1;font-style:italic">//这时发现conn2的地址与上面的conn的地址不一样了
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">//说明池中我们之前放回的对象被全部清除了，显然这并不是我们想看到的
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">//所以sync.Pool不适合用于scoket长连接或数据库连接池
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;coon2地址&#34;</span>,<span style="color:#268bd2">conn2</span>)
+}</code></pre></div>
+<p>推荐一开源的pool库：</p>
+
+<p><a href="https://github.com/jolestar/go-commons-pool">go-commons-pool</a></p>
+
+<p>另外，当理解这篇文章后，又看过源码解释，我建议去看看</p>
+
+<p>极客时间 <a href="https://time.geekbang.org/column/article/0?cid=112">Go语言核心36讲 第33 sync.Pool</a>,这篇文章，结合源码理解看看会又有新的理解，但不适合没看过源码的朋友，不然你会觉得：这是讲的什么鬼。。。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f&amp;text=Go%e7%9a%84sync&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f&amp;title=Go%e7%9a%84sync" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f&amp;title=Go%e7%9a%84sync" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f&amp;title=Go%e7%9a%84sync" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E7%259A%2584sync.pool%25E4%25B8%25B4%25E6%2597%25B6%25E5%25AF%25B9%25E8%25B1%25A1%25E6%25B1%25A0%2f&amp;description=Go%e7%9a%84sync" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E5%8F%91%E7%8E%B0%E6%B3%A8%E5%86%8C%E4%BA%8E%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E4%B8%80%E6%8A%8A%E6%A2%AD/" data-toggle="tooltip" data-placement="top" title="微服务的服务发布、发现注册于注册中心一把梭">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

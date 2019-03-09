@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 13 Feb 2019 20:01:18 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Mar 2019 00:26:14 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go的sync</title>
+      <link>https://driverzhang.github.io/post/go%E7%9A%84sync.pool%E4%B8%B4%E6%97%B6%E5%AF%B9%E8%B1%A1%E6%B1%A0/</link>
+      <pubDate>Sun, 10 Mar 2019 00:26:14 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E7%9A%84sync.pool%E4%B8%B4%E6%97%B6%E5%AF%B9%E8%B1%A1%E6%B1%A0/</guid>
+      <description>&lt;h1 id=&#34;sync-pool临时对象池&#34;&gt;sync.Pool临时对象池&lt;/h1&gt;
+
+&lt;p&gt;关于 pool 的由来可以参考：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/golang/go/issues/4720&#34;&gt;github issues&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://my.oschina.net/u/115763/blog/282376&#34;&gt;文章&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang内存分配逃逸分析</title>
