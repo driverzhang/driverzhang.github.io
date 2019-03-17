@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>用Delve调试器在VsCode中调试Go程序</title>
+  <meta property="og:title" content="用Delve调试器在VsCode中调试Go程序" />
+  <meta name="twitter:title" content="用Delve调试器在VsCode中调试Go程序" />
+  <meta name="description" content="本人平常主要是有的go代码工具是：
+
+
+goland
+vscode
+
+
+">
+  <meta property="og:description" content="本人平常主要是有的go代码工具是：
+
+
+goland
+vscode
+
+
+">
+  <meta name="twitter:description" content="本人平常主要是有的go代码工具是：
+
+
+goland
+vscode
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E7%94%A8delve%E8%B0%83%E8%AF%95%E5%99%A8%E5%9C%A8vscode%E4%B8%AD%E8%B0%83%E8%AF%95go%E7%A8%8B%E5%BA%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E7%94%A8delve%E8%B0%83%E8%AF%95%E5%99%A8%E5%9C%A8vscode%E4%B8%AD%E8%B0%83%E8%AF%95go%E7%A8%8B%E5%BA%8F/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>用Delve调试器在VsCode中调试Go程序</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on March 17, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>本人平常主要是有的go代码工具是：</p>
+
+<ul>
+<li>goland</li>
+<li>vscode</li>
+</ul>
+
+<p></p>
+
+<p>主要代码部分是用 goland，毕业 IDE 功能其他不用去操太多的配置的心，比如vscode你要下载一些插件然后就是各种捣鼓&hellip;&hellip;</p>
+
+<p>另外一个很重要的原因是，vscode 无法查看接口实现，当你看源码或者其他开源项目有点蛋疼。</p>
+
+<p>vscode 配合我mac 的终端快速的查看代码和编辑还是很方便的。</p>
+
+<h2 id="我的-go-程序调式习惯">我的 Go 程序调式习惯</h2>
+
+<p>一般都是打 log 的方式，配合我的log包还是可在终端很明显的看见并且快速跳转到问题所在。</p>
+
+<p>当然 你还有类似gdb 之类的。</p>
+
+<p>目前 Go语言支持 GDB、LLDB 和 Delve 几种调试器。其中GDB是最早支持的调试工具，LLDB是macOS系统推荐的标准调试工具。</p>
+
+<p>但是GDB和LLDB对Go语言的专有特性都缺乏很大支持，而只有Delve是专门为Go语言设计开发的调试工具。而且Delve本身也是采用Go语言开发，对Windows平台也提供了一样的支持。</p>
+
+<p>而刚好 vscode 对Go 的调试也是基于用 Delve 调试器调式的。</p>
+
+<h2 id="delve-调试器操作">Delve 调试器操作</h2>
+
+<p>首先我们安装 Delve，一般 mac 两种方法：</p>
+
+<ul>
+<li>brew install go-delve/delve/delve （下载好就已经自动把签名搞定的）</li>
+<li>go get -v -u github.com/peterh/liner github.com/derekparker/delve/cmd/dlv（自己手动签名）</li>
+</ul>
+
+<p>我 用第一种方法有问题，直接换第二种方法手动配一下签名证书就好</p>
+
+<h3 id="手动配置签名证书">手动配置签名证书</h3>
+
+<ol>
+<li>打开钥匙串访问 程序，然后创建证书</li>
+</ol>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1g165m063k6j317r0u0e77.jpg" alt="" /></p>
+
+<ol>
+<li>选择一个名称（在示例中为dlv-cert）</li>
+</ol>
+
+<p>将“Identity Type(身份类型)”设置为“Self Signed Root(自签名根)”，</p>
+
+<p>将“Certificate Type(证书类型)”设置为“Code Signing(代码签名)”，</p>
+
+<p>然后选择“Let me override defaults（让我覆盖默认值）”。 单击“Continue(继续)”。 您可能想将预定义的365天期间延长到3650天</p>
+
+<ol>
+<li>单击“Continue(继续)”多次，直到进入“Specify a Location For The Certificate(指定证书的位置)”页面，然后将“Keychain to System(钥匙串设置为系统)”。</li>
+</ol>
+
+<p>如果最后出现 报错 ： 未知错误 XXX，XXX,</p>
+
+<h4 id="骚操作如下">骚操作如下：</h4>
+
+<p>重复上面操作到 步骤3 的时候 不要选择系统，而是直接选择 “登录”，进行创建证书，然后把在 登录 里面的直接把刚才创建的证书拖进“系统”中。</p>
+
+<p>最后操作就是设置你的证书权限了，分别双击两次进入设备如下图：</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1g165xrdw6cj31m80se7fv.jpg" alt="" /></p>
+
+<p>设置为： “始终信任” 和 “允许所有应用访问此项目”。</p>
+
+<h3 id="go-get">go get</h3>
+
+<p>安装包文件即可：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go get -v -u github.com/peterh/liner github.com/derekparker/delve/cmd/dlv</pre></div>
+<h3 id="遇见问题">遇见问题：</h3>
+
+<p>当你上面go get 安装好后，在终端运行：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">dlv debug</pre></div>
+<p>遇见如下提示：</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1g1661vrssvj31z006cqgv.jpg" alt="" /></p>
+
+<p>其实只要确保你具有正确的编译工具链。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">xcode-select --install</pre></div>
+<p>然后再次运行  dlv debug 即可。</p>
+
+<h3 id="开始操作delve调式go程序">开始操作delve调式go程序</h3>
+
+<p>具体操作内容，本人不重复，给出如下链接自己去看看很简单：</p>
+
+<p><a href="https://chai2010.cn/advanced-go-programming-book/ch3-asm/ch3-09-debug.html">delve调试器</a></p>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h2 id="vscode-启动调试器">VsCode 启动调试器</h2>
+
+<p>如下图所示：</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcgy1g1667hv3szj30ul0u0q9l.jpg" alt="" /></p>
+
+<p>上面图片显示的重点都已经标记出来了，自己动手多捣鼓就会明白。好了开始调式你的程序吧。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f&amp;text=%e7%94%a8Delve%e8%b0%83%e8%af%95%e5%99%a8%e5%9c%a8VsCode%e4%b8%ad%e8%b0%83%e8%af%95Go%e7%a8%8b%e5%ba%8f&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f&amp;title=%e7%94%a8Delve%e8%b0%83%e8%af%95%e5%99%a8%e5%9c%a8VsCode%e4%b8%ad%e8%b0%83%e8%af%95Go%e7%a8%8b%e5%ba%8f" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f&amp;title=%e7%94%a8Delve%e8%b0%83%e8%af%95%e5%99%a8%e5%9c%a8VsCode%e4%b8%ad%e8%b0%83%e8%af%95Go%e7%a8%8b%e5%ba%8f" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f&amp;title=%e7%94%a8Delve%e8%b0%83%e8%af%95%e5%99%a8%e5%9c%a8VsCode%e4%b8%ad%e8%b0%83%e8%af%95Go%e7%a8%8b%e5%ba%8f" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E7%2594%25A8delve%25E8%25B0%2583%25E8%25AF%2595%25E5%2599%25A8%25E5%259C%25A8vscode%25E4%25B8%25AD%25E8%25B0%2583%25E8%25AF%2595go%25E7%25A8%258B%25E5%25BA%258F%2f&amp;description=%e7%94%a8Delve%e8%b0%83%e8%af%95%e5%99%a8%e5%9c%a8VsCode%e4%b8%ad%e8%b0%83%e8%af%95Go%e7%a8%8b%e5%ba%8f" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/go%E7%9A%84sync.pool%E4%B8%B4%E6%97%B6%E5%AF%B9%E8%B1%A1%E6%B1%A0/" data-toggle="tooltip" data-placement="top" title="Go的sync">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
