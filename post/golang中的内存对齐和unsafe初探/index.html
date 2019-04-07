@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang中的内存对齐和unsafe初探</title>
+  <meta property="og:title" content="Golang中的内存对齐和unsafe初探" />
+  <meta name="twitter:title" content="Golang中的内存对齐和unsafe初探" />
+  <meta name="description" content="unsafe 包简单说明
+
+unsafe，顾名思义，是不安全的，Go定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。
+
+">
+  <meta property="og:description" content="unsafe 包简单说明
+
+unsafe，顾名思义，是不安全的，Go定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。
+
+">
+  <meta name="twitter:description" content="unsafe 包简单说明
+
+unsafe，顾名思义，是不安全的，Go定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang中的内存对齐和unsafe初探</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 7, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="unsafe-包简单说明">unsafe 包简单说明</h1>
+
+<p>unsafe，顾名思义，是不安全的，Go定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。</p>
+
+<p></p>
+
+<blockquote>
+<p>使用unsafe包的同时也放弃了Go语言保证与未来版本的兼容性的承诺，因为它必然会有意无意中使用很多非公开的实现细节，而这些实现的细节在未来的Go语言中很可能会被改变。</p>
+
+<p>unsafe包被广泛地用于比较低级的包, 例如runtime、os、syscall还有net包等，因为它们需要和操作系统密切配合，但是对于普通的程序一般是不需要使用unsafe包的。</p>
+</blockquote>
+
+<p>虽然这个包不安全，但是它也有它的优势，那就是可以绕过Go的内存安全机制，直接对内存进行读写，所以有时候因为性能的需要，会冒一些风险使用该包，对内存进行操作。</p>
+
+<h2 id="unsafe-sizeof函数">unsafe.Sizeof函数</h2>
+
+<p>Sizeof函数返回操作数在内存中的字节大小（返回该类型所占用的内存大小），参数可以是任意类型的表达式，但是它并不会对表达式进行求值。</p>
+
+<p>一个 Sizeof 函数调用是一个对应 uintptr 类型的常量表达式，因此返回的结果可以用作数组类型的长度大小，或者用作计算其他的常量。</p>
+
+<p>Sizeof函数可以返回一个类型所占用的内存大小，这个大小只有类型有关，和类型对应的变量存储的内容大小无关，比如bool型占用一个字节、int8也占用一个字节。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"> <span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;unsafe&#34;</span>
+ 
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#2aa198">&#34;true&#34;</span>))                <span style="color:#93a1a1;font-style:italic">// 16
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#859900;font-weight:bold">true</span>))                  <span style="color:#93a1a1;font-style:italic">// 1
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">int8</span>(<span style="color:#2aa198;font-weight:bold">0</span>)))               <span style="color:#93a1a1;font-style:italic">// 1
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">int16</span>(<span style="color:#2aa198;font-weight:bold">10</span>)))             <span style="color:#93a1a1;font-style:italic">// 2
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">int32</span>(<span style="color:#2aa198;font-weight:bold">10000000</span>)))       <span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">int64</span>(<span style="color:#2aa198;font-weight:bold">10000000000000</span>))) <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">1</span>)))                <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#cb4b16">float64</span>(<span style="color:#2aa198;font-weight:bold">0</span>)))            <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>对于整型来说，占用的字节数意味着这个类型存储数字范围的大小，比如int8占用一个字节，也就是8bit，所以它可以存储的大小范围是-128~~127,也就是−2^(n-1)到2^(n-1)−1，n表示bit，int8表示8bit，int16表示16bit，其他以此类推。</p>
+
+<p>对于和平台有关的int类型，这个要看平台是32位还是64位，会取最大的。比如我自己测试，以上输出，会发现int和int64的大小是一样的，因为我的是64位平台的电脑。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">func Sizeof(x ArbitraryType) uintptr</pre></div>
+<p>以上是Sizeof的函数定义，它接收一个ArbitraryType类型的参数，返回一个uintptr类型的值。这里的ArbitraryType不用关心，他只是一个占位符，为了文档的考虑导出了该类型，但是一般不会使用它，我们只需要知道它表示任何类型，也就是我们这个函数可以接收任意类型的数据。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"> 
+ <span style="color:#93a1a1;font-style:italic">// ArbitraryType is here for the purposes of documentation only and is not actually
+</span><span style="color:#93a1a1;font-style:italic">// part of the unsafe package. It represents the type of an arbitrary Go expression.
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">ArbitraryType</span> <span style="color:#859900;font-weight:bold">int</span></code></pre></div>
+<hr />
+
+<h2 id="alignof-函数">Alignof 函数</h2>
+
+<p>Alignof返回一个类型的对齐值，也可以叫做对齐系数或者对齐倍数。对齐值是一个和内存对齐有关的值，合理的内存对齐可以提高内存读写的性能。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">var</span> <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">bool</span>
+	<span style="color:#859900">var</span> <span style="color:#268bd2">i8</span> <span style="color:#859900;font-weight:bold">int8</span>
+	<span style="color:#859900">var</span> <span style="color:#268bd2">i16</span> <span style="color:#859900;font-weight:bold">int16</span>
+	<span style="color:#859900">var</span> <span style="color:#268bd2">i64</span> <span style="color:#859900;font-weight:bold">int64</span>
+
+	<span style="color:#859900">var</span> <span style="color:#268bd2">f32</span> <span style="color:#859900;font-weight:bold">float32</span>
+
+	<span style="color:#859900">var</span> <span style="color:#268bd2">s</span> <span style="color:#859900;font-weight:bold">string</span>
+
+	<span style="color:#859900">var</span> <span style="color:#268bd2">m</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900;font-weight:bold">string</span>
+
+	<span style="color:#859900">var</span> <span style="color:#268bd2">p</span> *<span style="color:#859900;font-weight:bold">int32</span>
+
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">b</span>))   <span style="color:#93a1a1;font-style:italic">// 1
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">i8</span>))  <span style="color:#93a1a1;font-style:italic">// 1
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">i16</span>)) <span style="color:#93a1a1;font-style:italic">// 2
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">i64</span>)) <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">f32</span>)) <span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">s</span>))   <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">m</span>))   <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Alignof</span>(<span style="color:#268bd2">p</span>))   <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>}</code></pre></div>
+<p>从以上例子的输出，可以看到，对齐值一般是2^n,最大不会超过8（原因见下面的内存对齐规则）。Alignof的函数定义和Sizeof基本上一样。这里需要注意的是每个人的电脑运行的结果可能不一样，大同小异。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">func Alignof(x ArbitraryType) uintptr</pre></div>
+<p>获取对齐值还可以使用反射包的函数，也就是说：unsafe.Alignof(x)等价于reflect.TypeOf(x).Align()。</p>
+
+<hr />
+
+<h2 id="offsetof-函数">Offsetof 函数</h2>
+
+<p>Offsetof函数只适用于struct结构体中的字段相对于结构体的内存位置偏移量。结构体的第一个字段的偏移量都是0。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#859900">var</span> <span style="color:#268bd2">u1</span> <span style="color:#268bd2">user1</span>
+
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Offsetof</span>(<span style="color:#268bd2">u1</span>.<span style="color:#268bd2">b</span>)) <span style="color:#93a1a1;font-style:italic">// 0
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Offsetof</span>(<span style="color:#268bd2">u1</span>.<span style="color:#268bd2">i</span>)) <span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Offsetof</span>(<span style="color:#268bd2">u1</span>.<span style="color:#268bd2">j</span>)) <span style="color:#93a1a1;font-style:italic">// 8
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">unsafe</span>.<span style="color:#268bd2">Sizeof</span>(<span style="color:#268bd2">u1</span>))     <span style="color:#93a1a1;font-style:italic">// 16
+</span><span style="color:#93a1a1;font-style:italic"></span>
+}
+
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">user1</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">byte</span>
+	<span style="color:#268bd2">i</span> <span style="color:#859900;font-weight:bold">int32</span>
+	<span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int64</span>
+}</code></pre></div>
+<p>字段的偏移量，就是该字段在struct结构体内存布局中的起始位置(内存位置索引从0开始)。</p>
+
+<p>根据字段的偏移量，我们可以定位结构体的字段，进而可以读写该结构体的字段，哪怕他们是私有的。这里可以直接用汇编获取对应偏移量的字段值。</p>
+
+<p>同样也可以用反射表示：</p>
+
+<p>unsafe.Offsetof(u1.i) 等价于 reflect.TypeOf(u1).Field(i).Offset</p>
+
+<hr />
+
+<h1 id="struct-字段顺序不同-最终大小可能不同">struct 字段顺序不同，最终大小可能不同</h1>
+
+<h2 id="首先来看个栗子">首先来看个栗子：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Part1 struct {
+    a bool
+    b int32
+    c int8
+    d int64
+    e byte
+}</pre></div>
+<p>来看一下 Part1 共占用的大小是多少呢？</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">func main() {
+    fmt.Printf(&#34;bool size: %d\n&#34;, unsafe.Sizeof(bool(true)))
+    fmt.Printf(&#34;int32 size: %d\n&#34;, unsafe.Sizeof(int32(0)))
+    fmt.Printf(&#34;int8 size: %d\n&#34;, unsafe.Sizeof(int8(0)))
+    fmt.Printf(&#34;int64 size: %d\n&#34;, unsafe.Sizeof(int64(0)))
+    fmt.Printf(&#34;byte size: %d\n&#34;, unsafe.Sizeof(byte(0)))
+    fmt.Printf(&#34;string size: %d\n&#34;, unsafe.Sizeof(&#34;EDDYCJY&#34;))
+}</pre></div>
+<p>结果如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bool size: 1
+int32 size: 4
+int8 size: 1
+int64 size: 8
+byte size: 1
+string size: 16</pre></div>
+<p>然后你也许就会得出这个结果：</p>
+
+<p>Part1 这一个结构体的占用内存大小为 1+4+1+8+1 = 15 个字节。相信有的小伙伴是这么算的，看上去也没什么毛病</p>
+
+<p>但是实际答案却是：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Part1 struct {
+    a bool
+    b int32
+    c int8
+    d int64
+    e byte
+}
+
+func main() {
+    part1 := Part1{}
+
+    fmt.Printf(&#34;part1 size: %d, align: %d\n&#34;, unsafe.Sizeof(part1), unsafe.Alignof(part1))
+}</pre></div>
+<p>输出结果：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">part1 size: 32, align: 8</pre></div>
+<p>最终输出为占用 32 个字节。这与前面所预期的结果完全不一样。这充分地说明了先前的计算方式是错误的。</p>
+
+<p>为什么呢？</p>
+
+<p>在这里要提到 “内存对齐” 这一概念，才能够用正确的姿势去计算，接下来我们详细的讲讲它是什么</p>
+
+<hr />
+
+<h1 id="内存对齐">内存对齐</h1>
+
+<p>有的小伙伴可能会认为内存读取，就是一个简单的字节数组摆放</p>
+
+<p><img src="https://camo.githubusercontent.com/75eec73b37a770f4cd45aa2d2e61e283e5405ee9/68747470733a2f2f692e696d6775722e636f6d2f535a48514a4b372e706e67" alt="image" /></p>
+
+<p>上图表示一个坑一个萝卜的内存读取方式。但实际上 CPU 并不会以一个一个字节去读取和写入内存。</p>
+
+<h3 id="敲重点啦">敲重点啦：</h3>
+
+<p>相反 CPU 读取内存是一块一块读取的，块的大小可以为 2、4、6、8、16 字节等大小。块大小我们称其为内存访问粒度。如下图：</p>
+
+<p><img src="https://camo.githubusercontent.com/e42eac1dab3ac90560cd52c6c274c5c9ddcf5e3c/68747470733a2f2f692e696d6775722e636f6d2f6d43465a5765382e706e67" alt="image" /></p>
+
+<p>在样例中，假设访问粒度为 4。 CPU 是以每 4 个字节大小的访问粒度去读取和写入内存的。这才是正确的姿势</p>
+
+<h2 id="为什么要关心对齐">为什么要关心对齐？</h2>
+
+<ul>
+<li><p>你正在编写的代码在性能（CPU、Memory）方面有一定的要求</p></li>
+
+<li><p>你正在处理向量方面的指令</p></li>
+
+<li><p>某些硬件平台（ARM）体系不支持未对齐的内存访问</p></li>
+</ul>
+
+<h2 id="为什么要做对齐">为什么要做对齐</h2>
+
+<ul>
+<li><p>平台（移植性）原因：不是所有的硬件平台都能够访问任意地址上的任意数据。例如：特定的硬件平台只允许在特定地址获取特定类型的数据，否则会导致异常情况</p></li>
+
+<li><p>性能原因：若访问未对齐的内存，将会导致 CPU 进行两次内存访问，并且要花费额外的时钟周期来处理对齐及运算。而本身就对齐的内存仅需要一次访问就可以完成读取动作</p></li>
+</ul>
+
+<p><img src="https://camo.githubusercontent.com/0c7bed49e0cf585583362cb6fe16b0c5721e07d5/68747470733a2f2f692e696d6775722e636f6d2f6731527855547a2e706e67" alt="image" /></p>
+
+<p>在上图中，假设从 Index 1 开始读取，将会出现很崩溃的问题。因为它的内存访问边界是不对齐的。因此 CPU 会做一些额外的处理工作。如下：</p>
+
+<ul>
+<li>CPU 首次读取未对齐地址的第一个内存块，读取 0-3 字节。并移除不需要的字节 0</li>
+<li>CPU 再次读取未对齐地址的第二个内存块，读取 4-7 字节。并移除不需要的字节 5、6、7 字节</li>
+<li>合并 1-4 字节的数据</li>
+<li>合并后放入寄存器</li>
+</ul>
+
+<p>从上述流程可得出，不做 “内存对齐” 是一件有点 &ldquo;麻烦&rdquo; 的事。因为它会增加许多耗费时间的动作</p>
+
+<p>而假设做了内存对齐，从 Index 0 开始读取 4 个字节，只需要读取一次，也不需要额外的运算。</p>
+
+<h3 id="这显然高效很多-是标准的空间换时间做法">这显然高效很多，是标准的空间换时间做法</h3>
+
+<hr />
+
+<h2 id="默认对齐系数">默认对齐系数</h2>
+
+<p>在不同平台上的编译器都有自己默认的 “对齐系数”，可通过预编译命令 #pragma pack(n) 进行变更，n 就是代指 “对齐系数”。一般来讲，我们常用的平台的系数如下：</p>
+
+<ul>
+<li><p>32 位：4</p></li>
+
+<li><p>64 位：8</p></li>
+</ul>
+
+<p>另外要注意，不同硬件平台占用的大小和对齐值都可能是不一样的。因此本文的值不是唯一的，调试的时候需按本机的实际情况考虑</p>
+
+<h2 id="成员对齐">成员对齐</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">func main() {
+    fmt.Printf(&#34;bool align: %d\n&#34;, unsafe.Alignof(bool(true)))
+    fmt.Printf(&#34;int32 align: %d\n&#34;, unsafe.Alignof(int32(0)))
+    fmt.Printf(&#34;int8 align: %d\n&#34;, unsafe.Alignof(int8(0)))
+    fmt.Printf(&#34;int64 align: %d\n&#34;, unsafe.Alignof(int64(0)))
+    fmt.Printf(&#34;byte align: %d\n&#34;, unsafe.Alignof(byte(0)))
+    fmt.Printf(&#34;string align: %d\n&#34;, unsafe.Alignof(&#34;EDDYCJY&#34;))
+    fmt.Printf(&#34;map align: %d\n&#34;, unsafe.Alignof(map[string]string{}))
+}
+
+
+bool align: 1
+int32 align: 4
+int8 align: 1
+int64 align: 8
+byte align: 1
+string align: 8
+map align: 8</pre></div>
+<p>关于 unsafe.Alignof 是用来来返回相应类型的对齐系数，上面已经说了。</p>
+
+<p>通过观察输出结果，可得知基本都是 2^n，最大也不会超过 8。这是因为我本机（64 位）编译器默认对齐系数是 8，因此最大值不会超过这个数</p>
+
+<h2 id="整体对齐-结构体本身也要对齐">整体对齐 （结构体本身也要对齐）</h2>
+
+<p>上面提到了结构体中的成员变量要做字节对齐。那么想当然身为最终结果的结构体，也是需要做字节对齐的</p>
+
+<hr />
+
+<h2 id="对齐规则">对齐规则</h2>
+
+<ul>
+<li><p>结构体的成员变量，第一个成员变量的偏移量为 0。往后的每个成员变量的对齐值必须为编译器默认对齐长度（#pragma pack(n)）或当前成员变量类型的长度（unsafe.Sizeof），取最小值作为当前类型的对齐值。其偏移量必须为对齐值的整数倍</p></li>
+
+<li><p>结构体本身，对齐值必须为编译器默认对齐长度（#pragma pack(n)）或结构体的所有成员变量类型中的最大长度，取最大数的最小整数倍作为对齐值</p></li>
+
+<li><p>结合以上两点，可得知若编译器默认对齐长度（#pragma pack(n)）超过结构体内成员变量的类型最大长度时，默认对齐长度是没有任何意义的</p></li>
+</ul>
+
+<p>换个说法就是：</p>
+
+<ul>
+<li><p>对于具体类型来说，对齐值=min(编译器默认对齐值，类型大小Sizeof长度)。也就是在默认设置的对齐值和类型的内存占用大小之间，取最小值为该类型的对齐值。我的电脑默认是8，所以最大值不会超过8.</p></li>
+
+<li><p>struct在每个字段都内存对齐之后，其本身也要进行对齐，对齐值=min(默认对齐值，字段最大类型长度)。这条也很好理解，struct的所有字段中，最大的那个类型的长度以及默认对齐值之间，取最小的那个。</p></li>
+</ul>
+
+<h2 id="分析流程">分析流程</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Part1 struct {
+    a bool
+    b int32
+    c int8
+    d int64
+    e byte
+}</pre></div>
+<table>
+<thead>
+<tr>
+<th>成员变量</th>
+<th>类型</th>
+<th>偏移量</th>
+<th>自身占用</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>a</td>
+<td>bool</td>
+<td>0</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>字节对齐</td>
+<td>无</td>
+<td>1</td>
+<td>3</td>
+</tr>
+
+<tr>
+<td>b</td>
+<td>int32</td>
+<td>4</td>
+<td>4</td>
+</tr>
+
+<tr>
+<td>c</td>
+<td>int8</td>
+<td>8</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>字节对齐</td>
+<td>无</td>
+<td>9</td>
+<td>7</td>
+</tr>
+
+<tr>
+<td>d</td>
+<td>int64</td>
+<td>16</td>
+<td>8</td>
+</tr>
+
+<tr>
+<td>e</td>
+<td>byte</td>
+<td>24</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>字节对齐</td>
+<td>无</td>
+<td>25</td>
+<td>7</td>
+</tr>
+
+<tr>
+<td>总占用大小</td>
+<td>-</td>
+<td>-</td>
+<td>32</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="成员对齐-1">成员对齐：</h3>
+
+<ul>
+<li><p>第一个成员 a</p>
+
+<ul>
+<li>类型为 bool</li>
+<li>对齐值为 1 字节</li>
+<li>初始地址，偏移量为 0。占用了第 1 位</li>
+</ul></li>
+
+<li><p>第二个成员 b</p>
+
+<ul>
+<li>类型为 int32</li>
+<li>大小/对齐值为 4 字节</li>
+<li>根据规则 1，其偏移量必须为 4 的整数倍。确定偏移量为 4，因此 2-4 位为 Padding。而当前数值从第 5 位开始填充，到第 8 位。如下：axxx|bbbb</li>
+</ul></li>
+
+<li><p>第三个成员 c</p>
+
+<ul>
+<li>类型为 int8</li>
+<li>大小/对齐值为 1 字节</li>
+<li>根据规则1，其偏移量必须为 1 的整数倍。当前偏移量为 8。不需要额外对齐，填充 1 个字节到第 9 位。如下：axxx|bbbb|c&hellip;</li>
+</ul></li>
+
+<li><p>第四个成员 d</p>
+
+<ul>
+<li>类型为 int64</li>
+<li>大小/对齐值为 8 字节</li>
+<li>根据规则 1，其偏移量必须为 8 的整数倍。确定偏移量为 16，因此 9-16 位为 Padding。而当前数值从第 17 位开始写入，到第 24 位。如下：axxx|bbbb|cxxx|xxxx|dddd|dddd
+<br /></li>
+</ul></li>
+
+<li><p>第五个成员 e</p>
+
+<ul>
+<li>类型为 byte</li>
+<li>大小/对齐值为 1 字节</li>
+<li>根据规则 1，其偏移量必须为 1 的整数倍。当前偏移量为 24。不需要额外对齐，填充 1 个字节到第 25 位。如下：axxx|bbbb|cxxx|xxxx|dddd|dddd|e&hellip;</li>
+</ul></li>
+</ul>
+
+<h3 id="整体对齐">整体对齐：</h3>
+
+<p>在每个成员变量进行对齐后，根据规则 2，整个结构体本身也要进行字节对齐，因为可发现它可能并不是 2^n，不是偶数倍。显然不符合对齐的规则</p>
+
+<p>根据规则 2，可得出对齐值为 8。现在的偏移量为 25，不是 8 的整倍数。因此确定偏移量为 32。对结构体进行对齐</p>
+
+<h3 id="结果">结果：</h3>
+
+<p>Part1 内存布局：axxx|bbbb|cxxx|xxxx|dddd|dddd|exxx|xxxx</p>
+
+<h4 id="其中xxx表示为-内存空洞">其中xxx表示为 “内存空洞”</h4>
+
+<hr />
+
+<h2 id="推论字段顺序可改变结构体大小">推论字段顺序可改变结构体大小</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">type Part1 struct {
+    a bool
+    b int32
+    c int8
+    d int64
+    e byte
+}
+
+type Part2 struct {
+    e byte
+    c int8
+    a bool
+    b int32
+    d int64
+}
+
+func main() {
+    part1 := Part1{}
+    part2 := Part2{}
+
+    fmt.Printf(&#34;part1 size: %d, align: %d\n&#34;, unsafe.Sizeof(part1), unsafe.Alignof(part1))
+    fmt.Printf(&#34;part2 size: %d, align: %d\n&#34;, unsafe.Sizeof(part2), unsafe.Alignof(part2))
+}
+
+
+part1 size: 32, align: 8
+part2 size: 16, align: 8</pre></div>
+<p>分析过程和上面完全一样。</p>
+
+<h2 id="参考文章链接">参考文章链接：</h2>
+
+<p><a href="https://books.studygolang.com/gopl-zh/ch13/ch13-01.html">1. unsafe.Sizeof, Alignof 和 Offsetof</a></p>
+
+<p><a href="https://www.flysnow.org/2017/07/02/go-in-action-unsafe-memory-layout.html">2. Go语言实战笔记（二十六）| Go unsafe 包之内存布局</a></p>
+
+<p><a href="https://github.com/EDDYCJY/blog/blob/master/golang/2018-12-26-%E5%9C%A8Go%E4%B8%AD%E6%81%B0%E5%88%B0%E5%A5%BD%E5%A4%84%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90.md">3. 在 Go 中恰到好处的内存对齐</a></p>
+
+<p><a href="https://developer.ibm.com/articles/pa-dalign/">4 Data alignment: Straighten up and fly right</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f&amp;text=Golang%e4%b8%ad%e7%9a%84%e5%86%85%e5%ad%98%e5%af%b9%e9%bd%90%e5%92%8cunsafe%e5%88%9d%e6%8e%a2&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=Golang%e4%b8%ad%e7%9a%84%e5%86%85%e5%ad%98%e5%af%b9%e9%bd%90%e5%92%8cunsafe%e5%88%9d%e6%8e%a2" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=Golang%e4%b8%ad%e7%9a%84%e5%86%85%e5%ad%98%e5%af%b9%e9%bd%90%e5%92%8cunsafe%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f&amp;title=Golang%e4%b8%ad%e7%9a%84%e5%86%85%e5%ad%98%e5%af%b9%e9%bd%90%e5%92%8cunsafe%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E4%25B8%25AD%25E7%259A%2584%25E5%2586%2585%25E5%25AD%2598%25E5%25AF%25B9%25E9%25BD%2590%25E5%2592%258Cunsafe%25E5%2588%259D%25E6%258E%25A2%2f&amp;description=Golang%e4%b8%ad%e7%9a%84%e5%86%85%e5%ad%98%e5%af%b9%e9%bd%90%e5%92%8cunsafe%e5%88%9d%e6%8e%a2" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E7%94%A8delve%E8%B0%83%E8%AF%95%E5%99%A8%E5%9C%A8vscode%E4%B8%AD%E8%B0%83%E8%AF%95go%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="用Delve调试器在VsCode中调试Go程序">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

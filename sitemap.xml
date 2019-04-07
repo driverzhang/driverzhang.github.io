@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/</loc>
+    <lastmod>2019-04-07T14:21:21+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://driverzhang.github.io/post/%E7%94%A8delve%E8%B0%83%E8%AF%95%E5%99%A8%E5%9C%A8vscode%E4%B8%AD%E8%B0%83%E8%AF%95go%E7%A8%8B%E5%BA%8F/</loc>
     <lastmod>2019-03-17T22:43:57+08:00</lastmod>
   </url>
@@ -360,13 +365,13 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/golang/</loc>
-    <lastmod>2019-03-17T22:43:57+08:00</lastmod>
+    <lastmod>2019-04-07T14:21:21+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://driverzhang.github.io/</loc>
-    <lastmod>2019-03-17T22:43:57+08:00</lastmod>
+    <lastmod>2019-04-07T14:21:21+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -450,7 +455,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/post/</loc>
-    <lastmod>2019-03-17T22:43:57+08:00</lastmod>
+    <lastmod>2019-04-07T14:21:21+08:00</lastmod>
     <priority>0</priority>
   </url>
   

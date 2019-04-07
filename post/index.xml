@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 17 Mar 2019 22:43:57 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 07 Apr 2019 14:21:21 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang中的内存对齐和unsafe初探</title>
+      <link>https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/</link>
+      <pubDate>Sun, 07 Apr 2019 14:21:21 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/</guid>
+      <description>&lt;h1 id=&#34;unsafe-包简单说明&#34;&gt;unsafe 包简单说明&lt;/h1&gt;
+
+&lt;p&gt;unsafe，顾名思义，是不安全的，Go定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>用Delve调试器在VsCode中调试Go程序</title>
