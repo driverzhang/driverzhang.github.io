@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 07 Apr 2019 14:21:21 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 09 Apr 2019 21:42:45 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang基准测试Benchmark和Jmeter压测实践</title>
+      <link>https://driverzhang.github.io/post/golang%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95benchmark%E5%92%8Cjmeter%E5%8E%8B%E6%B5%8B%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 09 Apr 2019 21:42:45 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95benchmark%E5%92%8Cjmeter%E5%8E%8B%E6%B5%8B%E5%AE%9E%E8%B7%B5/</guid>
+      <description>&lt;h1 id=&#34;golang的性能测试benchmark&#34;&gt;golang的性能测试Benchmark&lt;/h1&gt;
+
+&lt;p&gt;go test 自带有三种测试：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;功能测试（单元测试）&lt;/li&gt;
+&lt;li&gt;基准测试 （性能测试）&lt;/li&gt;
+&lt;li&gt;实例测试 （举例测试）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang中的内存对齐和unsafe初探</title>

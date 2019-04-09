@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang基准测试Benchmark和Jmeter压测实践</title>
+  <meta property="og:title" content="Golang基准测试Benchmark和Jmeter压测实践" />
+  <meta name="twitter:title" content="Golang基准测试Benchmark和Jmeter压测实践" />
+  <meta name="description" content="golang的性能测试Benchmark
+
+go test 自带有三种测试：
+
+
+功能测试（单元测试）
+基准测试 （性能测试）
+实例测试 （举例测试）
+
+
+">
+  <meta property="og:description" content="golang的性能测试Benchmark
+
+go test 自带有三种测试：
+
+
+功能测试（单元测试）
+基准测试 （性能测试）
+实例测试 （举例测试）
+
+
+">
+  <meta name="twitter:description" content="golang的性能测试Benchmark
+
+go test 自带有三种测试：
+
+
+功能测试（单元测试）
+基准测试 （性能测试）
+实例测试 （举例测试）
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95benchmark%E5%92%8Cjmeter%E5%8E%8B%E6%B5%8B%E5%AE%9E%E8%B7%B5/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95benchmark%E5%92%8Cjmeter%E5%8E%8B%E6%B5%8B%E5%AE%9E%E8%B7%B5/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang基准测试Benchmark和Jmeter压测实践</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 9, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="golang的性能测试benchmark">golang的性能测试Benchmark</h1>
+
+<p>go test 自带有三种测试：</p>
+
+<ul>
+<li>功能测试（单元测试）</li>
+<li>基准测试 （性能测试）</li>
+<li>实例测试 （举例测试）</li>
+</ul>
+
+<p></p>
+
+<p>今天主要是写一下基准测试也就是我们的性能测试实践相关。</p>
+
+<p>基准测试是测量一个程序在固定工作负载下的性能。</p>
+
+<p>在Go语言中，基准测试函数和普通测试函数写法类似，但是以Benchmark为前缀名，并且带有一个*testing.B类型的参数；*testing.B参数除了提供和*testing.T类似的方法，还有额外一些和性能测量相关的方法。</p>
+
+<p>它还提供了一个整数N，用于指定操作执行的循环次数。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">BenchmarkAdapter_GetReport</span>(<span style="color:#268bd2">b</span> *<span style="color:#268bd2">testing</span>.<span style="color:#268bd2">B</span>) {
+	<span style="color:#268bd2">a</span> := &amp;<span style="color:#268bd2">Adapter</span>{
+		<span style="color:#268bd2">Server</span>: <span style="color:#2aa198">&#34;127.0.0.1:9094/tenant&#34;</span>,
+	}
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">b</span>.<span style="color:#268bd2">N</span>; <span style="color:#268bd2">i</span>++ {
+		<span style="color:#268bd2">b</span>.<span style="color:#268bd2">ReportAllocs</span>() <span style="color:#93a1a1;font-style:italic">// 这里可以直接调用 ReportAllocs 方法，就省去了再命令行中输入 -benchmem ，用于查看内存分配的大小和次数
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">_</span>, <span style="color:#268bd2">_</span> = <span style="color:#268bd2">a</span>.<span style="color:#268bd2">GetReport</span>(<span style="color:#2aa198">&#34;devices&#34;</span>, <span style="color:#2aa198">&#34;appsinfo&#34;</span>, <span style="color:#2aa198">&#34;&#34;</span>)
+	}
+}</code></pre></div>
+<p>然后在命令行输入如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go test -bench=GetReport</pre></div>
+<p>又或者直接填入测试函数名：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> go test -bench=BenchmarkAdapter_GetReport</pre></div>
+<p>最终显示数据如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">goos: darwin
+goarch: amd64
+pkg: safeuem/report/service/adapter
+BenchmarkAdapter_GetReport-4         500       2351618 ns/op       20770 B/op        301 allocs/op
+PASS
+ok      safeuem/report/service/adapter  2.741s</pre></div>
+<ul>
+<li>BenchmarkAdapter_GetReport-4 ：</li>
+</ul>
+
+<p>这里的-4中的4 表示最大 P 数量，最大 P 数量相当于可以同时运行 goroutine 的逻辑 CPU 的最大个数。这里的逻辑 CPU，也可以被称为 CPU 核心，但它并不等同于计算机中真正的 CPU 核心，只是 Go 语言运行时系统内部的一个概念，代表着它同时运行 goroutine 的能力。</p>
+
+<p>对应 golang 就是 GOMAXPROCS 的值。这个你可以自行设置，可以通过调用 runtime.GOMAXPROCS 函数改变最大P数量，也可以在命令行 go test 加入 -cpu=2 。</p>
+
+<ul>
+<li>500 2351618 ns/op</li>
+</ul>
+
+<p>显示每次调用 GetReport 函数花费 2.351618毫秒 ，是执行 500次 的平均时间。</p>
+
+<blockquote>
+<p>1s=1000ms=1000000us=1000000000ns</p>
+</blockquote>
+
+<p>因为基准测试驱动器开始时并不知道每个基准测试函数运行所花的时间，它会尝试在真正运行基准测试前先尝试用较小的N运行测试来估算基准测试函数所需要的时间，然后推断一个较大的时间保证稳定的测量结果</p>
+
+<ul>
+<li>20770 B/op  301 allocs/op</li>
+</ul>
+
+<p>表示平均500此种，每次分配了内存为 20770 B(字节) = 20.28KB = 0.0198MB 和 每次调用分配了 301次</p>
+
+<blockquote>
+<p>1MB=1024KB</p>
+
+<p>1KB=1024B</p>
+</blockquote>
+
+<ul>
+<li>2.741s</li>
+</ul>
+
+<p>表示测试总耗时。</p>
+
+<h3 id="小提示">小提示：</h3>
+
+<p>其实这里的总耗时，其实默认是1s，当测试次数逐渐递增到时间刚好超过1s 时测试就会停止，并显示测试，这里是500次。</p>
+
+<p>当然如果你的本身的测试函数运行一次就已经大于了1s,为了提高测试的精确性，你可以在命令行输入 :</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">go test -bench=GetReport -benchtime=5s</pre></div>
+<hr />
+
+<hr />
+
+<hr />
+
+<h1 id="jmeter-压力测试">jmeter 压力测试</h1>
+
+<p>首先要安装 <a href="https://www.jianshu.com/p/bce9077d883c">请看链接不多说</a></p>
+
+<p>如果下载页面进不去 <a href="https://archive.apache.org/dist/jmeter/binaries/">移步到此处下载即可</a></p>
+
+<h3 id="注意-一定要配置好java的环境变量才开始压测哦">注意 ： 一定要配置好java的环境变量才开始压测哦！</h3>
+
+<p>运行启动如图所示：</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1g1wgtz3xd5j316o0o00vj.jpg" alt="" /></p>
+
+<h3 id="1-你可以开始配置要测试的http接口">1. 你可以开始配置要测试的http接口：</h3>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1g1wisako5lj30j70di0vh.jpg" alt="" /></p>
+
+<h3 id="2-线程数的配置">2. 线程数的配置：</h3>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1g1wituj003j316s0k6ju7.jpg" alt="" /></p>
+
+<h3 id="3-建立http请求接口">3. 建立HTTP请求接口：</h3>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1g1wivl5o05j317q0iw415.jpg" alt="" /></p>
+
+<h3 id="4-建立监控器-数据展示">4. 建立监控器 数据展示</h3>
+
+<p>可以建立三个查看，一般我建立聚合报告看看就可以了。</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g1win5owa8j30j50msjw1.jpg" alt="" /></p>
+
+<h2 id="聚合报告数据说明">聚合报告数据说明：</h2>
+
+<p>来看如图所示的数据：</p>
+
+<p>中文版</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g1wj3l3cv5j319p0dj41n.jpg" alt="" /></p>
+
+<p>英文版</p>
+
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g1wj6zyfiej31bm0d7gou.jpg" alt="" /></p>
+
+<p>这里我的线程数改变了 2 。</p>
+
+<ul>
+<li>Label：每个 JMeter 的 element（例如 HTTP Request）都有一个 Name 属性，这里显示的就是 Name 属性的值</li>
+<li>#Samples：表示你这次测试中一共发出了多少个请求，如果模拟10个用户，每个用户迭代10次，那么这里显示100，每个用户只迭代一次就是10了。我这里自然是 2.</li>
+<li>Average：平均响应时间（单位ms，1s=1000ms）——默认情况下是单个 Request 的平均响应时间，当使用了 Transaction Controller 时，也可以以Transaction 为单位显示平均响应时间</li>
+<li>Median：中位数，也就是 50％ 用户的响应时间</li>
+<li>90% Line：90％ 用户的响应时间</li>
+<li>Min：最小响应时间</li>
+
+<li><p>Max：最大响应时间</p></li>
+
+<li><p>Error%：本次测试中出现错误的请求的数量/请求的总数</p></li>
+
+<li><h4 id="throughput-吞吐量-默认情况下表示每秒完成的请求数-request-per-second-如果你的接口超过了每秒请求一次就会按照每分钟展示-当使用了-transaction-controller-时-也可以表示类似-loadrunner-的-transaction-per-second-数">Throughput：吞吐量——默认情况下表示每秒完成的请求数（Request per Second），如果你的接口超过了每秒请求一次就会按照每分钟展示， 当使用了 Transaction Controller 时，也可以表示类似 LoadRunner 的 Transaction per Second 数</h4></li>
+
+<li><p>Received KB/Sec：每秒从服务器端接收到的数据量，相当于LoadRunner中的Throughput/Sec</p></li>
+
+<li><p>Send KB/Sec: 每秒向服务器端接发送的数据量。</p></li>
+</ul>
+
+<p>所以如图中的线程数为2的测试中，平均每次响应时间为 554 毫秒相当于半秒，吞吐量为每秒处理了 1.9 次，额。。。很渣的性能。</p>
+
+<p>因为这个接口本来就没有高并发场景要求，而且里面有个比较麻烦的递归查询操作很消耗性能的。</p>
+
+<h2 id="加大压力进行测试">加大压力进行测试</h2>
+
+<p>那么如果出现较多的访问该接口，较高并发访问性能是如何的呢。</p>
+
+<p>来个小 50 试试呢。</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1g1wjl2q4i7j31b40gx788.jpg" alt="" /></p>
+
+<p>好吧，这个接口性能确实很差。。。平均一个接口处理要6s的时间。</p>
+
+<p>具体分析原因：</p>
+
+<ul>
+<li>一个是递归耗性能</li>
+<li>另一个应该是Cassandra数据库I/O是性能瓶颈，pool可以从10调大到100试试。</li>
+</ul>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/">性能测试</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;text=Golang%e5%9f%ba%e5%87%86%e6%b5%8b%e8%af%95Benchmark%e5%92%8cJmeter%e5%8e%8b%e6%b5%8b%e5%ae%9e%e8%b7%b5&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=Golang%e5%9f%ba%e5%87%86%e6%b5%8b%e8%af%95Benchmark%e5%92%8cJmeter%e5%8e%8b%e6%b5%8b%e5%ae%9e%e8%b7%b5" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=Golang%e5%9f%ba%e5%87%86%e6%b5%8b%e8%af%95Benchmark%e5%92%8cJmeter%e5%8e%8b%e6%b5%8b%e5%ae%9e%e8%b7%b5" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=Golang%e5%9f%ba%e5%87%86%e6%b5%8b%e8%af%95Benchmark%e5%92%8cJmeter%e5%8e%8b%e6%b5%8b%e5%ae%9e%e8%b7%b5" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E5%2587%2586%25E6%25B5%258B%25E8%25AF%2595benchmark%25E5%2592%258Cjmeter%25E5%258E%258B%25E6%25B5%258B%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;description=Golang%e5%9f%ba%e5%87%86%e6%b5%8b%e8%af%95Benchmark%e5%92%8cJmeter%e5%8e%8b%e6%b5%8b%e5%ae%9e%e8%b7%b5" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%AF%B9%E9%BD%90%E5%92%8Cunsafe%E5%88%9D%E6%8E%A2/" data-toggle="tooltip" data-placement="top" title="Golang中的内存对齐和unsafe初探">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
