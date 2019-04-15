@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Tue, 09 Apr 2019 21:42:45 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Apr 2019 21:14:27 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang用pprof做动态追踪和性能优化</title>
+      <link>https://driverzhang.github.io/post/golang%E7%94%A8pprof%E5%81%9A%E5%8A%A8%E6%80%81%E8%BF%BD%E8%B8%AA%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Mon, 15 Apr 2019 21:14:27 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E7%94%A8pprof%E5%81%9A%E5%8A%A8%E6%80%81%E8%BF%BD%E8%B8%AA%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</guid>
+      <description>&lt;p&gt;上一篇文章中用到 Jmeter 对http接口进行压力测试，虽然有一些优化但是效果不是很好，所以打算用go 的 pprof 做一个动态追踪，看看到底哪块代码比较耗性能和内存以便于进一步优化。&lt;/p&gt;
+
+&lt;h2 id=&#34;大杀器-pprof&#34;&gt;大杀器 PProf&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang基准测试Benchmark和Jmeter压测实践</title>

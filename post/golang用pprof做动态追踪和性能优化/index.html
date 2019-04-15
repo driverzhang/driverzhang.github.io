@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang用pprof做动态追踪和性能优化</title>
+  <meta property="og:title" content="Golang用pprof做动态追踪和性能优化" />
+  <meta name="twitter:title" content="Golang用pprof做动态追踪和性能优化" />
+  <meta name="description" content="上一篇文章中用到 Jmeter 对http接口进行压力测试，虽然有一些优化但是效果不是很好，所以打算用go 的 pprof 做一个动态追踪，看看到底哪块代码比较耗性能和内存以便于进一步优化。
+
+大杀器 PProf
+
+">
+  <meta property="og:description" content="上一篇文章中用到 Jmeter 对http接口进行压力测试，虽然有一些优化但是效果不是很好，所以打算用go 的 pprof 做一个动态追踪，看看到底哪块代码比较耗性能和内存以便于进一步优化。
+
+大杀器 PProf
+
+">
+  <meta name="twitter:description" content="上一篇文章中用到 Jmeter 对http接口进行压力测试，虽然有一些优化但是效果不是很好，所以打算用go 的 pprof 做一个动态追踪，看看到底哪块代码比较耗性能和内存以便于进一步优化。
+
+大杀器 PProf
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E7%94%A8pprof%E5%81%9A%E5%8A%A8%E6%80%81%E8%BF%BD%E8%B8%AA%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E7%94%A8pprof%E5%81%9A%E5%8A%A8%E6%80%81%E8%BF%BD%E8%B8%AA%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang用pprof做动态追踪和性能优化</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 15, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>上一篇文章中用到 Jmeter 对http接口进行压力测试，虽然有一些优化但是效果不是很好，所以打算用go 的 pprof 做一个动态追踪，看看到底哪块代码比较耗性能和内存以便于进一步优化。</p>
+
+<h2 id="大杀器-pprof">大杀器 PProf</h2>
+
+<p></p>
+
+<p>pprof 是用于可视化和分析性能分析数据的工具</p>
+
+<p>pprof 以 profile.proto 读取分析样本的集合，并生成报告以可视化并帮助分析数据（支持文本和图形报告）</p>
+
+<p>profile.proto 是一个 Protocol Buffer v3 的描述文件，它描述了一组 callstack 和 symbolization 信息， 作用是表示统计分析的一组采样的调用栈，是很常见的 stacktrace 配置文件格式</p>
+
+<h3 id="支持的使用模式">支持的使用模式：</h3>
+
+<ul>
+<li><p>Report generation：报告生成</p></li>
+
+<li><p>Interactive terminal use：交互式终端使用</p></li>
+
+<li><p>Web interface：Web 界面</p></li>
+</ul>
+
+<p>本文主要是命令行配合web界面便于观看。</p>
+
+<h3 id="监控项目">监控项目：</h3>
+
+<ul>
+<li><p>CPU Profiling：CPU 分析，按照一定的频率采集所监听的应用程序 CPU（含寄存器）的使用情况，可确定应用程序在主动消耗 CPU 周期时花费时间的位置</p></li>
+
+<li><p>Memory Profiling：内存分析，在应用程序进行堆分配时记录堆栈跟踪，用于监视当前和历史内存使用情况，以及检查内存泄漏</p></li>
+
+<li><p>Block Profiling：阻塞分析，记录 goroutine 阻塞等待同步（包括定时器通道）的位置</p></li>
+
+<li><p>Mutex Profiling：互斥锁分析，报告互斥锁的竞争情况</p></li>
+</ul>
+
+<hr />
+
+<h2 id="pprof-实例">pprof 实例</h2>
+
+<p>通常我们采用http api来将pprof信息暴露出来以供分析，我们可以采用net/http/pprof 这个package。下面是一个简单的示例：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// pprof 的init函数会将pprof里的一些handler注册到http.DefaultServeMux上
+</span><span style="color:#93a1a1;font-style:italic">// 当不使用http.DefaultServeMux来提供http api时，可以查阅其init函数，自己注册handler
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#268bd2">_</span> <span style="color:#2aa198">&#34;net/http/pprof&#34;</span>
+
+<span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+    <span style="color:#268bd2">http</span>.<span style="color:#268bd2">ListenAndServe</span>(<span style="color:#2aa198">&#34;0.0.0.0:8080&#34;</span>, <span style="color:#859900;font-weight:bold">nil</span>)
+}()</code></pre></div>
+<p>其实就只在你的引入 net/http  地方再引入一个 &ldquo;net/http/pprof&rdquo; 。</p>
+
+<p>然后请打开你的浏览器访问地址：<a href="http://localhost:8080/debug/pprof/">http://localhost:8080/debug/pprof/</a></p>
+
+<p>可以看见如下如的信息页面显示：</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1g1zz5rt7g7j319a0lbdk1.jpg" alt="" /></p>
+
+<hr />
+
+<hr />
+
+<h2 id="分析">分析：</h2>
+
+<h3 id="一-通过-web-界面">一、通过 Web 界面</h3>
+
+<p>访问 <a href="http://localhost:8080/debug/pprof/">http://localhost:8080/debug/pprof/</a></p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1g1zz5rt7g7j319a0lbdk1.jpg" alt="" /></p>
+
+<p>这个页面中有许多子页面，来看看都有些什么？</p>
+
+<ul>
+<li><p>cpu（CPU Profiling）: $HOST/debug/pprof/profile，默认进行 30s 的 CPU Profiling，得到一个分析用的 profile 文件，这是个不方便直接读的二进制文件。需要用go tool 工具进行分析，下文会有提到。</p></li>
+
+<li><p>block（Block Profiling）：$HOST/debug/pprof/block，查看导致阻塞同步的堆栈跟踪</p></li>
+
+<li><p>goroutine：$HOST/debug/pprof/goroutine，查看当前所有运行的 goroutines 堆栈跟踪</p></li>
+
+<li><p>heap（Memory Profiling）: $HOST/debug/pprof/heap，查看活动对象的内存分配情况</p></li>
+
+<li><p>mutex（Mutex Profiling）：$HOST/debug/pprof/mutex，查看导致互斥锁的竞争持有者的堆栈跟踪</p></li>
+
+<li><p>threadcreate：$HOST/debug/pprof/threadcreate，查看创建新OS线程的堆栈跟踪</p></li>
+</ul>
+
+<h3 id="二-通过交互式终端使用">二、通过交互式终端使用</h3>
+
+<p>对于cpu的追踪： CPU Profiling</p>
+
+<p>（1）go tool pprof <a href="http://localhost:8080/debug/pprof/profile?seconds=60">http://localhost:8080/debug/pprof/profile?seconds=60</a></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ go tool pprof http://localhost:8080/debug/pprof/profile\?seconds\=60
+
+Fetching profile over HTTP from http://localhost:6060/debug/pprof/profile?seconds=60
+Saved profile in /Users/eddycjy/pprof/pprof.samples.cpu.007.pb.gz
+Type: cpu
+Duration: 1mins, Total samples = 26.55s (44.15%)
+Entering interactive mode (type &#34;help&#34; for commands, &#34;o&#34; for options)
+(pprof) </pre></div>
+<p>执行该命令后，需等待 60 秒（可调整 seconds 的值），pprof 会进行 CPU Profiling。结束后将默认进入 pprof 的交互式命令模式，可以对分析的结果进行查看或导出。具体可执行 pprof help 查看命令说明</p>
+
+<p>你可以输入top10 查看：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">(pprof) top10
+Showing nodes accounting for 25.92s, 97.63% of 26.55s total
+Dropped 85 nodes (cum &lt;= 0.13s)
+Showing top 10 nodes out of 21
+      flat  flat%   sum%        cum   cum%
+    23.28s 87.68% 87.68%     23.29s 87.72%  syscall.Syscall
+     0.77s  2.90% 90.58%      0.77s  2.90%  runtime.memmove
+     0.58s  2.18% 92.77%      0.58s  2.18%  runtime.freedefer
+     0.53s  2.00% 94.76%      1.42s  5.35%  runtime.scanobject
+     0.36s  1.36% 96.12%      0.39s  1.47%  runtime.heapBitsForObject
+     0.35s  1.32% 97.44%      0.45s  1.69%  runtime.greyobject
+     0.02s 0.075% 97.51%     24.96s 94.01%  main.main.func1
+     0.01s 0.038% 97.55%     23.91s 90.06%  os.(*File).Write
+     0.01s 0.038% 97.59%      0.19s  0.72%  runtime.mallocgc
+     0.01s 0.038% 97.63%     23.30s 87.76%  syscall.Write</pre></div>
+<ul>
+<li>flat：给定函数上运行耗时</li>
+<li>flat%：同上的 CPU 运行耗时总比例</li>
+<li>sum%：给定函数累积使用 CPU 总比例</li>
+<li>cum：当前函数加上它之上的调用运行总耗时</li>
+<li>cum%：同上的 CPU 运行耗时总比例</li>
+</ul>
+
+<hr />
+
+<p>对于heap内存追踪：</p>
+
+<p>（2）go tool pprof <a href="http://localhost:6060/debug/pprof/heap">http://localhost:6060/debug/pprof/heap</a></p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ go tool pprof http://localhost:6060/debug/pprof/heap
+Fetching profile over HTTP from http://localhost:6060/debug/pprof/heap
+Saved profile in /Users/eddycjy/pprof/pprof.alloc_objects.alloc_space.inuse_objects.inuse_space.008.pb.gz
+Type: inuse_space
+Entering interactive mode (type &#34;help&#34; for commands, &#34;o&#34; for options)
+(pprof) top
+Showing nodes accounting for 837.48MB, 100% of 837.48MB total
+      flat  flat%   sum%        cum   cum%
+  837.48MB   100%   100%   837.48MB   100%  main.main.func1</pre></div>
+<p>接下来的两个自行实验吧：</p>
+
+<p>（3） go tool pprof <a href="http://localhost:6060/debug/pprof/block">http://localhost:6060/debug/pprof/block</a></p>
+
+<p>（4） go tool pprof <a href="http://localhost:6060/debug/pprof/mutex">http://localhost:6060/debug/pprof/mutex</a></p>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h1 id="本次主要测试-针对某些接口使用-web-界面动态追踪-利用包-github-com-google-pprof-包括火焰图">（本次主要测试）针对某些接口使用 web 界面动态追踪 利用包 github.com/google/pprof （包括火焰图）</h1>
+
+<blockquote>
+<p>以上 都是直接对启动 main.go 主程序监控端口启动服务的追踪，所以并没有调用什么接口中的业务代码，那如果想把追踪粒度控到某一个接口，就应该写一个 benchmark 导出 .out 文件进行分析。</p>
+</blockquote>
+
+<p>代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">BenchmarkDevice_GetByApp</span>(<span style="color:#268bd2">b</span> *<span style="color:#268bd2">testing</span>.<span style="color:#268bd2">B</span>) {
+	<span style="color:#268bd2">r</span> := <span style="color:#268bd2">Device</span>{
+		<span style="color:#268bd2">Keyspace</span>: <span style="color:#268bd2">app</span>.<span style="color:#268bd2">Config</span>.<span style="color:#268bd2">Database</span>.<span style="color:#268bd2">Keyspace</span>,
+		<span style="color:#268bd2">Session</span>:  <span style="color:#268bd2">session</span>,
+	}
+	<span style="color:#268bd2">id</span> := <span style="color:#2aa198">&#34;dd4ac8da-552e-4f8c-8d0e-18cd874a1185&#34;</span>
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span> &lt; <span style="color:#268bd2">b</span>.<span style="color:#268bd2">N</span>; <span style="color:#268bd2">i</span>++ {
+		<span style="color:#268bd2">_</span>, <span style="color:#268bd2">_</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">GetByApp</span>(<span style="color:#268bd2">id</span>, <span style="color:#859900;font-weight:bold">true</span>, <span style="color:#2aa198">&#34;&#34;</span>, <span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198;font-weight:bold">2</span>, []<span style="color:#859900;font-weight:bold">string</span>{<span style="color:#2aa198">&#34;devicePath,asc&#34;</span>, <span style="color:#2aa198">&#34;deviceName,asc&#34;</span>, <span style="color:#2aa198">&#34;name,asc&#34;</span>})
+	}
+}</code></pre></div>
+<p>主要是对函数 GetByApp 进行基准测试。</p>
+
+<p>终端输入命令如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"> go test -bench=GetByApp -benchtime=10s  -memprofile mem.out -cpuprofile cpu.out</pre></div>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79gy1g2005cewpfj31gm086wni.jpg" alt="" /></p>
+
+<p>因为该接口较为耗时所以把时间延迟到10s的标准进行较为精准的测试。</p>
+
+<ul>
+<li>内存分析导入了mem.out文件</li>
+<li>cpu分析导入了cpu.out文件中</li>
+</ul>
+
+<p>最后导入包：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">$ go get -u github.com/google/pprof</pre></div>
+<p>启动追踪页面：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">pprof -http=:8080 mem.out
+
+或
+
+ pprof -http=:8080 cpu.out</pre></div>
+<p>你就会看见如下的界面：</p>
+
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79gy1g2008azaqnj31h00su45n.jpg" alt="" /></p>
+
+<p>这个是流程线路图</p>
+
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1g200963u4oj31gy0jt79g.jpg" alt="" /></p>
+
+<p>也包括火焰图。 颜色越深表示越耗资源。</p>
+
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1g2008nnnsbj30b007xq34.jpg" alt="" /></p>
+
+<p>这里特别说一下这四个参数选择对比：</p>
+
+<p>go tool pprof 可以选择显示 分配计数（allocation counts ） 或 使用内存（in use memory）。</p>
+
+<ul>
+<li><p>如果你想关心内存量的使用情况，那么你应该选择的是用 inuse metrics</p></li>
+
+<li><p>如果你担心垃圾回收gc 的时间（即堆上分配的内存 需要gc花时间来回收），请查看 allocations</p>
+
+<p>-inuse_space ：      Display in-use memory size</p>
+
+<p>-inuse_objects ：    Display in-use object counts</p>
+
+<p>-alloc_space ：      Display allocated memory size</p>
+
+<p>-alloc_objects ：    Display allocated object counts</p></li>
+</ul>
+
+<p>其中待 objects 表示的是分配次数，
+而 space 表示具体的 内存量。</p>
+
+<hr />
+
+<hr />
+
+<hr />
+
+<h2 id="参考文献">参考文献：</h2>
+
+<ul>
+<li><a href="https://lrita.github.io/2017/05/26/golang-memory-pprof/">golang 内存分析/动态追踪</a></li>
+<li><a href="https://jvns.ca/blog/2017/09/24/profiling-go-with-pprof/">Profiling Go programs with pprof</a></li>
+<li><a href="https://github.com/EDDYCJY/blog/blob/master/golang/2018-09-15-Golang%20%E5%A4%A7%E6%9D%80%E5%99%A8%E4%B9%8B%E6%80%A7%E8%83%BD%E5%89%96%E6%9E%90%20PProf.md">Golang 大杀器之性能剖析 PProf</a></li>
+<li><a href="https://segmentfault.com/u/qyuhen">Go性能优化技巧</a></li>
+<li><a href="https://blog.golang.org/profiling-go-programs">profiling-go-programs</a></li>
+</ul>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f&amp;text=Golang%e7%94%a8pprof%e5%81%9a%e5%8a%a8%e6%80%81%e8%bf%bd%e8%b8%aa%e5%92%8c%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f&amp;title=Golang%e7%94%a8pprof%e5%81%9a%e5%8a%a8%e6%80%81%e8%bf%bd%e8%b8%aa%e5%92%8c%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f&amp;title=Golang%e7%94%a8pprof%e5%81%9a%e5%8a%a8%e6%80%81%e8%bf%bd%e8%b8%aa%e5%92%8c%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f&amp;title=Golang%e7%94%a8pprof%e5%81%9a%e5%8a%a8%e6%80%81%e8%bf%bd%e8%b8%aa%e5%92%8c%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E7%2594%25A8pprof%25E5%2581%259A%25E5%258A%25A8%25E6%2580%2581%25E8%25BF%25BD%25E8%25B8%25AA%25E5%2592%258C%25E6%2580%25A7%25E8%2583%25BD%25E4%25BC%2598%25E5%258C%2596%2f&amp;description=Golang%e7%94%a8pprof%e5%81%9a%e5%8a%a8%e6%80%81%e8%bf%bd%e8%b8%aa%e5%92%8c%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95benchmark%E5%92%8Cjmeter%E5%8E%8B%E6%B5%8B%E5%AE%9E%E8%B7%B5/" data-toggle="tooltip" data-placement="top" title="Golang基准测试Benchmark和Jmeter压测实践">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
