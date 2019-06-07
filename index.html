@@ -219,6 +219,38 @@
           
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/golang-time%E5%8C%85%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%97%B6%E5%8C%BA%E4%B8%80%E6%AC%A1%E9%9C%80%E6%B1%82%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">Golang Time包的本地化时区一次需求实现</h2>
+                
+                
+              </a>
+
+              <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on June 7, 2019
+  
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  一般的需求说明： 一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT +08:00，东八区就会对应加上8小时。
+比如：插入一个时间段为：2019-06-06 18:10 到数据库中，你会看到数据库对应位置显示的缺是 ：2019-06-06 10:10。然后你把这个时间查出来直接丢给前端，由前端自己本地化时区转化为用户所在时区对应的时间即可；
+需求变更说明： 由于某种不可改变因素导致现在需求的时间本地时区化需要由后端来做，但前端需要传入用户所在地区的时区偏移量，只有这样后端才方便给用户做本地时区化处理。
+需求实现： 1. 前端传入参数： 秀一下我许久不用的js蹩脚代码：
+zoneOffset = new Date().getTimezoneOffset() * (- 60) // 东北区 =&gt; GMT + 08:00 =&gt; 28800秒  前端只需要传入这个方法调用的类型为Int的变量值即可：东八区对应该值为 28800 。
+2. golang后端实现time包功能调用： const TIME_LAYOUT = &#34;2006-01-02 15:04:05&#34; func parseWithLocation(name string, timeStr string) (time.Time, error) { locationName := name if l, err := time.LoadLocation(locationName); err != nil { println(err.Error()) return time.Time{}, err } else { lt, _ := time.
+                  <a href="https://driverzhang.github.io/post/golang-time%E5%8C%85%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%97%B6%E5%8C%BA%E4%B8%80%E6%AC%A1%E9%9C%80%E6%B1%82%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/golang%E7%94%A8pprof%E5%81%9A%E5%8A%A8%E6%80%81%E8%BF%BD%E8%B8%AA%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">
                 <h2 class="post-title">Golang用pprof做动态追踪和性能优化</h2>
                 
@@ -457,45 +489,6 @@
                 <div class="blog-tags">
                   
                     <a href="https://driverzhang.github.io//tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/">微服务架构</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/golang%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/">
-                <h2 class="post-title">Golang内存分配逃逸分析</h2>
-                
-                
-              </a>
-
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on February 13, 2019
-  
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h1 id="一-golang-的内存分配逃逸-于堆和栈">一. golang 的内存分配逃逸 于堆和栈</h1>
-
-<blockquote>
-<p>注意我们此处谈到的堆和栈是对操作系统中的，这个和数据结构中的堆和栈还是又一定区别的。</p>
-</blockquote>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/golang%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
                   
                 </div>
               
