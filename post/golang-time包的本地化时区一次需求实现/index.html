@@ -8,19 +8,24 @@
   <title>Golang Time包的本地化时区一次需求实现</title>
   <meta property="og:title" content="Golang Time包的本地化时区一次需求实现" />
   <meta name="twitter:title" content="Golang Time包的本地化时区一次需求实现" />
-  <meta name="description" content="一般的需求说明： 一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+  <meta name="description" content="一般的需求说明：
+
+一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+
 比如：插入一个时间段为：2019-06-06 18:10 到数据库中，你会看到数据库对应位置显示的缺是 ：2019-06-06 10:10。然后你把这个时间查出来直接丢给前端，由前端自己本地化时区转化为用户所在时区对应的时间即可；
-需求变更说明： 由于某种不可改变因素导致现在需求的时间本地时区化需要由后端来做，但前端需要传入用户所在地区的时区偏移量，只有这样后端才方便给用户做本地时区化处理。
-需求实现： 1. 前端传入参数： 秀一下我许久不用的js蹩脚代码：
-zoneOffset = new Date().getTimezoneOffset() * (- 60) // 东北区 =&gt; GMT &#43; 08:00 =&gt; 28800秒  前端只需要传入这个方法调用的类型为Int的变量值即可：东八区对应该值为 28800 。
-2. golang后端实现time包功能调用： const TIME_LAYOUT = &#34;2006-01-02 15:04:05&#34; func parseWithLocation(name string, timeStr string) (time.Time, error) { locationName := name if l, err := time.LoadLocation(locationName); err != nil { println(err.Error()) return time.Time{}, err } else { lt, _ := time.">
-  <meta property="og:description" content="一般的需求说明： 一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+
+">
+  <meta property="og:description" content="一般的需求说明：
+
+一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+
 比如：插入一个时间段为：2019-06-06 18:10 到数据库中，你会看到数据库对应位置显示的缺是 ：2019-06-06 10:10。然后你把这个时间查出来直接丢给前端，由前端自己本地化时区转化为用户所在时区对应的时间即可；
-需求变更说明： 由于某种不可改变因素导致现在需求的时间本地时区化需要由后端来做，但前端需要传入用户所在地区的时区偏移量，只有这样后端才方便给用户做本地时区化处理。
-需求实现： 1. 前端传入参数： 秀一下我许久不用的js蹩脚代码：
-zoneOffset = new Date().getTimezoneOffset() * (- 60) // 东北区 =&gt; GMT &#43; 08:00 =&gt; 28800秒  前端只需要传入这个方法调用的类型为Int的变量值即可：东八区对应该值为 28800 。
-2. golang后端实现time包功能调用： const TIME_LAYOUT = &#34;2006-01-02 15:04:05&#34; func parseWithLocation(name string, timeStr string) (time.Time, error) { locationName := name if l, err := time.LoadLocation(locationName); err != nil { println(err.Error()) return time.Time{}, err } else { lt, _ := time.">
-  <meta name="twitter:description" content="一般的需求说明： 一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+
+">
+  <meta name="twitter:description" content="一般的需求说明：
+
+一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT &#43;08:00，东八区就会对应加上8小时。
+
 比如：插入一个时间段为：2019-06-06 18:10 到数据库中， …">
   <meta name="author" content="Gopherzhang"/>
   <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -211,15 +216,13 @@ zoneOffset = new Date().getTimezoneOffset() * (- 60) // 东北区 =&gt; GMT &#43
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="一般的需求说明">一般的需求说明：</h2>
+        <h2 id="一般的需求说明">一般的需求说明：</h2>
 
 <p>一般情况是后端将数据插入数据库，但是数据库的时区默认是1970 1月1日00:00:00 GMT（0时区时间也可称为标准时间），然后中国所处的是在东八区对比入UTC（世界协调时间）或者GMT（格林威治标准时间）就应该是 GMT +08:00，东八区就会对应加上8小时。</p>
 
 <p>比如：插入一个时间段为：2019-06-06 18:10 到数据库中，你会看到数据库对应位置显示的缺是 ：2019-06-06 10:10。然后你把这个时间查出来直接丢给前端，由前端自己本地化时区转化为用户所在时区对应的时间即可；</p>
 
-<!-- more -->
+<p></p>
 
 <h2 id="需求变更说明">需求变更说明：</h2>
 
