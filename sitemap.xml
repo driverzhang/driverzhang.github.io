@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://driverzhang.github.io/post/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%B7%A5%E7%A8%8B%E9%A1%B9%E7%9B%AE%E4%B8%ADgoroutine%E5%BC%95%E7%94%A8%E9%97%AD%E5%8C%85%E7%9A%84%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://driverzhang.github.io/post/goroutine%E6%97%A0%E6%B3%95%E6%8A%9B%E9%94%99%E5%B0%B1%E7%94%A8errgroup/</loc>
     <lastmod>2019-07-28T23:30:27+08:00</lastmod>
   </url>
@@ -385,13 +390,13 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/golang/</loc>
-    <lastmod>2019-07-28T23:30:27+08:00</lastmod>
+    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://driverzhang.github.io/</loc>
-    <lastmod>2019-07-28T23:30:27+08:00</lastmod>
+    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -475,7 +480,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/post/</loc>
-    <lastmod>2019-07-28T23:30:27+08:00</lastmod>
+    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
     <priority>0</priority>
   </url>
   

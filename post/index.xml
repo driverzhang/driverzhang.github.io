@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 28 Jul 2019 23:30:27 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 17 Aug 2019 13:54:13 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>记一次工程项目中goroutine引用闭包的错误操作</title>
+      <link>https://driverzhang.github.io/post/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%B7%A5%E7%A8%8B%E9%A1%B9%E7%9B%AE%E4%B8%ADgoroutine%E5%BC%95%E7%94%A8%E9%97%AD%E5%8C%85%E7%9A%84%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C/</link>
+      <pubDate>Sat, 17 Aug 2019 13:54:13 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%B7%A5%E7%A8%8B%E9%A1%B9%E7%9B%AE%E4%B8%ADgoroutine%E5%BC%95%E7%94%A8%E9%97%AD%E5%8C%85%E7%9A%84%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;在进行敏捷开发项目中，同事写出来一些bug，其中有个goroutine引用闭包的问题，当时由于嵌入到了实际业务中相对环境较为复杂，我还没怎么注意到，后来下班地铁上就想起来了和一道经常考的面试题几乎一致。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Goroutine无法抛错就用errgroup</title>
