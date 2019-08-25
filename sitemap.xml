@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/</loc>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://driverzhang.github.io/post/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%B7%A5%E7%A8%8B%E9%A1%B9%E7%9B%AE%E4%B8%ADgoroutine%E5%BC%95%E7%94%A8%E9%97%AD%E5%8C%85%E7%9A%84%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C/</loc>
     <lastmod>2019-08-17T13:54:13+08:00</lastmod>
   </url>
@@ -390,13 +395,13 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/golang/</loc>
-    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://driverzhang.github.io/</loc>
-    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -480,7 +485,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/post/</loc>
-    <lastmod>2019-08-17T13:54:13+08:00</lastmod>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -550,7 +555,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2018-08-17T16:21:09+00:00</lastmod>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -674,7 +679,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/%E9%9D%A2%E8%AF%95/</loc>
-    <lastmod>2018-10-15T15:08:42+08:00</lastmod>
+    <lastmod>2019-08-25T15:23:25+08:00</lastmod>
     <priority>0</priority>
   </url>
   

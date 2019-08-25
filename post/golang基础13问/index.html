@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang基础13问</title>
+  <meta property="og:title" content="Golang基础13问" />
+  <meta name="twitter:title" content="Golang基础13问" />
+  <meta name="description" content="
+最近看见一篇关于go基础的问题，算是给自己的一个小考验，很多基础的东西当你回过头来看看也许有新的认识，当然这些题也适合出面试题。
+
+
+">
+  <meta property="og:description" content="
+最近看见一篇关于go基础的问题，算是给自己的一个小考验，很多基础的东西当你回过头来看看也许有新的认识，当然这些题也适合出面试题。
+
+
+">
+  <meta name="twitter:description" content="
+最近看见一篇关于go基础的问题，算是给自己的一个小考验，很多基础的东西当你回过头来看看也许有新的认识，当然这些题也适合出面试题。
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang基础13问</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 25, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <blockquote>
+<p>最近看见一篇关于go基础的问题，算是给自己的一个小考验，很多基础的东西当你回过头来看看也许有新的认识，当然这些题也适合出面试题。</p>
+</blockquote>
+
+<p></p>
+
+<h2 id="quiz1">Quiz1</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">hello</span>() []<span style="color:#859900;font-weight:bold">string</span> {
+	<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">h</span> := <span style="color:#268bd2">hello</span> <span style="color:#93a1a1;font-style:italic">// 这里注意区分 hello()
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">if</span> <span style="color:#268bd2">h</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;nil&#34;</span>)
+	} <span style="color:#859900">else</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;not nil&#34;</span>)
+	}
+
+	<span style="color:#268bd2">hs</span> := <span style="color:#268bd2">hello</span>() <span style="color:#93a1a1;font-style:italic">// 这里注意区分 hello
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">if</span> <span style="color:#268bd2">hs</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;nil&#34;</span>)
+	} <span style="color:#859900">else</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;not nil&#34;</span>)
+	}
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer:
+</span><span style="color:#93a1a1;font-style:italic">// not nil
+</span><span style="color:#93a1a1;font-style:italic">// nil
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// We assign the function hello() to the variable h in line no. 12 and
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">hence</span> <span style="color:#268bd2">h</span> <span style="color:#268bd2">is</span> <span style="color:#268bd2">not</span> <span style="color:#859900;font-weight:bold">nil</span> <span style="color:#268bd2">and</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">program</span> <span style="color:#268bd2">will</span> <span style="color:#268bd2">print</span> <span style="color:#268bd2">not</span> <span style="color:#859900;font-weight:bold">nil</span>.</code></pre></div>
+<hr />
+
+<h2 id="quiz2">Quiz2</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+	<span style="color:#2aa198">&#34;strconv&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">2</span>
+	<span style="color:#268bd2">s</span> := <span style="color:#2aa198">&#34;1000&#34;</span>
+	<span style="color:#859900">if</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">s</span>) &gt; <span style="color:#2aa198;font-weight:bold">1</span> { <span style="color:#93a1a1;font-style:italic">// 注意 变量的作用域
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">i</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">Atoi</span>(<span style="color:#268bd2">s</span>) <span style="color:#93a1a1;font-style:italic">// 注意这里的是 := 而不是 =
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">i</span> = <span style="color:#268bd2">i</span> + <span style="color:#2aa198;font-weight:bold">5</span>
+	}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">i</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 2
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// The tricky part of the above quiz is line no. 12. i, _ := strconv.Atoi(s) creates a new variable i whose scope is only within the if statement.
+</span><span style="color:#93a1a1;font-style:italic">// The i which is being printed in line no. 15 is actually the one defined in line no. 9
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">and</span> <span style="color:#268bd2">not</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">one</span> <span style="color:#268bd2">defined</span> <span style="color:#268bd2">in</span> <span style="color:#268bd2">line</span> <span style="color:#268bd2">no</span>. <span style="color:#2aa198;font-weight:bold">12.</span> <span style="color:#268bd2">Hence</span> <span style="color:#268bd2">this</span> <span style="color:#268bd2">program</span> <span style="color:#268bd2">will</span> <span style="color:#268bd2">print</span> <span style="color:#2aa198;font-weight:bold">2.</span></code></pre></div>
+<hr />
+
+<h2 id="quiz3">Quiz3</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">hello</span>(<span style="color:#268bd2">num</span> ...<span style="color:#859900;font-weight:bold">int</span>) {
+	<span style="color:#268bd2">num</span>[<span style="color:#2aa198;font-weight:bold">0</span>] = <span style="color:#2aa198;font-weight:bold">18</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">i</span> := []<span style="color:#859900;font-weight:bold">int</span>{<span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198;font-weight:bold">6</span>, <span style="color:#2aa198;font-weight:bold">7</span>}
+	<span style="color:#268bd2">hello</span>(<span style="color:#268bd2">i</span>...) <span style="color:#93a1a1;font-style:italic">// go 中函数参数都是值传递，但对于slice也把地址传入，所谓的引用类型。
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">i</span>[<span style="color:#2aa198;font-weight:bold">0</span>])
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#2aa198;font-weight:bold">18</span></code></pre></div>
+<hr />
+
+<h2 id="quiz4">Quiz4</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">a</span> := [<span style="color:#2aa198;font-weight:bold">2</span>]<span style="color:#859900;font-weight:bold">int</span>{<span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198;font-weight:bold">6</span>}
+	<span style="color:#268bd2">b</span> := [<span style="color:#2aa198;font-weight:bold">2</span>]<span style="color:#859900;font-weight:bold">int</span>{<span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198;font-weight:bold">6</span>}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">a</span> == <span style="color:#268bd2">b</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;equal&#34;</span>)
+	} <span style="color:#859900">else</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;not equal&#34;</span>)
+	}
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">equal</span></code></pre></div>
+<p>这道题目中对比的是数组，如果换成切片呢？</p>
+
+<p>提示：切片不能用 == 进行比较，可以 进行判断 == nil</p>
+
+<hr />
+
+<h2 id="quiz5">Quiz5 ⭐️</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;fmt&#34;</span>
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">rect</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">len</span>, <span style="color:#268bd2">wid</span> <span style="color:#859900;font-weight:bold">int</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> <span style="color:#268bd2">rect</span>) <span style="color:#268bd2">area</span>() {
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> * <span style="color:#268bd2">r</span>.<span style="color:#268bd2">wid</span>)
+	<span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> + <span style="color:#2aa198;font-weight:bold">1</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">rect</span>) <span style="color:#268bd2">add</span>() {
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> + <span style="color:#268bd2">r</span>.<span style="color:#268bd2">wid</span>)
+	<span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span> + <span style="color:#2aa198;font-weight:bold">1</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">r</span> := &amp;<span style="color:#268bd2">rect</span>{<span style="color:#268bd2">len</span>: <span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#268bd2">wid</span>: <span style="color:#2aa198;font-weight:bold">6</span>}
+	<span style="color:#268bd2">r</span>.<span style="color:#268bd2">area</span>()
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">r</span>.<span style="color:#268bd2">len</span>) <span style="color:#93a1a1;font-style:italic">// 5 没变
+</span><span style="color:#93a1a1;font-style:italic"></span>
+	<span style="color:#268bd2">a</span> := <span style="color:#268bd2">rect</span>{<span style="color:#268bd2">len</span>: <span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#268bd2">wid</span>: <span style="color:#2aa198;font-weight:bold">6</span>}
+	<span style="color:#268bd2">a</span>.<span style="color:#268bd2">add</span>()
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">a</span>.<span style="color:#268bd2">len</span>) <span style="color:#93a1a1;font-style:italic">// 6 改变
+</span><span style="color:#93a1a1;font-style:italic"></span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 30
+</span><span style="color:#93a1a1;font-style:italic">// 5
+</span><span style="color:#93a1a1;font-style:italic">// 11
+</span><span style="color:#93a1a1;font-style:italic">// 6
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// You might be wondering why the program worked when we didn&#39;t use (*r).area() in line no. 21. Since area() has a value receiver,
+</span><span style="color:#93a1a1;font-style:italic">// Go is intelligent enough to interpret r.area() as (*r).area() and hence this program works :).
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">但只有当方法的接受者为指针形式时</span>，<span style="color:#268bd2">才能够在方法内部进行属性操作生效从而改变源数据</span>。<span style="color:#268bd2">反之则不能</span></code></pre></div>
+<hr />
+
+<h2 id="quiz6">Quiz6</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">a</span> := [<span style="color:#2aa198;font-weight:bold">5</span>]<span style="color:#859900;font-weight:bold">int</span>{<span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198;font-weight:bold">2</span>, <span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">4</span>, <span style="color:#2aa198;font-weight:bold">5</span>} <span style="color:#93a1a1;font-style:italic">// 这里是 array
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">t</span> := <span style="color:#268bd2">a</span>[<span style="color:#2aa198;font-weight:bold">3</span>:<span style="color:#2aa198;font-weight:bold">4</span>:<span style="color:#2aa198;font-weight:bold">4</span>]              <span style="color:#93a1a1;font-style:italic">// 这里就成了 slice len == 4-3 cap == 4-3
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">t</span>[<span style="color:#2aa198;font-weight:bold">0</span>])
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#cb4b16">len</span>(<span style="color:#268bd2">t</span>), <span style="color:#cb4b16">cap</span>(<span style="color:#268bd2">t</span>))
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 4
+</span><span style="color:#93a1a1;font-style:italic">// 1 1
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#93a1a1;font-style:italic">// a[low : high : max]
+</span><span style="color:#93a1a1;font-style:italic">// constructs a slice of the same type,
+</span><span style="color:#93a1a1;font-style:italic">// and with the same length and elements as the simple slice expression a[low : high].
+</span><span style="color:#93a1a1;font-style:italic">// Additionally, it controls the resulting slice&#39;s capacity by setting it to max - low.
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">Hence</span>, <span style="color:#268bd2">the</span> <span style="color:#268bd2">slice</span> <span style="color:#268bd2">t</span> <span style="color:#268bd2">in</span> <span style="color:#268bd2">line</span> <span style="color:#268bd2">no</span><span style="color:#2aa198;font-weight:bold">.9</span> <span style="color:#268bd2">has</span> <span style="color:#268bd2">one</span> <span style="color:#268bd2">element</span> <span style="color:#2aa198;font-weight:bold">4</span> <span style="color:#268bd2">and</span> <span style="color:#268bd2">is</span> <span style="color:#268bd2">of</span> <span style="color:#268bd2">capacity</span> <span style="color:#2aa198;font-weight:bold">1.</span></code></pre></div>
+<hr />
+
+<h2 id="quiz7">Quiz7 ⭐️</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+	<span style="color:#2aa198">&#34;safeuem/common/log&#34;</span>
+)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">person</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">name</span> <span style="color:#859900;font-weight:bold">string</span>
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#859900">var</span> <span style="color:#268bd2">m</span> <span style="color:#859900">map</span>[<span style="color:#268bd2">person</span>]<span style="color:#859900;font-weight:bold">int</span> <span style="color:#93a1a1;font-style:italic">// 注意这里用 var  和 make 的区别
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">p</span> := <span style="color:#268bd2">person</span>{<span style="color:#2aa198">&#34;mike&#34;</span>}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">m</span>[<span style="color:#268bd2">p</span>])
+	<span style="color:#268bd2">v</span>, <span style="color:#268bd2">ok</span> := <span style="color:#268bd2">m</span>[<span style="color:#268bd2">p</span>]
+	<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Error</span>(<span style="color:#268bd2">v</span>, <span style="color:#268bd2">ok</span>)
+	<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Error</span>(<span style="color:#268bd2">m</span> == <span style="color:#859900;font-weight:bold">nil</span>)
+	<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;%p&#34;</span>, <span style="color:#268bd2">m</span>)
+
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 0
+</span><span style="color:#93a1a1;font-style:italic">// 0 false
+</span><span style="color:#93a1a1;font-style:italic">// true
+</span><span style="color:#93a1a1;font-style:italic">//  0x0
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#859900">var</span> <span style="color:#268bd2">并没有给变量分配控制内存地址</span>，<span style="color:#268bd2">但是对于的值已经初始化为类型零值</span></code></pre></div>
+<hr />
+
+<h2 id="quiz8">Quiz8</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+	<span style="color:#2aa198">&#34;safeuem/common/log&#34;</span>
+	<span style="color:#2aa198">&#34;strconv&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">65</span>
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#cb4b16">string</span>(<span style="color:#268bd2">i</span>))
+
+	<span style="color:#268bd2">s</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">FormatInt</span>(<span style="color:#cb4b16">int64</span>(<span style="color:#268bd2">i</span>), <span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#93a1a1;font-style:italic">// string与其他类型之间的转换 应该使用 strconv 包
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Error</span>(<span style="color:#268bd2">s</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// A
+</span><span style="color:#93a1a1;font-style:italic">// 65
+</span><span style="color:#93a1a1;font-style:italic">// The unicode value of A is 65.
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">Hence</span> <span style="color:#268bd2">when</span> <span style="color:#268bd2">i</span> <span style="color:#268bd2">is</span> <span style="color:#859900">type</span> <span style="color:#268bd2">casted</span> <span style="color:#268bd2">to</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#268bd2">in</span> <span style="color:#268bd2">line</span> <span style="color:#268bd2">no</span>. <span style="color:#2aa198;font-weight:bold">9</span>, <span style="color:#268bd2">A</span> <span style="color:#268bd2">is</span> <span style="color:#268bd2">printed</span>.</code></pre></div>
+<hr />
+
+<h2 id="quiz9">Quiz9 ⭐️</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#859900">var</span> <span style="color:#268bd2">i</span> <span style="color:#859900">interface</span>{} <span style="color:#93a1a1;font-style:italic">// 注意 var 声明方式 不会分配内存地址 但会初始化对于类型的零值
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">if</span> <span style="color:#268bd2">i</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;nil&#34;</span>)
+		<span style="color:#859900">return</span>
+	}
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;not nil&#34;</span>)
+
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// nil
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">An</span> <span style="color:#268bd2">empty</span> <span style="color:#859900">interface</span> <span style="color:#268bd2">has</span> <span style="color:#268bd2">both</span> <span style="color:#268bd2">its</span> <span style="color:#268bd2">underlying</span> <span style="color:#268bd2">value</span> <span style="color:#268bd2">and</span> <span style="color:#268bd2">concrete</span> <span style="color:#859900">type</span> <span style="color:#268bd2">as</span> <span style="color:#859900;font-weight:bold">nil</span>. <span style="color:#268bd2">Hence</span> <span style="color:#268bd2">i</span> <span style="color:#268bd2">is</span> <span style="color:#859900;font-weight:bold">nil</span></code></pre></div>
+<p>这道题，请自行查看interface 与 nil 的知识点</p>
+
+<hr />
+
+<h2 id="quiz10">Quiz10 ⭐️</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">hello</span>(<span style="color:#268bd2">i</span> <span style="color:#859900;font-weight:bold">int</span>) {
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">i</span>)
+}
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">5</span>
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">hello</span>(<span style="color:#268bd2">i</span>) <span style="color:#93a1a1;font-style:italic">// defer 函数的参数 是在声明时进行读入值，而不是在实际调用时才读入
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">i</span> = <span style="color:#268bd2">i</span> + <span style="color:#2aa198;font-weight:bold">10</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 5
+</span><span style="color:#93a1a1;font-style:italic">// The arguments of a deferred function are evaluated
+</span><span style="color:#93a1a1;font-style:italic">// when the defer statement is executed and not when the actual function call is done.
+</span><span style="color:#93a1a1;font-style:italic">// Hence when the defer statement is encountered in line no. 12, the value of i is 5.
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">So</span> <span style="color:#268bd2">this</span> <span style="color:#268bd2">program</span> <span style="color:#268bd2">will</span> <span style="color:#268bd2">print</span> <span style="color:#2aa198;font-weight:bold">5.</span></code></pre></div>
+<p>这道题关于defer其中一个知识点，关于defer的知识点还有其他，自行查看吧。</p>
+
+<hr />
+
+<h2 id="quiz11">Quiz11</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%%&#34;</span>) <span style="color:#93a1a1;font-style:italic">// 输出 % 本体
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// %
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">The</span> <span style="color:#268bd2">format</span> <span style="color:#268bd2">specifier</span> %% <span style="color:#268bd2">prints</span> <span style="color:#268bd2">a</span> <span style="color:#268bd2">literal</span> % <span style="color:#268bd2">sign</span>. <span style="color:#268bd2">Hence</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">program</span> <span style="color:#268bd2">prints</span> %.</code></pre></div>
+<p>这里直接补充下：</p>
+
+<table>
+<thead>
+<tr>
+<th>动 词</th>
+<th>功 能</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>%v</td>
+<td>按值的本来值输出</td>
+</tr>
+
+<tr>
+<td>%+v</td>
+<td>在 %v 基础上，对结构体字段名和值进行展开</td>
+</tr>
+
+<tr>
+<td>%#v</td>
+<td>输出 Go 语言语法格式的值</td>
+</tr>
+
+<tr>
+<td>%T</td>
+<td>输出 Go 语言语法格式的类型和值</td>
+</tr>
+
+<tr>
+<td>%%</td>
+<td>输出 % 本体</td>
+</tr>
+
+<tr>
+<td>%b</td>
+<td>整型以二进制方式显示</td>
+</tr>
+
+<tr>
+<td>%o</td>
+<td>整型以八进制方式显示</td>
+</tr>
+
+<tr>
+<td>%d</td>
+<td>整型以十进制方式显示</td>
+</tr>
+
+<tr>
+<td>%+d</td>
+<td>整型以十进制方式显示并显示数字的符号</td>
+</tr>
+
+<tr>
+<td>%x</td>
+<td>整型以十六进制方式显示</td>
+</tr>
+
+<tr>
+<td>%X</td>
+<td>整型以十六进制、字母大写方式显示</td>
+</tr>
+
+<tr>
+<td>%U</td>
+<td>Unicode 字符</td>
+</tr>
+
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+
+<tr>
+<td>%p</td>
+<td>指针，十六进制方式显示</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="quiz12">Quiz12</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">s</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900;font-weight:bold">int</span>)
+	<span style="color:#cb4b16">delete</span>(<span style="color:#268bd2">s</span>, <span style="color:#2aa198">&#34;h&#34;</span>)
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">s</span>[<span style="color:#2aa198">&#34;h&#34;</span>])
+}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// 0
+</span><span style="color:#93a1a1;font-style:italic">// The delete function in line no. 9 doesn&#39;t return anything and will do nothing if the specified key doesn&#39;t exist.
+</span><span style="color:#93a1a1;font-style:italic">// Since the key h doesn&#39;t exist,
+</span><span style="color:#93a1a1;font-style:italic">// the delete function will not do anything. In line no. 10, we are trying to print s[&#34;h&#34;].
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">Since</span> <span style="color:#268bd2">the</span> <span style="color:#859900">map</span> <span style="color:#268bd2">s</span> <span style="color:#268bd2">doesn</span>&#39;<span style="color:#268bd2">t</span> <span style="color:#268bd2">have</span> <span style="color:#268bd2">the</span> <span style="color:#268bd2">key</span> <span style="color:#268bd2">h</span>, <span style="color:#268bd2">it</span> <span style="color:#268bd2">will</span> <span style="color:#859900">return</span> <span style="color:#268bd2">the</span> <span style="color:#859900">default</span> <span style="color:#268bd2">value</span> <span style="color:#268bd2">of</span> <span style="color:#859900;font-weight:bold">int</span>. <span style="color:#268bd2">Hence</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#268bd2">will</span> <span style="color:#268bd2">be</span> <span style="color:#268bd2">printed</span>.</code></pre></div>
+<hr />
+
+<h2 id="quiz13">Quiz13</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+
+<span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">i</span> := -<span style="color:#2aa198;font-weight:bold">5</span>
+	<span style="color:#268bd2">j</span> := +<span style="color:#2aa198;font-weight:bold">5</span>
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%+d %+d&#34;</span>, <span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span>) <span style="color:#93a1a1;font-style:italic">// +d 表示始终打出数字的符号
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// Answer
+</span><span style="color:#93a1a1;font-style:italic">// -5 +5
+</span><span style="color:#93a1a1;font-style:italic">// The + flag in the format specifier %+d is used to always print a sign for numeric values.
+</span><span style="color:#93a1a1;font-style:italic"></span>// <span style="color:#268bd2">Hence</span> <span style="color:#268bd2">this</span> <span style="color:#268bd2">program</span> <span style="color:#268bd2">outputs</span> -<span style="color:#2aa198;font-weight:bold">5</span> +<span style="color:#2aa198;font-weight:bold">5.</span></code></pre></div>
+<hr />
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E9%9D%A2%E8%AF%95/">面试</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f&amp;text=Golang%e5%9f%ba%e7%a1%8013%e9%97%ae&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f&amp;title=Golang%e5%9f%ba%e7%a1%8013%e9%97%ae" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f&amp;title=Golang%e5%9f%ba%e7%a1%8013%e9%97%ae" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f&amp;title=Golang%e5%9f%ba%e7%a1%8013%e9%97%ae" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%259F%25BA%25E7%25A1%258013%25E9%2597%25AE%2f&amp;description=Golang%e5%9f%ba%e7%a1%8013%e9%97%ae" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%B7%A5%E7%A8%8B%E9%A1%B9%E7%9B%AE%E4%B8%ADgoroutine%E5%BC%95%E7%94%A8%E9%97%AD%E5%8C%85%E7%9A%84%E9%94%99%E8%AF%AF%E6%93%8D%E4%BD%9C/" data-toggle="tooltip" data-placement="top" title="记一次工程项目中goroutine引用闭包的错误操作">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

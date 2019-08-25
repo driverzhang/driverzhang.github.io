@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sat, 17 Aug 2019 13:54:13 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 25 Aug 2019 15:23:25 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang基础13问</title>
+      <link>https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/</link>
+      <pubDate>Sun, 25 Aug 2019 15:23:25 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;最近看见一篇关于go基础的问题，算是给自己的一个小考验，很多基础的东西当你回过头来看看也许有新的认识，当然这些题也适合出面试题。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>记一次工程项目中goroutine引用闭包的错误操作</title>
