@@ -7,10 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 25 Aug 2019 15:23:25 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 28 Sep 2019 19:26:33 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gogs与drone实现DevOps流程落地实验</title>
+      <link>https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/</link>
+      <pubDate>Sat, 28 Sep 2019 19:26:33 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/</guid>
+      <description>&lt;h2 id=&#34;docker-搭建-gogs&#34;&gt;Docker 搭建 Gogs&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;docker 搭建 Gogs 参考 &lt;a href=&#34;https://my.oschina.net/xsh1208/blog/3019458&#34;&gt;这里&lt;/a&gt;
+和 &lt;a href=&#34;https://gogs.io/&#34;&gt;gogs.io&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang基础13问</title>

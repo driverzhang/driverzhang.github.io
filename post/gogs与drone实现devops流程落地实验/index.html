@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Gogs与drone实现DevOps流程落地实验</title>
+  <meta property="og:title" content="Gogs与drone实现DevOps流程落地实验" />
+  <meta name="twitter:title" content="Gogs与drone实现DevOps流程落地实验" />
+  <meta name="description" content="Docker 搭建 Gogs
+
+
+docker 搭建 Gogs 参考 这里
+和 gogs.io
+
+
+">
+  <meta property="og:description" content="Docker 搭建 Gogs
+
+
+docker 搭建 Gogs 参考 这里
+和 gogs.io
+
+
+">
+  <meta name="twitter:description" content="Docker 搭建 Gogs
+
+
+docker 搭建 Gogs 参考 这里
+和 gogs.io
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Gogs与drone实现DevOps流程落地实验</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 28, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="docker-搭建-gogs">Docker 搭建 Gogs</h2>
+
+<blockquote>
+<p>docker 搭建 Gogs 参考 <a href="https://my.oschina.net/xsh1208/blog/3019458">这里</a>
+和 <a href="https://gogs.io/">gogs.io</a></p>
+</blockquote>
+
+<p></p>
+
+<p>由于gogs 要依赖Mysql 所以我这里直接用 docker-compose 进行多容器安装启动了。</p>
+
+<p>具体 docker-compose.yml 如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version: <span style="color:#2aa198">&#34;3&#34;</span>
+services:
+  mysql:
+    image: mysql:<span style="color:#2aa198;font-weight:bold">5.7</span>
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=gogs
+      - MYSQL_USER=gogs
+      - MYSQL_PASSWORD=gogs
+      - MYSQL_DATABASE=gogs
+    ports:
+      - <span style="color:#2aa198">&#34;10036:3306&#34;</span>
+    volumes:
+      - ./mysql:/var/lib/mysq
+    networks:
+      gogs_app:
+        aliases:
+          - mysql
+  gogs:
+    image: gogs/gogs:latest
+    container_name: gogs
+    restart: always
+    ports:
+      - <span style="color:#2aa198">&#34;8082:3000&#34;</span>
+      - <span style="color:#2aa198">&#34;10022:22&#34;</span>
+    depends_on:
+      - mysql
+    volumes:
+      - ./data:/data
+    networks:
+      gogs_app:
+        aliases:
+          - gogs_main
+networks:
+  gogs_app:</code></pre></div>
+<h2 id="docker-安装-drone">Docker 安装 drone</h2>
+
+<blockquote>
+<p>参考</p>
+</blockquote>
+
+<p><a href="https://www.cnblogs.com/rongfengliang/p/9963311.html">dorne1.0体验</a></p>
+
+<p><a href="https://www.cnblogs.com/rongfengliang/p/9963139.html">drone 0.8.8 集成gogs 进行ci/cd 处理</a></p>
+
+<p><a href="https://blog.haitanyule.com/2018-11-15/drone-ci-cd-1-0-0/">Drone CI/CD 节点匹配</a></p>
+
+<p><a href="https://blog.wu-boy.com/2017/09/why-i-choose-drone-as-ci-cd-tool/">為什麼我用 Drone 取代 Jenkins 及 GitLab CI</a></p>
+
+<p>docker-compose 方式安装：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version: <span style="color:#2aa198">&#39;3&#39;</span>
+services:
+  drone-server:
+    image: drone/drone:<span style="color:#2aa198;font-weight:bold">1.2</span>.<span style="color:#2aa198;font-weight:bold">1</span>
+    ports:
+      - <span style="color:#2aa198">&#34;8083:80&#34;</span>
+    volumes:
+      - ./drone:/var/lib/drone/
+    environment:
+      - DRONE_OPEN=<span style="color:#859900;font-weight:bold">true</span>
+      - DRONE_SERVER_HOST=<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
+      - DRONE_DEBUG=<span style="color:#859900;font-weight:bold">true</span>
+      - DRONE_GIT_ALWAYS_AUTH=<span style="color:#859900;font-weight:bold">false</span>
+      - DRONE_GOGS=<span style="color:#859900;font-weight:bold">true</span>
+      - DRONE_GOGS_SKIP_VERIFY=<span style="color:#859900;font-weight:bold">false</span>
+      - DRONE_GOGS_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8082</span>
+      - DRONE_PROVIDER=gogs
+      - DRONE_SERVER_PROTO=http
+      - DRONE_RPC_SECRET=6d77513f7c989178c72c64acfb0561c6
+      - DRONE_RUNNER_CAPACITY=<span style="color:#2aa198;font-weight:bold">2</span>
+      - DRONE_AGENTS_ENABLED=<span style="color:#859900;font-weight:bold">true</span>
+  drone-agent:
+    image: drone/agent:<span style="color:#2aa198;font-weight:bold">1.2</span>.<span style="color:#2aa198;font-weight:bold">1</span>
+    depends_on:
+      - drone-server
+    environment:
+      - DRONE_RPC_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
+      - DRONE_RPC_SECRET=6d77513f7c989178c72c64acfb0561c6
+      - DRONE_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
+      - DRONE_DEBUG=<span style="color:#859900;font-weight:bold">true</span>
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock</code></pre></div>
+<p>docker 命令行安装运行</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">docker run <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --volume=/var/lib/drone:/data <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_GOGS_SERVER</span>=http://47.99.212.97:8082 <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_RPC_SECRET</span>=<span style="color:#2aa198;font-weight:bold">111111</span> <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_SERVER_HOST</span>=http://47.99.212.97:8083 <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_SERVER_PROTO</span>=http <span style="color:#2aa198">\ </span>  
+  --publish=<span style="color:#2aa198;font-weight:bold">8083</span>:8000 <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --restart=always <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --detach=<span style="color:#cb4b16">true</span> <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  --name=drone <span style="color:#2aa198">\
+</span><span style="color:#2aa198"></span>  drone/drone:1</code></pre></div>
+<h3 id="drone-gogs-记录坑处">drone+gogs 记录坑处：</h3>
+
+<p><a href="https://discourse.drone.io/t/cannot-connect-to-the-docker-daemon-at-unix-var-run-docker-sock-is-the-docker-daemon-running/4071">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/devops/">DevOps</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;text=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;description=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/" data-toggle="tooltip" data-placement="top" title="Golang基础13问">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
