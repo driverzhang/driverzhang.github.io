@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sat, 28 Sep 2019 19:26:33 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 03 Oct 2019 16:17:02 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gogs与Jenkin实现DevOps流程落地实验</title>
+      <link>https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/</link>
+      <pubDate>Thu, 03 Oct 2019 16:17:02 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/</guid>
+      <description>&lt;h2 id=&#34;1-docker-compose-安装jenkins&#34;&gt;1. docker-compose 安装jenkins&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Gogs与drone实现DevOps流程落地实验</title>

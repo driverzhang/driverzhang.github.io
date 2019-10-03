@@ -5,31 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Gogs与drone实现DevOps流程落地实验</title>
-  <meta property="og:title" content="Gogs与drone实现DevOps流程落地实验" />
-  <meta name="twitter:title" content="Gogs与drone实现DevOps流程落地实验" />
-  <meta name="description" content="Docker 搭建 Gogs
-
-
-docker 搭建 Gogs 参考 这里
-和 gogs.io
-
+  <title>Gogs与Jenkin实现DevOps流程落地实验</title>
+  <meta property="og:title" content="Gogs与Jenkin实现DevOps流程落地实验" />
+  <meta name="twitter:title" content="Gogs与Jenkin实现DevOps流程落地实验" />
+  <meta name="description" content="1. docker-compose 安装jenkins
 
 ">
-  <meta property="og:description" content="Docker 搭建 Gogs
-
-
-docker 搭建 Gogs 参考 这里
-和 gogs.io
-
+  <meta property="og:description" content="1. docker-compose 安装jenkins
 
 ">
-  <meta name="twitter:description" content="Docker 搭建 Gogs
-
-
-docker 搭建 Gogs 参考 这里
-和 gogs.io
-
+  <meta name="twitter:description" content="1. docker-compose 安装jenkins
 
 ">
   <meta name="author" content="Gopherzhang"/>
@@ -37,12 +22,12 @@ docker 搭建 Gogs 参考 这里
   <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Gopherzhang" />
 
   <meta name="generator" content="Hugo 0.48" />
-  <link rel="canonical" href="https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" />
   <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -194,13 +179,13 @@ docker 搭建 Gogs 参考 这里
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Gogs与drone实现DevOps流程落地实验</h1>
+              <h1>Gogs与Jenkin实现DevOps流程落地实验</h1>
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 28, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 3, 2019
   
   
   
@@ -221,22 +206,50 @@ docker 搭建 Gogs 参考 这里
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <h2 id="docker-搭建-gogs">Docker 搭建 Gogs</h2>
-
-<blockquote>
-<p>docker 搭建 Gogs 参考 <a href="https://my.oschina.net/xsh1208/blog/3019458">这里</a>
-和 <a href="https://gogs.io/">gogs.io</a></p>
-</blockquote>
+        <h2 id="1-docker-compose-安装jenkins">1. docker-compose 安装jenkins</h2>
 
 <p></p>
 
-<p>由于gogs 要依赖Mysql 所以我这里直接用 docker-compose 进行多容器安装启动了。</p>
+<p>docker-compose.yml</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">version: &#34;3&#34;
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: always
+    user: root
+    privileged: true
+    ports:
+      - &#34;8080:8080&#34;  //这里端口默认内部为8080，最好不要改动
+      - &#34;50000:50000&#34;
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/jenkins_home:/var/jenkins_home
+      - /etc/localtime:/etc/localtime:ro</pre></div>
+<p>创建好对应文件后运行：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">docker-compose up -d</pre></div>
+<p>打开对应地址：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">http://47.99.212.97:8080</pre></div>
+<p>你会看见一张图叫你填写一个系统管理密码串，它在</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/var/jenkins_home/secrets/initialAdminPassword</pre></div>
+<p>注意具体路径以你看见图片中的路径为准，并且最好是把路径映射到主机中，即加入volumes中。</p>
 
-<p>具体 docker-compose.yml 如下：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version: <span style="color:#2aa198">&#34;3&#34;</span>
+<p>请运行命令即可得到秘钥串：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat /var/jenkins_home/secrets/initialAdminPassword</pre></div>
+<p>完了以后构建一个项目再进入插件管理中选择gogs：</p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jxhygmnzj327m0sw43y.jpg" alt="" /></p>
+
+<p>点击 直接安装 即可。</p>
+
+<hr />
+
+<h2 id="2-docker-compose-安装-gogs-mysql">2. docker-compose 安装 Gogs + Mysql</h2>
+
+<h3 id="对应-docker-compose-yml">对应 docker-compose.yml</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">version: &#34;3&#34;
 services:
   mysql:
-    image: mysql:<span style="color:#2aa198;font-weight:bold">5.7</span>
+    image: mysql:5.7
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=gogs
@@ -244,7 +257,7 @@ services:
       - MYSQL_PASSWORD=gogs
       - MYSQL_DATABASE=gogs
     ports:
-      - <span style="color:#2aa198">&#34;10036:3306&#34;</span>
+      - &#34;10036:3306&#34;
     volumes:
       - ./mysql:/var/lib/mysq
     networks:
@@ -256,8 +269,8 @@ services:
     container_name: gogs
     restart: always
     ports:
-      - <span style="color:#2aa198">&#34;8082:3000&#34;</span>
-      - <span style="color:#2aa198">&#34;10022:22&#34;</span>
+      - &#34;8082:3000&#34;
+      - &#34;10022:22&#34;
     depends_on:
       - mysql
     volumes:
@@ -267,69 +280,100 @@ services:
         aliases:
           - gogs_main
 networks:
-  gogs_app:</code></pre></div>
-<h2 id="docker-安装-drone">Docker 安装 drone</h2>
+  gogs_app:</pre></div>
+<p>创建好对应yml文件后运行：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">docker-compose up -d</pre></div>
+<p>成功后浏览器打开对应地址：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">http://47.99.212.97:8082</pre></div>
+<p>首次运行安装会让你进入路径 /install 配置安装页面填写相应数据：</p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jxl074j9j30yh0u00zr.jpg" alt="" /></p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jxma004tj310p0u0dki.jpg" alt="" /></p>
+
+<p>启动成功后创建一个代码仓库即可，记住在设置中加入自己电脑的 ssh 秘钥不然你 push 不上来的：</p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jxnn6q3aj31d20u0dl3.jpg" alt="" /></p>
+
+<h3 id="添加web钩子">添加web钩子：</h3>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jy6eg4a4j31as0u046p.jpg" alt="" /></p>
+
+<p>推送地址的格式为：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">http(s)://&lt;你的Jenkins地址&gt;/gogs-webhook/?job=&lt;你的Jenkins任务名&gt;</pre></div>
+<p>你可以点击测试推送，看见推送成功即可。</p>
+
+<hr />
+
+<h2 id="3-jenkins配置构建远程服务器">3. Jenkins配置构建远程服务器</h2>
+
+<blockquote>
+<p>（1）、进入jenkins平台 -&gt; 安装插件 -&gt; 搜索 Publish Over SSH 并安装</p>
+</blockquote>
+
+<p>同上安装gogs插件过程一样，搜索 Publish Over SSH 点击直接安装即可。</p>
+
+<p>你可以先选择安装完毕后自动重启jenkins（记得安装完后要重启哦）</p>
+
+<p>安装好重启以后添加你的ssh登录秘钥，这里就算只有一台机器也是需要进行认证添加的，不然会报登录服务器授权错误问题</p>
+
+<ol>
+<li>ssh-keygen -f ssh 生成公钥和私钥</li>
+<li>cat ~/.ssh/ssh.pub 查看公钥</li>
+<li>vim  ~/.ssh/authorized_keys 登录服务器B将服务器A生成的公钥加入authorized_keys （这里就是自己给自己添加即可）</li>
+<li>cat ~/.ssh/jenkins 查看私钥并填入下图中
+首先进入系统设置：</li>
+</ol>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7kaq6wa0jj31mi0u0175.jpg" alt="" /></p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7kal9ddghj31qi0u0wld.jpg" alt="" /></p>
+
+<h2 id="4-构建仓库代码相关配置">4. 构建仓库代码相关配置</h2>
+
+<p>进入项目test配置管理：</p>
+
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jyx5yt8dj31tm0u00yb.jpg" alt="" /></p>
+
+<p>设置好你的项目git地址url和分支。</p>
+
+<h2 id="5-安装go-编译工具">5. 安装Go 编译工具</h2>
+
+<p>Golang Build-env</p>
+
+<p>因为默认的Jenkins镜像是不带有Go的编译工具的，所以我们很有必要安装一个Go插件Go-Plugin-Jenkins
+具体步骤如下：</p>
+
+<ul>
+<li>插件管理中安装构建包 Go</li>
+<li>在全局工具设置中配置启动go选定版本</li>
+<li>再到test项目中勾选go即可</li>
+</ul>
+
+<h2 id="6-触发钩子安装插件-generic-webhook-trigger-plugin">6. 触发钩子安装插件 Generic Webhook Trigger Plugin</h2>
+
+<p>请参考下面这篇。</p>
+
+<blockquote>
+<p>主要解决web钩子触发自动push构建无效的问题</p>
+</blockquote>
+
+<p>但是创建gogs web钩子时请填写如下格式：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">http://47.99.212.97:8080/generic-webhook-trigger/invoke?token=xxx</pre></div>
+<p><a href="https://blog.csdn.net/cheungzz/article/details/80585454">Gogs webhook实现git push 远程分支后自动触发Jenkins构建</a></p>
 
 <blockquote>
 <p>参考</p>
 </blockquote>
 
-<p><a href="https://www.cnblogs.com/rongfengliang/p/9963311.html">dorne1.0体验</a></p>
+<p><a href="https://www.jianshu.com/p/14e356cf8bb4">Jenkins+Gogs搭建自动化部署平台
+</a></p>
 
-<p><a href="https://www.cnblogs.com/rongfengliang/p/9963139.html">drone 0.8.8 集成gogs 进行ci/cd 处理</a></p>
+<p><a href="https://segmentfault.com/a/1190000014788819">docker+jenkins+golang持续集成实践</a></p>
 
-<p><a href="https://blog.haitanyule.com/2018-11-15/drone-ci-cd-1-0-0/">Drone CI/CD 节点匹配</a></p>
+<p><a href="https://www.cnblogs.com/Survivalist/p/11339924.html">Jenkins使用SSH 脚本运行Dockerfile构建Go项目并执行</a></p>
 
-<p><a href="https://blog.wu-boy.com/2017/09/why-i-choose-drone-as-ci-cd-tool/">為什麼我用 Drone 取代 Jenkins 及 GitLab CI</a></p>
-
-<p>docker-compose 方式安装：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version: <span style="color:#2aa198">&#39;3&#39;</span>
-services:
-  drone-server:
-    image: drone/drone:<span style="color:#2aa198;font-weight:bold">1.2</span>.<span style="color:#2aa198;font-weight:bold">1</span>
-    ports:
-      - <span style="color:#2aa198">&#34;8083:80&#34;</span>
-    volumes:
-      - ./drone:/var/lib/drone/
-    environment:
-      - DRONE_OPEN=<span style="color:#859900;font-weight:bold">true</span>
-      - DRONE_SERVER_HOST=<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
-      - DRONE_DEBUG=<span style="color:#859900;font-weight:bold">true</span>
-      - DRONE_GIT_ALWAYS_AUTH=<span style="color:#859900;font-weight:bold">false</span>
-      - DRONE_GOGS=<span style="color:#859900;font-weight:bold">true</span>
-      - DRONE_GOGS_SKIP_VERIFY=<span style="color:#859900;font-weight:bold">false</span>
-      - DRONE_GOGS_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8082</span>
-      - DRONE_PROVIDER=gogs
-      - DRONE_SERVER_PROTO=http
-      - DRONE_RPC_SECRET=6d77513f7c989178c72c64acfb0561c6
-      - DRONE_RUNNER_CAPACITY=<span style="color:#2aa198;font-weight:bold">2</span>
-      - DRONE_AGENTS_ENABLED=<span style="color:#859900;font-weight:bold">true</span>
-  drone-agent:
-    image: drone/agent:<span style="color:#2aa198;font-weight:bold">1.2</span>.<span style="color:#2aa198;font-weight:bold">1</span>
-    depends_on:
-      - drone-server
-    environment:
-      - DRONE_RPC_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
-      - DRONE_RPC_SECRET=6d77513f7c989178c72c64acfb0561c6
-      - DRONE_SERVER=http://<span style="color:#2aa198;font-weight:bold">47.99</span>.<span style="color:#2aa198;font-weight:bold">212.97</span>:<span style="color:#2aa198;font-weight:bold">8083</span>
-      - DRONE_DEBUG=<span style="color:#859900;font-weight:bold">true</span>
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock</code></pre></div>
-<p>docker 命令行安装运行</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">docker run <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --volume=/var/lib/drone:/data <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_GOGS_SERVER</span>=http://47.99.212.97:8082 <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_RPC_SECRET</span>=<span style="color:#2aa198;font-weight:bold">111111</span> <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_SERVER_HOST</span>=http://47.99.212.97:8083 <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --env=<span style="color:#268bd2">DRONE_SERVER_PROTO</span>=http <span style="color:#2aa198">\ </span>  
-  --publish=<span style="color:#2aa198;font-weight:bold">8083</span>:8000 <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --restart=always <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --detach=<span style="color:#cb4b16">true</span> <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  --name=drone <span style="color:#2aa198">\
-</span><span style="color:#2aa198"></span>  drone/drone:1</code></pre></div>
-<h3 id="drone-gogs-记录坑处">drone+gogs 记录坑处：</h3>
-
-<p><a href="https://discourse.drone.io/t/cannot-connect-to-the-docker-daemon-at-unix-var-run-docker-sock-is-the-docker-daemon-running/4071">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running</a></p>
+<p><a href="https://www.cnblogs.com/stulzq/p/8629720.html">Jenkins配置Gogs webhook插件</a></p>
 
         
           <div class="blog-tags">
@@ -347,7 +391,7 @@ services:
 
 
 <li>
-    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;text=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c&amp;via="
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;text=Gogs%e4%b8%8eJenkin%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c&amp;via="
        target="_blank" alt="" title="Share on Twitter">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -358,7 +402,7 @@ services:
 
 
 <li>
-    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Google Plus">
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Google Plus">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
@@ -368,7 +412,7 @@ services:
 
 
 <li>
-    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Facebook">
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f" target="_blank" title="Share on Facebook">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -378,7 +422,7 @@ services:
 
 
 <li>
-    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank" title="Share on Reddit">
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8eJenkin%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank" title="Share on Reddit">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
@@ -388,7 +432,7 @@ services:
 
 
 <li>
-    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8eJenkin%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
        title="Share on LinkedIn">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -399,7 +443,7 @@ services:
 
 
 <li>
-    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;title=Gogs%e4%b8%8eJenkin%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
        title="Share on StumbleUpon">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -410,7 +454,7 @@ services:
 
 
 <li>
-    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Edrone%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;description=Gogs%e4%b8%8edrone%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgogs%25E4%25B8%258Ejenkin%25E5%25AE%259E%25E7%258E%25B0devops%25E6%25B5%2581%25E7%25A8%258B%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%2f&amp;description=Gogs%e4%b8%8eJenkin%e5%ae%9e%e7%8e%b0DevOps%e6%b5%81%e7%a8%8b%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c" target="_blank"
        title="Share on Pinterest">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -428,13 +472,9 @@ services:
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://driverzhang.github.io/post/golang%E5%9F%BA%E7%A1%8013%E9%97%AE/" data-toggle="tooltip" data-placement="top" title="Golang基础13问">&larr; Previous Post</a>
+              <a href="https://driverzhang.github.io/post/gogs%E4%B8%8Edrone%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" data-toggle="tooltip" data-placement="top" title="Gogs与drone实现DevOps流程落地实验">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" data-toggle="tooltip" data-placement="top" title="Gogs与Jenkin实现DevOps流程落地实验">Next Post &rarr;</a>
-            </li>
           
         </ul>
       
