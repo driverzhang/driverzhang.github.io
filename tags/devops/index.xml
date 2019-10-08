@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Thu, 03 Oct 2019 16:17:02 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 Oct 2019 21:05:18 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Gitea与Jenkins实现DevOps落地实验最终版</title>
+      <link>https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/</link>
+      <pubDate>Tue, 08 Oct 2019 21:05:18 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/</guid>
+      <description>&lt;p&gt;基于 Gitea 与 drone 的参考提及&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;参考&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Gogs与Jenkin实现DevOps流程落地实验</title>

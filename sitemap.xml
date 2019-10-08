@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/</loc>
+    <lastmod>2019-10-08T21:05:18+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/</loc>
     <lastmod>2019-10-03T16:17:02+08:00</lastmod>
   </url>
@@ -355,7 +360,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/tags/devops/</loc>
-    <lastmod>2019-10-03T16:17:02+08:00</lastmod>
+    <lastmod>2019-10-08T21:05:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -417,7 +422,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/</loc>
-    <lastmod>2019-10-03T16:17:02+08:00</lastmod>
+    <lastmod>2019-10-08T21:05:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -501,7 +506,7 @@
   
   <url>
     <loc>https://driverzhang.github.io/post/</loc>
-    <lastmod>2019-10-03T16:17:02+08:00</lastmod>
+    <lastmod>2019-10-08T21:05:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
