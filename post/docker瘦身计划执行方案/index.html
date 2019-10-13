@@ -5,28 +5,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Gitea与Jenkins实现DevOps落地实验最终版</title>
-  <meta property="og:title" content="Gitea与Jenkins实现DevOps落地实验最终版" />
-  <meta name="twitter:title" content="Gitea与Jenkins实现DevOps落地实验最终版" />
-  <meta name="description" content="基于 Gitea 与 drone 的参考提及
+  <title>Docker瘦身计划执行方案</title>
+  <meta property="og:title" content="Docker瘦身计划执行方案" />
+  <meta name="twitter:title" content="Docker瘦身计划执行方案" />
+  <meta name="description" content="docker 镜像拉取下来一看近一个G实在不能忍受，所以要减肥。
 
-
-参考
-
+首先来个配置一个docker国内镜像代理。
 
 ">
-  <meta property="og:description" content="基于 Gitea 与 drone 的参考提及
+  <meta property="og:description" content="docker 镜像拉取下来一看近一个G实在不能忍受，所以要减肥。
 
-
-参考
-
+首先来个配置一个docker国内镜像代理。
 
 ">
-  <meta name="twitter:description" content="基于 Gitea 与 drone 的参考提及
+  <meta name="twitter:description" content="docker 镜像拉取下来一看近一个G实在不能忍受，所以要减肥。
 
-
-参考
-
+首先来个配置一个docker国内镜像代理。
 
 ">
   <meta name="author" content="Gopherzhang"/>
@@ -34,12 +28,12 @@
   <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/docker%E7%98%A6%E8%BA%AB%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Gopherzhang" />
 
   <meta name="generator" content="Hugo 0.48" />
-  <link rel="canonical" href="https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/docker%E7%98%A6%E8%BA%AB%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/" />
   <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -191,13 +185,13 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Gitea与Jenkins实现DevOps落地实验最终版</h1>
+              <h1>Docker瘦身计划执行方案</h1>
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 8, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 13, 2019
   
   
   
@@ -218,144 +212,118 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>基于 Gitea 与 drone 的参考提及</p>
+        <p>docker 镜像拉取下来一看近一个G实在不能忍受，所以要减肥。</p>
 
-<blockquote>
-<p>参考</p>
-</blockquote>
+<p>首先来个配置一个docker国内镜像代理。</p>
 
 <p></p>
 
-<blockquote>
-<p><a href="https://blog.csdn.net/tuobicui6522/article/details/95461513">基于Drone+Gitea+Docker对go项目进行CI/CD</a></p>
+<p><a href="https://blog.csdn.net/qq_37495786/article/details/83246421">使用阿里云docker镜像加速</a></p>
 
-<p><a href="https://segmentfault.com/a/1190000018377842">初试drone1.0+gitea—docker安装</a></p>
+<p><a href="https://www.cnblogs.com/young233/p/11013520.html">docker国内镜像加速</a></p>
+
+<h2 id="dockerfile-文件">Dockerfile 文件：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">FROM golang:alpine AS builder
+
+WORKDIR $GOPATH/src/docker_package/builder/
+
+COPY . .
+
+# 获取改项目所要依赖的包文件 合并多个RUN
+# RUN go get -d -v xxxx.xxx.xxx
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags=&#34;-w -s&#34; -o hello
+
+FROM alpine:latest AS production
+
+WORKDIR /root/
+
+COPY --from=builder /go/src/docker_package/builder/hello .
+
+EXPOSE 8081
+
+CMD [&#34;./hello&#34;]</pre></div>
+<h2 id="瘦身文件说明">瘦身文件说明：</h2>
+
+<h3 id="1-使用更小的基础镜像">1. 使用更小的基础镜像</h3>
+
+<blockquote>
+<p>常用的Linux系统基础镜像有Debian、Ubuntu、CentOS和Alpine等，其中Alpine是面向安全的轻量级Linux发行版。在这些镜像中，Debian和Alpine镜像只有不到5M的大小，而其他镜像则是几十MB的大小。因此，Alpine非常适用做基础镜像。</p>
 </blockquote>
 
-<h2 id="1-最终选择基于-gitea-与-jenkins">1. 最终选择基于 Gitea 与 Jenkins</h2>
-
-<blockquote>
-<p>由于大部分体系较大的公司或者喜欢自己写脚本的开发运维来说，用jenkins来与代码库做 ci/cd 是较为完整的稳定的操作流程，所有这次最终选择的是 Gitea 与 Jenkins 来做我这次的微服务自动化流程的实验落地方案。</p>
-</blockquote>
-
-<h3 id="installation-from-binary-for-gitea">Installation from binary for Gitea</h3>
-
-<blockquote>
-<p>基于二进制可执行文件安装 Gitea ，具体环境变量和文件创建位置参考 <a href="https://docs.gitea.io/en-us/install-from-binary/">官方文档即可</a></p>
-
-<p>注意： linux 都自带 python ， python 自带 sqlite ,如果你的机器上没有，请自行搜索安装即可。</p>
-</blockquote>
-
-<h4 id="1-下载安装-gitea">1. 下载安装 Gitea</h4>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">wget -O gitea https://dl.gitea.io/gitea/1.9.3/gitea-1.9.3-linux-amd64
-
-chmod +x gitea</pre></div>
-<h4 id="2-启动与挂载-gitea">2. 启动与挂载 Gitea</h4>
-
-<p>gitea 这里下载下来就是一个可以执行的go的二进制包文件，直接执行即可。</p>
-
-<p>直接终端打印跑起：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">./gitea web</pre></div>
-<p>后台挂起可以运行如下：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">nohup ./gitea &amp;</pre></div>
-<p>跑起来后浏览器自行打开对应ip或者域名加端口默认为 3000</p>
-
-<h4 id="3-install-页面配置注意事项">3. install 页面配置注意事项</h4>
+<p>使用基于Linux alpine 打好的 golang 镜像</p>
 
 <ul>
-<li>首秀先进入一个 /install 进行安装流程，这里数据库默认选择就是用 sqlite3 系统自带简单方便。</li>
-<li>所有要求填入域名或者host的填空，皆填入你的域名或者 ip 地址即可。</li>
-<li>我这里运行用户都是按照 root 进行的，这里和你安装gitea的时候需要自行注意些。</li>
+<li>alpine 是Linux 发型稳定版中最小的的系统推荐使用。</li>
+<li>AS 将镜像另为别名的作用，下面好用</li>
 </ul>
 
-<p>最后创建一个自己的测试代码仓库即可界面如下：</p>
+<h3 id="2-go-build-打包避免交叉编译">2. go build 打包避免交叉编译</h3>
 
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7qlx5bms1j31fu0ofdim.jpg" alt="" /></p>
+<ul>
+<li>CGO_ENABLED=0 用于标识（声明） cgo 工具是否可用。</li>
+</ul>
+
+<blockquote>
+<p>存在交叉编译的情况时，cgo 工具是不可用的</p>
+
+<p>CGO_ENABLED=0的意思是使用C语言版本的GO编译器，参数配置为0的时候就关闭C语言版本的编译器了。自从golang1.5以后go就使用go语言编译器进行编译了。在golang1.9当中没有使用CGO_ENABLED参数发现依然可以正常编译。当然使用了也可以正常编译。比如把CGO_ENABLED参数设置成1，即在编译的过程当中使用CGO编译器，我发现依然是可以正常编译的。</p>
+</blockquote>
+
+<p>实际上如果在go当中使用了C的库，比如import &ldquo;C&rdquo;默认使用go build的时候就会启动CGO编译器，当然我们可以使用CGO_ENABLED=0来控制go build是否使用CGO编译器。</p>
+
+<ul>
+<li>-a 强制重新编译</li>
+</ul>
+
+<blockquote>
+<p>简单来说，就是不利用缓存或已编译好的部分文件，直接所有包都是最新的代码重新编译和关联
+- -installsuffix cgo 在软件包安装的目录中增加后缀标识，以保持输出与默认版本分开
+-  -ldflags=&ldquo;-w -s&rdquo; 设置编译参数</p>
+
+<p>arguments to pass on each go tool link invocation</p>
+
+<p>-w为去掉调试信息（无法使用gdb调试），-s为去掉符号表。 为了安全起见防止别人debug你的程序。</p>
+</blockquote>
+
+<ul>
+<li>-o 打包为 可以直接写 xxx/xxx/name  也可以只写 name</li>
+</ul>
+
+<h3 id="3-压缩run语句-清理多余垃圾">3. 压缩RUN语句&amp;清理多余垃圾</h3>
+
+<p>在该文件中 RUN 语言只有一个，但是放开注释的那个RUN 就有多个。 因为 Docker 镜像是分层的，Dockerfile中的每一条RUN语句都会增加一层镜像，导致镜像非常臃肿。多个RUN命令应尽量用一条RUN命令完成，用“&amp;&amp;”和“\”串联每一条命令。如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">RUN go get -d -v xxxx.xxx.xxx &amp;&amp; \
+
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags=&#34;-w -s&#34; -o hello</pre></div>
+<h3 id="4-多阶段打包">4. 多阶段打包</h3>
+
+<p>从 Docker 17.05 开始，一个Dockerfile文件可以使用多条FROM语句，每条FROM语句可以使用不同的镜像。这样我们可以把Docker的构建阶段分层多个阶段，以两个FROM语句为例，我们可以使用一个镜像编译我们的程序；另一个镜像使用更精简的镜像，拷贝上一阶段的编译的结果。</p>
+
+<p>内容中有两个 FROM 为多阶段打包镜像可减少镜像体积，第一个builder可作为第二个的基础包执行。</p>
+
+<blockquote>
+<p>在使用FROM语句时，我们可以用AS为不同的镜像起别名，方便后续操作。用COPY命令从其他镜像拷贝文件时，我们可以用&ndash;from=alias src dst从别的阶段复制文件；如果没有为镜像起别名，第一个镜像的ID为0，第二个为1，我们可以用ID从别的阶段拷贝文件，&ndash;from=0 src dst</p>
+</blockquote>
 
 <hr />
 
-<h3 id="2-docker-compose-安装-jenkins">2. docker-compose 安装 Jenkins</h3>
+<p>最后打出的镜像只有11M:</p>
 
-<h4 id="1-docker-compose-启动程序">1. docker-compose 启动程序</h4>
+<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7ucic2oa0j311r08njyu.jpg" alt="" /></p>
 
-<p>建立 docker-compose.yml 如下内容：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">version: &#34;3&#34;
-services:
-  jenkins:
-    image: jenkins/jenkins:lts
-    restart: always
-    user: root
-    privileged: true
-    environment:
-      - TZ=Asia/Shanghai
-      - JENKINS_JAVA_OPTIONS=&#34;-Dorg.apache.commons.jelly.tags.fmt.timeZone=Asia/Shanghai&#34;
-    ports:
-      - &#34;8080:8080&#34;
-      - &#34;50000:50000&#34;
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/jenkins_home:/var/jenkins_home
-      - /etc/localtime:/etc/localtime:ro</pre></div>
-<p>配置说明：</p>
+<p>参考文章</p>
 
-<ul>
-<li>TZ 用docker-compose 启动程序，设置docker内部的时区问题</li>
-<li>JENKINS_JAVA_OPTIONS 这是设置jenkins时区问题，防止相差八小时问题</li>
-<li>ro 表示docker容器内只读文件</li>
-</ul>
+<p><a href="https://mp.weixin.qq.com/s/RqTwXjUPEvm3tVSocvdUsQ">精简Docker镜像的几个方法</a></p>
 
-<p>参考文章： <a href="https://www.cnblogs.com/sxdcgaq8080/p/10072040.html">docker-compose.yml文本内容详解 + docker-compose命令详解 + docker-compose启动服务容器时区设置</a></p>
-
-<p>创建好对应文件后运行：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">docker-compose up -d</pre></div>
-<p>打开对应地址：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">http://47.99.xxx.xx:8080</pre></div>
-<p>你会看见一张图叫你填写一个系统管理密码串，它在</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/var/jenkins_home/secrets/initialAdminPassword</pre></div>
-<p>注意具体路径以你看见图片中的路径为准，并且最好是把路径映射到主机中，即加入volumes中。</p>
-
-<p>请运行命令即可得到秘钥串：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">cat /var/jenkins_home/secrets/initialAdminPassword</pre></div>
-<p>完了以后构建一个项目再进入插件管理中选择 gitea(gogs)：</p>
-
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7jxhygmnzj327m0sw43y.jpg" alt="" /></p>
-
-<p>点击 直接安装 即可。</p>
-
-<h4 id="2-在-jenkins-中配置好-gitea-触发push的钩子相关">2. 在 jenkins 中配置好 gitea 触发Push的钩子相关</h4>
-
-<p>进入到建立的test项目中，点击配置看见如下图所示进行填写：</p>
-
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7qre3otz7j31bv0n5tbq.jpg" alt="" /></p>
-
-<blockquote>
-<p>注意如果安装的是gogs插件会有Gogs webhookbooks 一项的配置，我这里用的是gitea 所以少了这个配置。</p>
-</blockquote>
-
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7qrfa0155j31030glgn4.jpg" alt="" /></p>
-
-<p>下载对应插件名称，填写对应token</p>
-
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7qri0xmd8j31860ofjwn.jpg" alt="" /></p>
-
-<p>填写test项目对应启动脚本的名称过程：</p>
-
-<p><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g7qrjgizl1j31870kygo0.jpg" alt="" /></p>
-
-<p>以上步骤都完成以后 说明你已经将 jenkins 和 gitea 连接一起了，你需要做的就是拉下代码更新内容再push上去，就能看见你的项目再自动构建和部署了！</p>
-
-<p>小提示：</p>
-
-<p>如果你觉得输入端口号麻烦，那么请用上nginx的反向代理，不过这里推荐使用  <a href="https://caddyserver.com/docs/automatic-https">caddy</a> 简单方便配置安装就可以搞定你的需求了。</p>
-
-<p>caddy 安装可参考 <a href="https://www.lingbaoboy.com/2018/10/caddy.html">caddy官方脚本一键安装与使用</a></p>
-
-<p><a href="https://my.oschina.net/bfbd/blog/2246229">Ubuntu 中安装和配置 Caddy 服务</a></p>
+<p><a href="https://blog.csdn.net/kurisu_/article/details/100052611">一次 Docker 镜像瘦身实记</a></p>
 
         
           <div class="blog-tags">
             
-              <a href="https://driverzhang.github.io//tags/devops/">DevOps</a>&nbsp;
+              <a href="https://driverzhang.github.io//tags/docker/">Docker</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/dockerfile/">dockerfile</a>&nbsp;
             
           </div>
         
@@ -368,7 +336,7 @@ services:
 
 
 <li>
-    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f&amp;text=Gitea%e4%b8%8eJenkins%e5%ae%9e%e7%8e%b0DevOps%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c%e6%9c%80%e7%bb%88%e7%89%88&amp;via="
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f&amp;text=Docker%e7%98%a6%e8%ba%ab%e8%ae%a1%e5%88%92%e6%89%a7%e8%a1%8c%e6%96%b9%e6%a1%88&amp;via="
        target="_blank" alt="" title="Share on Twitter">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -379,7 +347,7 @@ services:
 
 
 <li>
-    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f" target="_blank" title="Share on Google Plus">
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f" target="_blank" title="Share on Google Plus">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
@@ -389,7 +357,7 @@ services:
 
 
 <li>
-    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f" target="_blank" title="Share on Facebook">
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f" target="_blank" title="Share on Facebook">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -399,7 +367,7 @@ services:
 
 
 <li>
-    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f&amp;title=Gitea%e4%b8%8eJenkins%e5%ae%9e%e7%8e%b0DevOps%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c%e6%9c%80%e7%bb%88%e7%89%88" target="_blank" title="Share on Reddit">
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f&amp;title=Docker%e7%98%a6%e8%ba%ab%e8%ae%a1%e5%88%92%e6%89%a7%e8%a1%8c%e6%96%b9%e6%a1%88" target="_blank" title="Share on Reddit">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
@@ -409,7 +377,7 @@ services:
 
 
 <li>
-    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f&amp;title=Gitea%e4%b8%8eJenkins%e5%ae%9e%e7%8e%b0DevOps%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c%e6%9c%80%e7%bb%88%e7%89%88" target="_blank"
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f&amp;title=Docker%e7%98%a6%e8%ba%ab%e8%ae%a1%e5%88%92%e6%89%a7%e8%a1%8c%e6%96%b9%e6%a1%88" target="_blank"
        title="Share on LinkedIn">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -420,7 +388,7 @@ services:
 
 
 <li>
-    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f&amp;title=Gitea%e4%b8%8eJenkins%e5%ae%9e%e7%8e%b0DevOps%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c%e6%9c%80%e7%bb%88%e7%89%88" target="_blank"
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f&amp;title=Docker%e7%98%a6%e8%ba%ab%e8%ae%a1%e5%88%92%e6%89%a7%e8%a1%8c%e6%96%b9%e6%a1%88" target="_blank"
        title="Share on StumbleUpon">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -431,7 +399,7 @@ services:
 
 
 <li>
-    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgitea%25E4%25B8%258Ejenkins%25E5%25AE%259E%25E7%258E%25B0devops%25E8%2590%25BD%25E5%259C%25B0%25E5%25AE%259E%25E9%25AA%258C%25E6%259C%2580%25E7%25BB%2588%25E7%2589%2588%2f&amp;description=Gitea%e4%b8%8eJenkins%e5%ae%9e%e7%8e%b0DevOps%e8%90%bd%e5%9c%b0%e5%ae%9e%e9%aa%8c%e6%9c%80%e7%bb%88%e7%89%88" target="_blank"
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fdocker%25E7%2598%25A6%25E8%25BA%25AB%25E8%25AE%25A1%25E5%2588%2592%25E6%2589%25A7%25E8%25A1%258C%25E6%2596%25B9%25E6%25A1%2588%2f&amp;description=Docker%e7%98%a6%e8%ba%ab%e8%ae%a1%e5%88%92%e6%89%a7%e8%a1%8c%e6%96%b9%e6%a1%88" target="_blank"
        title="Share on Pinterest">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -449,13 +417,9 @@ services:
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://driverzhang.github.io/post/gogs%E4%B8%8Ejenkin%E5%AE%9E%E7%8E%B0devops%E6%B5%81%E7%A8%8B%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C/" data-toggle="tooltip" data-placement="top" title="Gogs与Jenkin实现DevOps流程落地实验">&larr; Previous Post</a>
+              <a href="https://driverzhang.github.io/post/gitea%E4%B8%8Ejenkins%E5%AE%9E%E7%8E%B0devops%E8%90%BD%E5%9C%B0%E5%AE%9E%E9%AA%8C%E6%9C%80%E7%BB%88%E7%89%88/" data-toggle="tooltip" data-placement="top" title="Gitea与Jenkins实现DevOps落地实验最终版">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://driverzhang.github.io/post/docker%E7%98%A6%E8%BA%AB%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/" data-toggle="tooltip" data-placement="top" title="Docker瘦身计划执行方案">Next Post &rarr;</a>
-            </li>
           
         </ul>
       

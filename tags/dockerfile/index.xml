@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docker on Gopherzhang</title>
-    <link>https://driverzhang.github.io/tags/docker/</link>
-    <description>Recent content in Docker on Gopherzhang</description>
+    <title>Dockerfile on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/dockerfile/</link>
+    <description>Recent content in Dockerfile on Gopherzhang</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
     <lastBuildDate>Sun, 13 Oct 2019 18:54:53 +0800</lastBuildDate>
     
-	<atom:link href="https://driverzhang.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://driverzhang.github.io/tags/dockerfile/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -23,15 +23,6 @@
 &lt;p&gt;首先来个配置一个docker国内镜像代理。&lt;/p&gt;
 
 &lt;p&gt;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Docker本地运行Elasticsearch&#43;Elasticsearch Head</title>
-      <link>https://driverzhang.github.io/post/docker%E6%9C%AC%E5%9C%B0%E8%BF%90%E8%A1%8Celasticsearch&#43;elasticsearch-head/</link>
-      <pubDate>Fri, 28 Sep 2018 10:28:56 +0800</pubDate>
-      
-      <guid>https://driverzhang.github.io/post/docker%E6%9C%AC%E5%9C%B0%E8%BF%90%E8%A1%8Celasticsearch&#43;elasticsearch-head/</guid>
-      <description>&lt;p&gt;记一次 本地 docker 拉去 ES  和 ES-head 镜像运行容器的坑&amp;hellip; &lt;/p&gt;</description>
     </item>
     
   </channel>
