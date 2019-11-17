@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Go标准库数据结构系列之堆heap</title>
+  <meta property="og:title" content="Go标准库数据结构系列之堆heap" />
+  <meta name="twitter:title" content="Go标准库数据结构系列之堆heap" />
+  <meta name="description" content="堆 这种数据结构是比较难搞的一种，但是它在实际工程中的实用性又比较高，能够有效的解决实际中遇见的问题。
+
+
+那么在 go语言中是如何要实现一个heap的呢，其实在官方标准库 container/heap 已经给你实现了，你只需要根据自己实际情况进行接口实现即可。
+
+
+">
+  <meta property="og:description" content="堆 这种数据结构是比较难搞的一种，但是它在实际工程中的实用性又比较高，能够有效的解决实际中遇见的问题。
+
+
+那么在 go语言中是如何要实现一个heap的呢，其实在官方标准库 container/heap 已经给你实现了，你只需要根据自己实际情况进行接口实现即可。
+
+
+">
+  <meta name="twitter:description" content="堆 这种数据结构是比较难搞的一种，但是它在实际工程中的实用性又比较高，能够有效的解决实际中遇见的问题。
+
+
+那么在 go语言中是如何要实现一个heap的呢，其实在官方标准库 container/heap 已经给你实现了，你只需要根据自己实际情况进行接口实现即可。
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/go%E6%A0%87%E5%87%86%E5%BA%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86heap/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/go%E6%A0%87%E5%87%86%E5%BA%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86heap/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Go标准库数据结构系列之堆heap</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 17, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>堆 这种数据结构是比较难搞的一种，但是它在实际工程中的实用性又比较高，能够有效的解决实际中遇见的问题。</p>
+
+<blockquote>
+<p>那么在 go语言中是如何要实现一个heap的呢，其实在官方标准库 container/heap 已经给你实现了，你只需要根据自己实际情况进行接口实现即可。</p>
+</blockquote>
+
+<p></p>
+
+<h1 id="1-堆的知识梳理">1. 堆的知识梳理</h1>
+
+<h3 id="堆的概念">堆的概念：</h3>
+
+<blockquote>
+<p>堆这种数据结构的应用场景非常多，最经典的莫过于堆排序了。堆排序是一种原地的、时间复杂度为 O(nlogn)</p>
+</blockquote>
+
+<ul>
+<li>堆是一个完全二叉树</li>
+<li>堆中每一个节点的值都必须大于等于（或小于等于）其子树中每个节点的值。</li>
+</ul>
+
+<p>大顶堆： 堆中每一个节点的值都必须大于等于其子树中每个节点的值。</p>
+
+<p>小顶堆：堆中每一个节点的值都必须小于等于其子树中每个节点的值。</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/4c/99/4c452a1ad3b2d152daa2727d06097099.jpg" alt="image" /></p>
+
+<ul>
+<li><p>1,2为 大顶堆</p></li>
+
+<li><p>3 小顶堆</p></li>
+
+<li><p>4 不是堆</p></li>
+</ul>
+
+<h3 id="堆的操作-堆化">堆的操作（堆化）</h3>
+
+<blockquote>
+<p>堆化非常简单，就是顺着节点所在的路径，向上或者向下，对比，然后交换。</p>
+</blockquote>
+
+<h4 id="往堆中插入元素-从下往上">往堆中插入元素（从下往上）</h4>
+
+<p>给出一个大顶堆，然后从末尾插入一个元素两张图可以展示整个过程演示：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/e5/22/e578654f930002a140ebcf72b11eb722.jpg" alt="image" /></p>
+
+<p>插入过程示意图：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/e3/0e/e3744661e038e4ae570316bc862b2c0e.jpg" alt="image" /></p>
+
+<h4 id="删除堆顶元素-从上往下">删除堆顶元素（从上往下）</h4>
+
+<blockquote>
+<p>由于堆的特性，所有堆顶元素不是最大值就是最小值。删除堆顶元素后，我们还是需要堆化的过程。</p>
+</blockquote>
+
+<p>删除比较特殊，为了避免出现 “数组空洞问题” 如下图：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/59/81/5916121b08da6fc0636edf1fc24b5a81.jpg" alt="image" /></p>
+
+<p>我们可以直接将堆顶元素与最后一个元素交换，直接删除掉堆顶元素，再进行堆化的过程即可。</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/11/60/110d6f442e718f86d2a1d16095513260.jpg" alt="image" /></p>
+
+<h3 id="实现堆排序-建堆和排序">实现堆排序（建堆和排序）</h3>
+
+<h3 id="建堆">建堆</h3>
+
+<blockquote>
+<p>建堆的时间复杂度就是 O(n)</p>
+</blockquote>
+
+<p>一种建堆思路的处理过程是从前往后处理数组数据，并且每个数据插入堆中时，都是从下往上堆化。</p>
+
+<p>而这里推荐的是第二种实现思路，是从后往前处理数组，并且每个数据都是从上往下堆化。如图所示：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/50/1e/50c1e6bc6fe68378d0a66bdccfff441e.jpg" alt="image" /></p>
+
+<p><img src="http://static001.geekbang.org/resource/image/aa/9d/aabb8d15b1b92d5e040895589c60419d.jpg" alt="image" /></p>
+
+<h3 id="排序">排序</h3>
+
+<p>上面建堆过程中我们可以得到一个大顶堆，堆顶为最大元素值，然后我们仿照着“删除堆顶元素”的方式进行排序即可。</p>
+
+<p>不断的把堆顶元素和最后一个元素交换位置再将前面n-1和元素堆化，如下图：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/23/d1/23958f889ca48dbb8373f521708408d1.jpg" alt="image" /></p>
+
+<p>整个堆排序的过程，都只需要极个别临时存储空间，所以堆排序是原地排序算法。</p>
+
+<p>堆排序包括建堆和排序两个操作，建堆过程的时间复杂度是 O(n)，而排序时间复杂度为 O(nlogn)。</p>
+
+<p>所以，堆排序整体的时间复杂度是 O(nlogn)。</p>
+
+<blockquote>
+<p>堆排序不是稳定的排序算法，因为在排序的过程，存在将堆的最后一个节点跟堆顶节点互换的操作，所以就有可能改变值相同数据的原始相对顺序。</p>
+
+<p>参考文章</p>
+
+<p><a href="https://time.geekbang.org/column/article/69913">28 | 堆和堆排序：为什么说堆排序没有快速排序快？</a></p>
+</blockquote>
+
+<hr />
+
+<h1 id="2-heap-堆的实现-go语言版">2. heap 堆的实现 go语言版</h1>
+
+<p>在go的标准库 container/heap 以后给出了现存的堆结构我们只需要进行接口实现和调用接口即可，具体如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">import</span> (
+	<span style="color:#2aa198">&#34;container/heap&#34;</span>
+	<span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">IntHeap</span> []<span style="color:#859900;font-weight:bold">int</span>
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+	<span style="color:#268bd2">h</span> := &amp;<span style="color:#268bd2">IntHeap</span>{<span style="color:#2aa198;font-weight:bold">2</span>, <span style="color:#2aa198;font-weight:bold">1</span>, <span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198;font-weight:bold">6</span>, <span style="color:#2aa198;font-weight:bold">4</span>, <span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198;font-weight:bold">7</span>, <span style="color:#2aa198;font-weight:bold">9</span>, <span style="color:#2aa198;font-weight:bold">8</span>, <span style="color:#2aa198;font-weight:bold">0</span>} <span style="color:#93a1a1;font-style:italic">// 创建slice
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Init</span>(<span style="color:#268bd2">h</span>)                                <span style="color:#93a1a1;font-style:italic">// 将数组切片进行堆化
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(*<span style="color:#268bd2">h</span>)                             <span style="color:#93a1a1;font-style:italic">// [0 1 3 6 2 5 7 9 8 4] 由Less方法可控制小顶堆
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Pop</span>(<span style="color:#268bd2">h</span>))                    <span style="color:#93a1a1;font-style:italic">// 调用pop 0 返回移除的顶部最小元素
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Push</span>(<span style="color:#268bd2">h</span>, <span style="color:#2aa198;font-weight:bold">6</span>)                             <span style="color:#93a1a1;font-style:italic">// 调用push [1 2 3 6 4 5 7 9 8] 添加一个元素进入堆中进行堆化
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;new: &#34;</span>, *<span style="color:#268bd2">h</span>)                    <span style="color:#93a1a1;font-style:italic">// [1 2 3 6 4 5 7 9 8 6]
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">for</span> <span style="color:#cb4b16">len</span>(*<span style="color:#268bd2">h</span>) &gt; <span style="color:#2aa198;font-weight:bold">0</span> {                           <span style="color:#93a1a1;font-style:italic">// 持续推出顶部最小元素
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%d \n &#34;</span>, <span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Pop</span>(<span style="color:#268bd2">h</span>))
+	}
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">h</span> <span style="color:#268bd2">IntHeap</span>) <span style="color:#268bd2">Len</span>() <span style="color:#859900;font-weight:bold">int</span> { <span style="color:#859900">return</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">h</span>) }
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">h</span> <span style="color:#268bd2">IntHeap</span>) <span style="color:#268bd2">Less</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">bool</span> { <span style="color:#859900">return</span> <span style="color:#268bd2">h</span>[<span style="color:#268bd2">i</span>] &lt; <span style="color:#268bd2">h</span>[<span style="color:#268bd2">j</span>] } <span style="color:#93a1a1;font-style:italic">// 这里决定 大小顶堆 现在是小顶堆
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">func</span> (<span style="color:#268bd2">h</span> <span style="color:#268bd2">IntHeap</span>) <span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) {
+	<span style="color:#268bd2">h</span>[<span style="color:#268bd2">i</span>], <span style="color:#268bd2">h</span>[<span style="color:#268bd2">j</span>] = <span style="color:#268bd2">h</span>[<span style="color:#268bd2">j</span>], <span style="color:#268bd2">h</span>[<span style="color:#268bd2">i</span>]
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">h</span> *<span style="color:#268bd2">IntHeap</span>) <span style="color:#268bd2">Pop</span>() <span style="color:#859900">interface</span>{} {
+	<span style="color:#268bd2">old</span> := *<span style="color:#268bd2">h</span>
+	<span style="color:#268bd2">n</span> := <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">old</span>)
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#2aa198">&#34;old: &#34;</span>, <span style="color:#268bd2">old</span>) <span style="color:#93a1a1;font-style:italic">// [1 2 3 6 4 5 7 9 8 0] 将顶小堆元素与最后一个元素交换位置，在进行堆排序的结果
+</span><span style="color:#93a1a1;font-style:italic"></span>
+	<span style="color:#268bd2">x</span> := <span style="color:#268bd2">old</span>[<span style="color:#268bd2">n</span>-<span style="color:#2aa198;font-weight:bold">1</span>]
+	*<span style="color:#268bd2">h</span> = <span style="color:#268bd2">old</span>[<span style="color:#2aa198;font-weight:bold">0</span> : <span style="color:#268bd2">n</span>-<span style="color:#2aa198;font-weight:bold">1</span>]
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(*<span style="color:#268bd2">h</span>) <span style="color:#93a1a1;font-style:italic">// [1 2 3 6 4 5 7 9 8]
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">return</span> <span style="color:#268bd2">x</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">h</span> *<span style="color:#268bd2">IntHeap</span>) <span style="color:#268bd2">Push</span>(<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) { <span style="color:#93a1a1;font-style:italic">// 绑定push方法，插入新元素
+</span><span style="color:#93a1a1;font-style:italic"></span>	*<span style="color:#268bd2">h</span> = <span style="color:#cb4b16">append</span>(*<span style="color:#268bd2">h</span>, <span style="color:#268bd2">x</span>.(<span style="color:#859900;font-weight:bold">int</span>))
+}</code></pre></div>
+<p>理解以上代码需要结合上面的堆知识梳理中的“堆化”和“删除元素” + “插入元素”。</p>
+
+<p>再来看看heap包的源码：</p>
+
+<ol>
+<li>首先要调用heap.Init()方式传入的参数必须是已经实现Interface对应接口的。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// The Interface type describes the requirements
+</span><span style="color:#93a1a1;font-style:italic">// for a type using the routines in this package.
+</span><span style="color:#93a1a1;font-style:italic">// Any type that implements it may be used as a
+</span><span style="color:#93a1a1;font-style:italic">// min-heap with the following invariants (established after
+</span><span style="color:#93a1a1;font-style:italic">// Init has been called or if the data is empty or sorted):
+</span><span style="color:#93a1a1;font-style:italic">//
+</span><span style="color:#93a1a1;font-style:italic">//	!h.Less(j, i) for 0 &lt;= i &lt; h.Len() and 2*i+1 &lt;= j &lt;= 2*i+2 and j &lt; h.Len()
+</span><span style="color:#93a1a1;font-style:italic">//
+</span><span style="color:#93a1a1;font-style:italic">// Note that Push and Pop in this interface are for package heap&#39;s
+</span><span style="color:#93a1a1;font-style:italic">// implementation to call. To add and remove things from the heap,
+</span><span style="color:#93a1a1;font-style:italic">// use heap.Push and heap.Pop.
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">Interface</span> <span style="color:#859900">interface</span> { <span style="color:#93a1a1;font-style:italic">// 该接口组合了另外的sort.Interface接口，所以也要实现里面的方法
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">sort</span>.<span style="color:#268bd2">Interface</span>
+	<span style="color:#268bd2">Push</span>(<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) <span style="color:#93a1a1;font-style:italic">// add x as element Len()
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Pop</span>() <span style="color:#859900">interface</span>{}   <span style="color:#93a1a1;font-style:italic">// remove and return element Len() - 1.
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// Init establishes the heap invariants required by the other routines in this package.
+</span><span style="color:#93a1a1;font-style:italic">// Init is idempotent with respect to the heap invariants
+</span><span style="color:#93a1a1;font-style:italic">// and may be called whenever the heap invariants may have been invalidated.
+</span><span style="color:#93a1a1;font-style:italic">// The complexity is O(n) where n = h.Len().
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Init</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>) {
+	<span style="color:#93a1a1;font-style:italic">// heapify
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">n</span> := <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Len</span>()
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span> := <span style="color:#268bd2">n</span>/<span style="color:#2aa198;font-weight:bold">2</span> - <span style="color:#2aa198;font-weight:bold">1</span>; <span style="color:#268bd2">i</span> &gt;= <span style="color:#2aa198;font-weight:bold">0</span>; <span style="color:#268bd2">i</span>-- {
+		<span style="color:#268bd2">down</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">i</span>, <span style="color:#268bd2">n</span>)
+	}
+}</code></pre></div>
+<p>其中 sort.Interface接口：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">sort</span>
+
+<span style="color:#93a1a1;font-style:italic">// A type, typically a collection, that satisfies sort.Interface can be
+</span><span style="color:#93a1a1;font-style:italic">// sorted by the routines in this package. The methods require that the
+</span><span style="color:#93a1a1;font-style:italic">// elements of the collection be enumerated by an integer index.
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">Interface</span> <span style="color:#859900">interface</span> {
+	<span style="color:#93a1a1;font-style:italic">// Len is the number of elements in the collection.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Len</span>() <span style="color:#859900;font-weight:bold">int</span>
+	<span style="color:#93a1a1;font-style:italic">// Less reports whether the element with
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// index i should sort before the element with index j.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Less</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">bool</span>
+	<span style="color:#93a1a1;font-style:italic">// Swap swaps the elements with indexes i and j.
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>)
+}</code></pre></div>
+<p>再回来看看heap包中的其他方法：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// Push pushes the element x onto the heap.
+</span><span style="color:#93a1a1;font-style:italic">// The complexity is O(log n) where n = h.Len().
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Push</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>, <span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) {
+	<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Push</span>(<span style="color:#268bd2">x</span>)
+	<span style="color:#268bd2">up</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Len</span>()-<span style="color:#2aa198;font-weight:bold">1</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// Pop removes and returns the minimum element (according to Less) from the heap.
+</span><span style="color:#93a1a1;font-style:italic">// The complexity is O(log n) where n = h.Len().
+</span><span style="color:#93a1a1;font-style:italic">// Pop is equivalent to Remove(h, 0).
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Pop</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>) <span style="color:#859900">interface</span>{} {
+	<span style="color:#268bd2">n</span> := <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Len</span>() - <span style="color:#2aa198;font-weight:bold">1</span>
+	<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Swap</span>(<span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">n</span>)
+	<span style="color:#268bd2">down</span>(<span style="color:#268bd2">h</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">n</span>)
+	<span style="color:#859900">return</span> <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Pop</span>()
+}
+
+<span style="color:#93a1a1;font-style:italic">// Remove removes and returns the element at index i from the heap.
+</span><span style="color:#93a1a1;font-style:italic">// The complexity is O(log n) where n = h.Len().
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Remove</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>, <span style="color:#268bd2">i</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900">interface</span>{} {
+	<span style="color:#268bd2">n</span> := <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Len</span>() - <span style="color:#2aa198;font-weight:bold">1</span>
+	<span style="color:#859900">if</span> <span style="color:#268bd2">n</span> != <span style="color:#268bd2">i</span> {
+		<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">n</span>)
+		<span style="color:#859900">if</span> !<span style="color:#268bd2">down</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">i</span>, <span style="color:#268bd2">n</span>) {
+			<span style="color:#268bd2">up</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">i</span>)
+		}
+	}
+	<span style="color:#859900">return</span> <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Pop</span>()
+}
+
+<span style="color:#93a1a1;font-style:italic">// Fix re-establishes the heap ordering after the element at index i has changed its value.
+</span><span style="color:#93a1a1;font-style:italic">// Changing the value of the element at index i and then calling Fix is equivalent to,
+</span><span style="color:#93a1a1;font-style:italic">// but less expensive than, calling Remove(h, i) followed by a Push of the new value.
+</span><span style="color:#93a1a1;font-style:italic">// The complexity is O(log n) where n = h.Len().
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Fix</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>, <span style="color:#268bd2">i</span> <span style="color:#859900;font-weight:bold">int</span>) {
+	<span style="color:#859900">if</span> !<span style="color:#268bd2">down</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">i</span>, <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Len</span>()) {
+		<span style="color:#268bd2">up</span>(<span style="color:#268bd2">h</span>, <span style="color:#268bd2">i</span>)
+	}
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">up</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) {
+	<span style="color:#859900">for</span> {
+		<span style="color:#268bd2">i</span> := (<span style="color:#268bd2">j</span> - <span style="color:#2aa198;font-weight:bold">1</span>) / <span style="color:#2aa198;font-weight:bold">2</span> <span style="color:#93a1a1;font-style:italic">// parent
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900">if</span> <span style="color:#268bd2">i</span> == <span style="color:#268bd2">j</span> || !<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Less</span>(<span style="color:#268bd2">j</span>, <span style="color:#268bd2">i</span>) {
+			<span style="color:#859900">break</span>
+		}
+		<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span>)
+		<span style="color:#268bd2">j</span> = <span style="color:#268bd2">i</span>
+	}
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">down</span>(<span style="color:#268bd2">h</span> <span style="color:#268bd2">Interface</span>, <span style="color:#268bd2">i0</span>, <span style="color:#268bd2">n</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">bool</span> {
+	<span style="color:#268bd2">i</span> := <span style="color:#268bd2">i0</span>
+	<span style="color:#859900">for</span> {
+		<span style="color:#268bd2">j1</span> := <span style="color:#2aa198;font-weight:bold">2</span>*<span style="color:#268bd2">i</span> + <span style="color:#2aa198;font-weight:bold">1</span>
+		<span style="color:#859900">if</span> <span style="color:#268bd2">j1</span> &gt;= <span style="color:#268bd2">n</span> || <span style="color:#268bd2">j1</span> &lt; <span style="color:#2aa198;font-weight:bold">0</span> { <span style="color:#93a1a1;font-style:italic">// j1 &lt; 0 after int overflow
+</span><span style="color:#93a1a1;font-style:italic"></span>			<span style="color:#859900">break</span>
+		}
+		<span style="color:#268bd2">j</span> := <span style="color:#268bd2">j1</span> <span style="color:#93a1a1;font-style:italic">// left child
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900">if</span> <span style="color:#268bd2">j2</span> := <span style="color:#268bd2">j1</span> + <span style="color:#2aa198;font-weight:bold">1</span>; <span style="color:#268bd2">j2</span> &lt; <span style="color:#268bd2">n</span> &amp;&amp; <span style="color:#268bd2">h</span>.<span style="color:#268bd2">Less</span>(<span style="color:#268bd2">j2</span>, <span style="color:#268bd2">j1</span>) {
+			<span style="color:#268bd2">j</span> = <span style="color:#268bd2">j2</span> <span style="color:#93a1a1;font-style:italic">// = 2*i + 2  // right child
+</span><span style="color:#93a1a1;font-style:italic"></span>		}
+		<span style="color:#859900">if</span> !<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Less</span>(<span style="color:#268bd2">j</span>, <span style="color:#268bd2">i</span>) {
+			<span style="color:#859900">break</span>
+		}
+		<span style="color:#268bd2">h</span>.<span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span>)
+		<span style="color:#268bd2">i</span> = <span style="color:#268bd2">j</span>
+	}
+	<span style="color:#859900">return</span> <span style="color:#268bd2">i</span> &gt; <span style="color:#268bd2">i0</span>
+}</code></pre></div>
+<p>总结方法如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">h := &amp;IntHeap{3, 8, 6}  // 创建IntHeap类型的原始数据
+func Init(h Interface)  // 对heap进行初始化，生成小根堆（或大根堆）
+func Push(h Interface, x interface{})  // 往堆里面插入内容
+func Pop(h Interface) interface{}  // 从堆顶pop出内容
+func Remove(h Interface, i int) interface{}  // 从指定位置删除数据，并返回删除的数据
+func Fix(h Interface, i int)  // 从i位置数据发生改变后，对堆再平衡，优先级队列使用到了该方法</pre></div>
+<p>在堆的应用中下面会用 heap 实现一个优先队列。</p>
+
+<blockquote>
+<p>参考文档</p>
+
+<p><a href="https://www.cnblogs.com/huxianglin/p/6925119.html">GO语言heap剖析及利用heap实现优先级队列</a></p>
+
+<h2 id="官方文档-https-golang-org-pkg-container-heap"><a href="https://golang.org/pkg/container/heap/">官方文档</a></h2>
+</blockquote>
+
+<h1 id="3-堆的实际应用和解决方案">3. 堆的实际应用和解决方案</h1>
+
+<h2 id="一-优先级队列">一. 优先级队列</h2>
+
+<blockquote>
+<p>优先级最高的，最先出队。</p>
+</blockquote>
+
+<p>优先级队列，顾名思义，它首先应该是一个队列。</p>
+
+<p>队列最大的特性就是先进先出。</p>
+
+<h4 id="不过-在优先级队列中-数据的出队顺序不是先进先出-而是按照优先级来-优先级最高的-最先出队">不过，在优先级队列中，数据的出队顺序不是先进先出，而是按照优先级来，优先级最高的，最先出队</h4>
+
+<p>用堆来实现优先级队列是最直接、最高效的。</p>
+
+<p>这是因为，堆和优先级队列非常相似。</p>
+
+<p>一个堆就可以看作一个优先级队列。
+很多时候，它们只是概念上的区分而已。</p>
+
+<p>往优先级队列中插入一个元素，就相当于往堆中插入一个元素；从优先级队列中取出优先级最高的元素，就相当于取出堆顶元素。</p>
+
+<p>下面是两个具体的列子，告诉我们优先队列的具体应用场景。</p>
+
+<h3 id="1-合并有序小文件">1. 合并有序小文件</h3>
+
+<blockquote>
+<p>场景一 需求说明：</p>
+</blockquote>
+
+<p>有100个文件，每个文件大小都是100M，然后每个文件里面存储的都是字符串，现在需要将这100个文件合并成一个有序的大文件。</p>
+
+<h4 id="解决方案一-数组法">解决方案一 数组法：</h4>
+
+<p>取出每个文件的第一个字符串，总共就是100个字符串放入到一个数组中。</p>
+
+<p>然后再这个数组中比较大小，将最小的那个放入的最终的大文件中，并从之前的数组中删掉。</p>
+
+<p>假设这个字符串是 12.txt 这个文件中的，那我们就再从这个文件中取出一个字符串来，然后放入到之前的数组中，重新比较大小，并选择最小的那个再次放入到最终的大文件中。</p>
+
+<p>以此类推，直到所有文件中的数据都放入到了大文件中即可。</p>
+
+<blockquote>
+<p>这里我们用数组这种数据结构，来存储从小文件中取出来的字符串。每次从数组中取最小字符串，都需要循环遍历整个数组，显然，这不是很高效。下面我们用优先队列。</p>
+</blockquote>
+
+<h4 id="解决方案二-优先队列-推荐">解决方案二 优先队列（推荐）：</h4>
+
+<p>我们将从小文件中取出来的字符串放入到小顶堆中，那堆顶的元素，也就是优先级队列队首的元素，就是最小的字符串。</p>
+
+<p>我们将这个字符串放入到大文件中，并将其从堆中删除。</p>
+
+<p>然后再从小文件中取出下一个字符串，放入到堆中。循环这个过程，就可以将 100 个小文件中的数据依次放入到大文件中。</p>
+
+<blockquote>
+<p>这里删除堆元素和往堆中插入数据的时间复杂度都是 O(logn)， 而之前的放入数组再每次比较大小为O(n平方)。明显要高效很多了。</p>
+</blockquote>
+
+<h3 id="2-高性能定时器">2. 高性能定时器</h3>
+
+<blockquote>
+<p>场景二 需求说明</p>
+</blockquote>
+
+<p>有一个定时器，定时器中维护了很多定时任务，每个任务都设定了一个要触发执行的时间点。定时器每过一个很小的单位时间（比如 1 秒），就扫描一遍任务，看是否有任务到达设定的执行时间。如果到达了，就拿出来执行。请进行优化。</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/b0/e7/b04656d27fd0ba112a38a28c892069e7.jpg" alt="image" /></p>
+
+<p>如上所述，这样每隔 1 秒就去扫描的方法比较低效：</p>
+
+<ul>
+<li>1. 每个任务的约定执行时间之间可能会隔很久，这样会多出很多无用的扫描。</li>
+<li>2. 每次都去扫描整个任务列表的话，如果该表比较大，扫描时间间隔又及其短，对性能时间消耗就比较大了。</li>
+</ul>
+
+<h3 id="解决方案-优先队列化">解决方案 优先队列化</h3>
+
+<p>按照任务设定的执行时间，将这些任务存储在优先级队列中，队列首部（也就是小顶堆的堆顶）存储的是最先执行的任务。</p>
+
+<p>这样，定时器就不需要每隔 1 秒就扫描一遍任务列表了。</p>
+
+<p>它先拿队首任务的执行时间点，与当前时间点相减，得到一个时间间隔 T。</p>
+
+<p>这个时间间隔 T 就是，从当前时间开始，需要等待多久，才会有第一个任务需要被执行。</p>
+
+<p>这样，定时器就可以设定在 T 秒之后，再来执行任务。从当前时间点到（T-1）秒这段时间里，定时器都不需要做任何事情。</p>
+
+<p>当 T 秒时间过去之后，定时器取优先级队列中队首的任务执行。然后再计算新的队首任务的执行时间点与当前时间点的差值，把这个值作为定时器执行下一个任务需要等待的时间。</p>
+
+<blockquote>
+<p>这样，定时器既不用间隔 1 秒就轮询一次，也不用遍历整个任务列表，性能也就提高了。完美！</p>
+</blockquote>
+
+<h3 id="利用-heap-包实现一个优先队列">利用 heap 包实现一个优先队列</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">import</span> (
+    <span style="color:#2aa198">&#34;container/heap&#34;</span>
+    <span style="color:#2aa198">&#34;fmt&#34;</span>
+)
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">Item</span> <span style="color:#859900">struct</span> {
+    <span style="color:#268bd2">value</span>    <span style="color:#859900;font-weight:bold">string</span> <span style="color:#93a1a1;font-style:italic">// 优先级队列中的数据，可以是任意类型，这里使用string
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">priority</span> <span style="color:#859900;font-weight:bold">int</span>    <span style="color:#93a1a1;font-style:italic">// 优先级队列中节点的优先级
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">index</span>    <span style="color:#859900;font-weight:bold">int</span>    <span style="color:#93a1a1;font-style:italic">// index是该节点在堆中的位置
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// 优先级队列需要实现heap的interface
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">PriorityQueue</span> []*<span style="color:#268bd2">Item</span>
+
+<span style="color:#93a1a1;font-style:italic">// 绑定Len方法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> <span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">Len</span>() <span style="color:#859900;font-weight:bold">int</span> {
+    <span style="color:#859900">return</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">pq</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// 绑定Less方法，这里用的是小于号，生成的是小根堆
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> <span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">Less</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#859900;font-weight:bold">bool</span> {
+    <span style="color:#859900">return</span> <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">priority</span> &lt; <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">j</span>].<span style="color:#268bd2">priority</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// 绑定swap方法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> <span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">Swap</span>(<span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span> <span style="color:#859900;font-weight:bold">int</span>) {
+    <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">i</span>], <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">j</span>] = <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">j</span>], <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">i</span>]
+    <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">index</span>, <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">j</span>].<span style="color:#268bd2">index</span> = <span style="color:#268bd2">i</span>, <span style="color:#268bd2">j</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// 绑定put方法，将index置为-1是为了标识该数据已经出了优先级队列了
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> *<span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">Pop</span>() <span style="color:#859900">interface</span>{} {
+    <span style="color:#268bd2">old</span> := *<span style="color:#268bd2">pq</span>
+    <span style="color:#268bd2">n</span> := <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">old</span>)
+    <span style="color:#268bd2">item</span> := <span style="color:#268bd2">old</span>[<span style="color:#268bd2">n</span>-<span style="color:#2aa198;font-weight:bold">1</span>]
+    *<span style="color:#268bd2">pq</span> = <span style="color:#268bd2">old</span>[<span style="color:#2aa198;font-weight:bold">0</span> : <span style="color:#268bd2">n</span>-<span style="color:#2aa198;font-weight:bold">1</span>]
+    <span style="color:#268bd2">item</span>.<span style="color:#268bd2">index</span> = -<span style="color:#2aa198;font-weight:bold">1</span>
+    <span style="color:#859900">return</span> <span style="color:#268bd2">item</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// 绑定push方法
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> *<span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">Push</span>(<span style="color:#268bd2">x</span> <span style="color:#859900">interface</span>{}) {
+    <span style="color:#268bd2">n</span> := <span style="color:#cb4b16">len</span>(*<span style="color:#268bd2">pq</span>)
+    <span style="color:#268bd2">item</span> := <span style="color:#268bd2">x</span>.(*<span style="color:#268bd2">Item</span>)
+    <span style="color:#268bd2">item</span>.<span style="color:#268bd2">index</span> = <span style="color:#268bd2">n</span>
+    *<span style="color:#268bd2">pq</span> = <span style="color:#cb4b16">append</span>(*<span style="color:#268bd2">pq</span>, <span style="color:#268bd2">item</span>)
+}
+
+<span style="color:#93a1a1;font-style:italic">// 更新修改了优先级和值的item在优先级队列中的位置
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">pq</span> *<span style="color:#268bd2">PriorityQueue</span>) <span style="color:#268bd2">update</span>(<span style="color:#268bd2">item</span> *<span style="color:#268bd2">Item</span>, <span style="color:#268bd2">value</span> <span style="color:#859900;font-weight:bold">string</span>, <span style="color:#268bd2">priority</span> <span style="color:#859900;font-weight:bold">int</span>) {
+    <span style="color:#268bd2">item</span>.<span style="color:#268bd2">value</span> = <span style="color:#268bd2">value</span>
+    <span style="color:#268bd2">item</span>.<span style="color:#268bd2">priority</span> = <span style="color:#268bd2">priority</span>
+    <span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Fix</span>(<span style="color:#268bd2">pq</span>, <span style="color:#268bd2">item</span>.<span style="color:#268bd2">index</span>)
+}
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#93a1a1;font-style:italic">// 创建节点并设计他们的优先级
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">items</span> := <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900;font-weight:bold">int</span>{<span style="color:#2aa198">&#34;二毛&#34;</span>: <span style="color:#2aa198;font-weight:bold">5</span>, <span style="color:#2aa198">&#34;张三&#34;</span>: <span style="color:#2aa198;font-weight:bold">3</span>, <span style="color:#2aa198">&#34;狗蛋&#34;</span>: <span style="color:#2aa198;font-weight:bold">9</span>}
+    <span style="color:#268bd2">i</span> := <span style="color:#2aa198;font-weight:bold">0</span>
+    <span style="color:#268bd2">pq</span> := <span style="color:#cb4b16">make</span>(<span style="color:#268bd2">PriorityQueue</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">items</span>)) <span style="color:#93a1a1;font-style:italic">// 创建优先级队列，并初始化
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">for</span> <span style="color:#268bd2">k</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">items</span> {             <span style="color:#93a1a1;font-style:italic">// 将节点放到优先级队列中
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">pq</span>[<span style="color:#268bd2">i</span>] = &amp;<span style="color:#268bd2">Item</span>{
+            <span style="color:#268bd2">value</span>:    <span style="color:#268bd2">k</span>,
+            <span style="color:#268bd2">priority</span>: <span style="color:#268bd2">v</span>,
+            <span style="color:#268bd2">index</span>:    <span style="color:#268bd2">i</span>}
+        <span style="color:#268bd2">i</span>++
+    }
+    <span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Init</span>(&amp;<span style="color:#268bd2">pq</span>) <span style="color:#93a1a1;font-style:italic">// 初始化堆
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">item</span> := &amp;<span style="color:#268bd2">Item</span>{ <span style="color:#93a1a1;font-style:italic">// 创建一个item
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">value</span>:    <span style="color:#2aa198">&#34;李四&#34;</span>,
+        <span style="color:#268bd2">priority</span>: <span style="color:#2aa198;font-weight:bold">1</span>,
+    }
+    <span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Push</span>(&amp;<span style="color:#268bd2">pq</span>, <span style="color:#268bd2">item</span>)           <span style="color:#93a1a1;font-style:italic">// 入优先级队列
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">pq</span>.<span style="color:#268bd2">update</span>(<span style="color:#268bd2">item</span>, <span style="color:#268bd2">item</span>.<span style="color:#268bd2">value</span>, <span style="color:#2aa198;font-weight:bold">6</span>) <span style="color:#93a1a1;font-style:italic">// 更新item的优先级
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#859900">for</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">pq</span>) &gt; <span style="color:#2aa198;font-weight:bold">0</span> {
+        <span style="color:#268bd2">item</span> := <span style="color:#268bd2">heap</span>.<span style="color:#268bd2">Pop</span>(&amp;<span style="color:#268bd2">pq</span>).(*<span style="color:#268bd2">Item</span>)
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;%.2d:%s index:%.2d\n&#34;</span>, <span style="color:#268bd2">item</span>.<span style="color:#268bd2">priority</span>, <span style="color:#268bd2">item</span>.<span style="color:#268bd2">value</span>, <span style="color:#268bd2">item</span>.<span style="color:#268bd2">index</span>)
+    }
+}</code></pre></div>
+<p>输出结果为：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">输出结果：
+03:张三 index:-01
+05:二毛 index:-01
+06:李四 index:-01
+09:狗蛋 index:-01</pre></div>
+<h2 id="二-利用堆求-top-k">二. 利用堆求 Top K</h2>
+
+<p>求这个TOP K 问题可以分为两种情况
+- 1. 静态数据
+- 2. 动态数据</p>
+
+<blockquote>
+<p>一类是针对静态数据集合，也就是说数据集合事先确定，不会再变。另一类是针对动态数据集合，也就是说数据集合事先并不确定，有数据动态地加入到集合中。</p>
+</blockquote>
+
+<h4 id="静态数据">静态数据：</h4>
+
+<p>如何在一个含有 n 个数据的数组中，求出前 k 大的数据呢？</p>
+
+<p>维护一个大小为K的小顶堆（这个堆就保持只有K个元素即可）</p>
+
+<p>从数组中取出一个与堆顶元素比较，如果取出来的元素比堆顶元素大，则删除堆顶元素，再将该数组元素插入到堆中。</p>
+
+<p>相反比堆顶元素小，则不管。直到最后数组中的元素都遍历完了，那么该小顶堆里面的K个元素就是前k大元素了。</p>
+
+<p>请注意，小顶堆中每次移除的就是最小的那个，插入进来再重新堆化。</p>
+
+<h4 id="动态数据">动态数据：</h4>
+
+<blockquote>
+<p>针对动态数据求得 Top K 就是实时 Top K。</p>
+</blockquote>
+
+<p>一个数据集合中有两个操作，一个是添加数据，另一个询问当前的前 K 大数据。</p>
+
+<p>我们可以一直都维护一个 K 大小的小顶堆，当有数据被添加到集合中时，我们就拿它与堆顶的元素对比。（这里就不再放入数组中了，而是直接进入堆中进行比较）</p>
+
+<p>如果比堆顶元素大，我们就把堆顶元素删除，并且将这个元素插入到堆中；如果比堆顶元素小，则不做处理。这样，无论任何时候需要查询当前的前 K 大数据，我们都可以立刻返回给他。</p>
+
+<h2 id="三-利用堆求中位数">三. 利用堆求中位数</h2>
+
+<blockquote>
+<p>如何求动态数据中的中位数</p>
+</blockquote>
+
+<p>中位数，顾名思义，就是处在中间位置的那个数。如果数据的个数是奇数，把数据从小到大排列，那第 n/2 + 1  个数据就是中位数（注意：假设数据是从 0 开始编号的）；如果数据的个数是偶数的话，那处于中间位置的数据有两个，第 n/2 和 n/2 + 1 个数据。</p>
+
+<p>这个时候，我们可以随意取一个作为中位数，比如取两个数中靠前的那个，就是第 n/2 个数据。</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/18/b6/1809157fdd804dd40a6a795ec30acbb6.jpg" alt="" /></p>
+
+<p>在我们面对动态数据的集合，中位数在不停地变动，如果再用先排序的方法，每次询问中位数的时候，都要先进行排序，那效率就不高了。</p>
+
+<p>#### 解决方案 维护两个堆 一个小顶堆 一个大顶堆</p>
+
+<blockquote>
+<p>我们需要维护两个堆，一个大顶堆，一个小顶堆。大顶堆中存储前半部分数据，小顶堆中存储后半部分数据，且小顶堆中的数据都大于大顶堆中的数据。</p>
+</blockquote>
+
+<p>这里请注意对于奇数和偶数中，大小顶堆的存储分布。</p>
+
+<p>这样存储的话，那么大顶堆堆顶元素就是我们要找的中位数了。如图所示：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/08/99/08c29d3e014a4baf5f8148c2271e6099.jpg" alt="" /></p>
+
+<p>如果新加入的数据小于等于大顶堆的堆顶元素，我们就将这个新数据插入到大顶堆；否则，我们就将这个新数据插入到小顶堆。</p>
+
+<p>由于数据是动态变化的，当新添加一个数据的时候，我们如何调整两个堆，让大顶堆中的堆顶元素继续是中位数呢？</p>
+
+<p>当为奇数个数据时，我们可以从一个堆中不停地将堆顶元素移动到另一个堆，通过这样的调整，来让两个堆中的数据满足上面的约定。如下图所示：</p>
+
+<p><img src="http://static001.geekbang.org/resource/image/ae/b1/aee4dcaf9d34111870a1d66a6e109fb1.jpg" alt="" /></p>
+
+<blockquote>
+<p>这样我们就可以利用两个堆，一个大顶堆、一个小顶堆，实现在动态数据集合中求中位数的操作。插入数据因为需要涉及堆化，所以时间复杂度变成了 O(logn)，但是求中位数我们只需要返回大顶堆的堆顶元素就可以了，所以时间复杂度就是 O(1)。</p>
+</blockquote>
+
+<p>同样的道理可以看下方求99%的相关问题。</p>
+
+<h3 id="如何快速求接口的99-的响应时间">如何快速求接口的99%的响应时间</h3>
+
+<blockquote>
+<p>在开始这个问题的讲解之前，我先解释一下，什么是“99% 响应时间”。</p>
+</blockquote>
+
+<p><img src="http://static001.geekbang.org/resource/image/bb/2d/bbb043d369eeef1bb7feadd28c6ea32d.jpg" alt="" /></p>
+
+<p>中位数的概念就是将数据从小到大排列，处于中间位置，就叫中位数，这个数据会大于等于前面 50% 的数据。99 百分位数的概念可以类比中位数，如果将一组数据从小到大排列，这个 99 百分位数就是大于前面 99% 数据的那个数据。</p>
+
+<blockquote>
+<p>弄懂了这个概念，我们再来看 99% 响应时间。如果有 100 个接口访问请求，每个接口请求的响应时间都不同，比如 55 毫秒、100 毫秒、23 毫秒等，我们把这 100 个接口的响应时间按照从小到大排列，排在第 99 的那个数据就是 99% 响应时间，也叫 99 百分位响应时间。</p>
+</blockquote>
+
+<h3 id="解决方案-维护一个大顶堆-一小顶堆">解决方案 维护一个大顶堆，一小顶堆。</h3>
+
+<p>我们维护两个堆，一个大顶堆，一个小顶堆。</p>
+
+<p>假设当前总数据的个数是 n，大顶堆中保存 n*99% 个数据，小顶堆中保存 n*1% 个数据。</p>
+
+<p>大顶堆堆顶的数据就是我们要找的 99% 响应时间。</p>
+
+<p>每次插入一个数据的时候，我们要判断这个数据跟大顶堆和小顶堆堆顶数据的大小关系，然后决定插入到哪个堆中。如果这个新插入的数据比大顶堆的堆顶数据小，那就插入大顶堆；如果这个新插入的数据比小顶堆的堆顶数据大，那就插入小顶堆。</p>
+
+<p>但是，为了保持大顶堆中的数据占 99%，小顶堆中的数据占 1%，在每次新插入数据之后，我们都要重新计算，这个时候大顶堆和小顶堆中的数据个数，是否还符合 99:1 这个比例。如果不符合，我们就将一个堆中的数据移动到另一个堆，直到满足这个比例。移动的方法类似前面求中位数的方法，这里我就不啰嗦了。</p>
+
+<blockquote>
+<p>通过这样的方法，每次插入数据，可能会涉及几个数据的堆化操作，所以时间复杂度是 O(logn)。每次求 99% 响应时间的时候，直接返回大顶堆中的堆顶数据即可，时间复杂度是 O(1)。</p>
+</blockquote>
+
+<hr />
+
+<h3 id="小结">小结：</h3>
+
+<p>优先级队列是一种特殊的队列，优先级高的数据先出队，而不再像普通的队列那样，先进先出。实际上，堆就可以看作优先级队列，只是称谓不一样罢了。求 Top K 问题又可以分为针对静态数据和针对动态数据，只需要利用一个堆，就可以做到非常高效率的查询 Top K 的数据。求中位数实际上还有很多变形，比如求 99 百分位数据、90 百分位数据等，处理的思路都是一样的，即利用两个堆，一个大顶堆，一个小顶堆，随着数据的动态添加，动态调整两个堆中的数据，最后大顶堆的堆顶元素就是要求的数据。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f&amp;text=Go%e6%a0%87%e5%87%86%e5%ba%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%b3%bb%e5%88%97%e4%b9%8b%e5%a0%86heap&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f&amp;title=Go%e6%a0%87%e5%87%86%e5%ba%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%b3%bb%e5%88%97%e4%b9%8b%e5%a0%86heap" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f&amp;title=Go%e6%a0%87%e5%87%86%e5%ba%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%b3%bb%e5%88%97%e4%b9%8b%e5%a0%86heap" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f&amp;title=Go%e6%a0%87%e5%87%86%e5%ba%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%b3%bb%e5%88%97%e4%b9%8b%e5%a0%86heap" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgo%25E6%25A0%2587%25E5%2587%2586%25E5%25BA%2593%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584%25E7%25B3%25BB%25E5%2588%2597%25E4%25B9%258B%25E5%25A0%2586heap%2f&amp;description=Go%e6%a0%87%e5%87%86%e5%ba%93%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%b3%bb%e5%88%97%e4%b9%8b%e5%a0%86heap" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/docker%E7%98%A6%E8%BA%AB%E8%AE%A1%E5%88%92%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/" data-toggle="tooltip" data-placement="top" title="Docker瘦身计划执行方案">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

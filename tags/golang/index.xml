@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 25 Aug 2019 15:23:25 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 17 Nov 2019 21:59:05 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go标准库数据结构系列之堆heap</title>
+      <link>https://driverzhang.github.io/post/go%E6%A0%87%E5%87%86%E5%BA%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86heap/</link>
+      <pubDate>Sun, 17 Nov 2019 21:59:05 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/go%E6%A0%87%E5%87%86%E5%BA%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86heap/</guid>
+      <description>&lt;p&gt;堆 这种数据结构是比较难搞的一种，但是它在实际工程中的实用性又比较高，能够有效的解决实际中遇见的问题。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;那么在 go语言中是如何要实现一个heap的呢，其实在官方标准库 container/heap 已经给你实现了，你只需要根据自己实际情况进行接口实现即可。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang基础13问</title>
