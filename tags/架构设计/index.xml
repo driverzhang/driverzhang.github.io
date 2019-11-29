@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构设计 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</link>
+    <description>Recent content in 架构设计 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Fri, 29 Nov 2019 21:11:49 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang Gin框架中间件实现操作日志统一管理</title>
+      <link>https://driverzhang.github.io/post/golang-gin%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Fri, 29 Nov 2019 21:11:49 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang-gin%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;在大部分后台管理中都会出现操作日志模块的需求，一般情况你会想到创建一个操作日志表 opLog 然后就是在每个 api 的地放调用插入数据即可。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如上所述，这样的设计确实十分灵活可以让每个写api的开发人员自由的操作内容，但是也比较费时间和精力。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

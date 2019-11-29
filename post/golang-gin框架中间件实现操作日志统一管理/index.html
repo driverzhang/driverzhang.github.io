@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang Gin框架中间件实现操作日志统一管理</title>
+  <meta property="og:title" content="Golang Gin框架中间件实现操作日志统一管理" />
+  <meta name="twitter:title" content="Golang Gin框架中间件实现操作日志统一管理" />
+  <meta name="description" content="
+在大部分后台管理中都会出现操作日志模块的需求，一般情况你会想到创建一个操作日志表 opLog 然后就是在每个 api 的地放调用插入数据即可。
+
+
+如上所述，这样的设计确实十分灵活可以让每个写api的开发人员自由的操作内容，但是也比较费时间和精力。
+
+">
+  <meta property="og:description" content="
+在大部分后台管理中都会出现操作日志模块的需求，一般情况你会想到创建一个操作日志表 opLog 然后就是在每个 api 的地放调用插入数据即可。
+
+
+如上所述，这样的设计确实十分灵活可以让每个写api的开发人员自由的操作内容，但是也比较费时间和精力。
+
+">
+  <meta name="twitter:description" content="
+在大部分后台管理中都会出现操作日志模块的需求，一般情况你会想到创建一个操作日志表 opLog 然后就是在每个 api 的地放调用插入数据即可。
+
+
+如上所述，这样的设计确实十分灵活可以让每个写api的开发人员自由的操作内容，但是也比较费时间和精力。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang-gin%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang-gin%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang Gin框架中间件实现操作日志统一管理</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on November 29, 2019
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <blockquote>
+<p>在大部分后台管理中都会出现操作日志模块的需求，一般情况你会想到创建一个操作日志表 opLog 然后就是在每个 api 的地放调用插入数据即可。</p>
+</blockquote>
+
+<p>如上所述，这样的设计确实十分灵活可以让每个写api的开发人员自由的操作内容，但是也比较费时间和精力。</p>
+
+<p></p>
+
+<h2 id="解决答方案">解决答方案</h2>
+
+<p>利用gin框架的use挂起中间件，将操作日志进行统一抽象的被动调用。</p>
+
+<p>先给出如下的表结构字段设计，</p>
+
+<p>这里我是放在mongodb中的：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// 后台管理员操作日志表
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">OperationLog</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">Id</span>            <span style="color:#268bd2">primitive</span>.<span style="color:#268bd2">ObjectID</span> <span style="color:#2aa198">`form:&#34;_id&#34; json:&#34;_id&#34; bson:&#34;_id&#34;`</span>            <span style="color:#93a1a1;font-style:italic">// 操作id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">OperationId</span>   <span style="color:#859900;font-weight:bold">int64</span>              <span style="color:#2aa198">`json:&#34;operationId&#34; bson:&#34;operationId&#34;`</span>       <span style="color:#93a1a1;font-style:italic">// 操作员Id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">OperationName</span> <span style="color:#859900;font-weight:bold">string</span>             <span style="color:#2aa198">`json:&#34;operation_name&#34; bson:&#34;operation_name&#34;`</span> <span style="color:#93a1a1;font-style:italic">// 操作员name
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Ip</span>            <span style="color:#859900;font-weight:bold">string</span>             <span style="color:#2aa198">`json:&#34;ip&#34; bson:&#34;ip&#34;`</span>                         <span style="color:#93a1a1;font-style:italic">// 操作地址Ip
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Operation</span>     <span style="color:#859900;font-weight:bold">string</span>             <span style="color:#2aa198">`json:&#34;operation&#34; bson:&#34;operation&#34;`</span>           <span style="color:#93a1a1;font-style:italic">// 操作 增删改
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Business</span>      <span style="color:#859900;font-weight:bold">string</span>             <span style="color:#2aa198">`json:&#34;business&#34; bson:&#34;business&#34;`</span>             <span style="color:#93a1a1;font-style:italic">// 业务名称
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Tables</span>        <span style="color:#859900;font-weight:bold">string</span>             <span style="color:#2aa198">`json:&#34;tables&#34; bson:&#34;tables&#34;`</span>                 <span style="color:#93a1a1;font-style:italic">// 直接相关表（一个）
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">Data</span>          <span style="color:#859900">interface</span>{}        <span style="color:#2aa198">`json:&#34;data&#34; bson:&#34;data&#34;`</span>                     <span style="color:#93a1a1;font-style:italic">// 新数据的保存 只保留主键id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">CreatedAt</span>     <span style="color:#859900;font-weight:bold">int64</span>              <span style="color:#2aa198">`json:&#34;created_at&#34; bson:&#34;created_at&#34;`</span>
+}</code></pre></div>
+<p>具体如下：</p>
+
+<ul>
+<li>全部获取都需要 ctx *gin.Context</li>
+<li>利用 获取 userId 方法获取 operationId (一般都是从你的token产生出提取userId即可)</li>
+<li>ip := ctx.ClientIP() 直接调用获取客户端ip地址</li>
+<li>ctx.Request.Method 获取api实际的方法对应 新增，编辑，删除操作即可</li>
+<li>开发任务只需要维护一个表面+业务 和 HandlerFunc 映射数据即可</li>
+</ul>
+
+<blockquote>
+<p>根据每个api 调用的 HandlerFunc 都是唯一不同的，即可获取 Tables、Business</p>
+</blockquote>
+
+<ul>
+<li>最后将代理抽象利用 ctx.Set() 和 ctx.Get() 获取 相关数据 id 即可。</li>
+</ul>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// 用与 handle 函数与 表名及其业务描述的映射
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">HandleTableAndDesc</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900;font-weight:bold">string</span> <span style="color:#93a1a1;font-style:italic">// value 值填入 {最直接关联的唯一表名},{业务描述}
+</span><span style="color:#93a1a1;font-style:italic"></span>
+<span style="color:#859900">var</span> <span style="color:#268bd2">HandleTableName</span> = <span style="color:#268bd2">HandleTableAndDesc</span>{
+	<span style="color:#2aa198">&#34;InsertWithdrawalOrder&#34;</span>: <span style="color:#2aa198">&#34;withdrawal,生成提现订单&#34;</span>,
+	<span style="color:#2aa198">&#34;UpdateStatus&#34;</span>:          <span style="color:#2aa198">&#34;withdrawal,提现操作状态&#34;</span>,
+	<span style="color:#2aa198">&#34;TaskShelf&#34;</span>:             <span style="color:#2aa198">&#34;task_base,任务上架&#34;</span>,
+	<span style="color:#2aa198">&#34;UploadIcon&#34;</span>:            <span style="color:#2aa198">&#34;photo,上传任务图片&#34;</span>,
+	<span style="color:#2aa198">&#34;StaffFreeze&#34;</span>:           <span style="color:#2aa198">&#34;staffs,冻结解冻管理员&#34;</span>,
+	<span style="color:#2aa198">&#34;UserFreeze&#34;</span>:            <span style="color:#2aa198">&#34;cend_user,冻结解冻用户&#34;</span>,
+}</code></pre></div>
+<h2 id="具体代码封装">具体代码封装：</h2>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">var</span> <span style="color:#268bd2">Engine</span> = <span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Default</span>()
+
+<span style="color:#859900">func</span> <span style="color:#268bd2">init</span>() {
+	<span style="color:#268bd2">swagger</span>.<span style="color:#268bd2">RegSwagger</span>(<span style="color:#268bd2">Engine</span>)
+	<span style="color:#268bd2">Engine</span>.<span style="color:#268bd2">Use</span>(<span style="color:#268bd2">operationlog</span>.<span style="color:#268bd2">Operation</span>(<span style="color:#268bd2">contracts</span>.<span style="color:#268bd2">HandleTableName</span>))
+	
+	<span style="color:#268bd2">Engine</span>.<span style="color:#268bd2">POST</span>(<span style="color:#2aa198">&#34;/stat/withdrawal&#34;</span>, <span style="color:#268bd2">controllers</span>.<span style="color:#268bd2">InsertWithdrawalOrder</span>)
+	<span style="color:#268bd2">Engine</span>.<span style="color:#268bd2">PUT</span>(<span style="color:#2aa198">&#34;/stat/withdrawal&#34;</span>, <span style="color:#268bd2">controllers</span>.<span style="color:#268bd2">UpdateStatus</span>)          
+	<span style="color:#268bd2">Engine</span>.<span style="color:#268bd2">GET</span>(<span style="color:#2aa198">&#34;/stat/withdrawal&#34;</span>, <span style="color:#268bd2">controllers</span>.<span style="color:#268bd2">GetWithdrawalList</span>)  
+}</code></pre></div>
+<p>具体的 operationlog 包 是核心代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">Operation</span>(<span style="color:#268bd2">handlerTableName</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900;font-weight:bold">string</span>) <span style="color:#268bd2">gin</span>.<span style="color:#268bd2">HandlerFunc</span> {
+	<span style="color:#859900">return</span> <span style="color:#859900">func</span>(<span style="color:#268bd2">c</span> *<span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Context</span>) {
+		<span style="color:#859900">if</span> <span style="color:#268bd2">c</span>.<span style="color:#268bd2">Request</span>.<span style="color:#268bd2">Method</span> == <span style="color:#2aa198">&#34;&#34;</span> {
+			<span style="color:#268bd2">c</span>.<span style="color:#268bd2">Next</span>() <span style="color:#93a1a1;font-style:italic">// 注意 next()方法的作用是跳过该调用链去直接后面的中间件以及api路由
+</span><span style="color:#93a1a1;font-style:italic"></span>		}
+		<span style="color:#93a1a1;font-style:italic">// 1. 获取当前用户ID
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">ok</span>, <span style="color:#268bd2">userId</span> := <span style="color:#268bd2">xxx</span>.<span style="color:#268bd2">GetUserInfo</span>(<span style="color:#268bd2">c</span>)
+		<span style="color:#859900">if</span> !<span style="color:#268bd2">ok</span> {
+			<span style="color:#268bd2">userId</span> = <span style="color:#2aa198">&#34;&#34;</span>
+		}
+		<span style="color:#93a1a1;font-style:italic">// 2. 获取表名 这里会把前面 &#34;加载的包名.HandlerName&#34;
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">handlerName</span> := <span style="color:#268bd2">strings</span>.<span style="color:#268bd2">Split</span>(<span style="color:#268bd2">c</span>.<span style="color:#268bd2">HandlerName</span>(), <span style="color:#2aa198">&#34;.&#34;</span>)[<span style="color:#2aa198;font-weight:bold">1</span>]
+		<span style="color:#859900">if</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">ok</span> := <span style="color:#268bd2">handlerTableName</span>[<span style="color:#268bd2">handlerName</span>]; !<span style="color:#268bd2">ok</span> {
+			<span style="color:#268bd2">c</span>.<span style="color:#268bd2">Next</span>() <span style="color:#93a1a1;font-style:italic">// 如果映射中没有找到表关系，说明没有手动加入
+</span><span style="color:#93a1a1;font-style:italic"></span>		}
+
+		<span style="color:#268bd2">tableDesc</span> := <span style="color:#268bd2">strings</span>.<span style="color:#268bd2">Split</span>(<span style="color:#268bd2">handlerTableName</span>[<span style="color:#268bd2">handlerName</span>], <span style="color:#2aa198">&#34;,&#34;</span>)
+		<span style="color:#859900">if</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">tableDesc</span>) != <span style="color:#2aa198;font-weight:bold">2</span> {
+			<span style="color:#859900">return</span> <span style="color:#93a1a1;font-style:italic">// 存在映射，但是不完全则返回
+</span><span style="color:#93a1a1;font-style:italic"></span>		}
+
+		<span style="color:#268bd2">tableName</span> := <span style="color:#268bd2">tableDesc</span>[<span style="color:#2aa198;font-weight:bold">0</span>] <span style="color:#93a1a1;font-style:italic">// 0表名
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">desc</span> := <span style="color:#268bd2">tableDesc</span>[<span style="color:#2aa198;font-weight:bold">1</span>]      <span style="color:#93a1a1;font-style:italic">// 1业务描述
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#93a1a1;font-style:italic">// 3. 获取Ip
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">ip</span> := <span style="color:#268bd2">c</span>.<span style="color:#268bd2">ClientIP</span>()
+		<span style="color:#268bd2">opMethod</span> := &amp;<span style="color:#268bd2">OperationMethod</span>{
+			<span style="color:#268bd2">C</span>:      <span style="color:#268bd2">c</span>,
+			<span style="color:#268bd2">Table</span>:  <span style="color:#268bd2">tableName</span>,
+			<span style="color:#268bd2">Desc</span>:   <span style="color:#268bd2">desc</span>,
+			<span style="color:#268bd2">Ip</span>:     <span style="color:#268bd2">ip</span>,
+			<span style="color:#268bd2">UserId</span>: <span style="color:#268bd2">userId</span>,
+		}
+		<span style="color:#93a1a1;font-style:italic">// 4. 根据method方法名确定操作行为
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900">switch</span> <span style="color:#268bd2">c</span>.<span style="color:#268bd2">Request</span>.<span style="color:#268bd2">Method</span> {
+		<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;PUT&#34;</span>:
+			<span style="color:#268bd2">err</span> := <span style="color:#268bd2">opMethod</span>.<span style="color:#268bd2">putOperation</span>()
+			<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+				<span style="color:#268bd2">c</span>.<span style="color:#268bd2">Next</span>()
+			}
+		<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;POST&#34;</span>:
+			<span style="color:#268bd2">err</span> := <span style="color:#268bd2">opMethod</span>.<span style="color:#268bd2">postOperation</span>()
+			<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+				<span style="color:#268bd2">c</span>.<span style="color:#268bd2">Next</span>()
+			}
+		<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;DELETE&#34;</span>:
+			<span style="color:#268bd2">err</span> := <span style="color:#268bd2">opMethod</span>.<span style="color:#268bd2">deleteOperation</span>()
+			<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+				<span style="color:#268bd2">c</span>.<span style="color:#268bd2">Next</span>()
+			}
+		<span style="color:#859900">default</span>:
+			<span style="color:#859900">return</span>
+		}
+	}
+}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">OperationMethod</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">C</span>      *<span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Context</span>
+	<span style="color:#268bd2">Table</span>  <span style="color:#859900;font-weight:bold">string</span> <span style="color:#2aa198">`json:&#34;table&#34;`</span>
+	<span style="color:#268bd2">Desc</span>   <span style="color:#859900;font-weight:bold">string</span> <span style="color:#2aa198">`json:&#34;desc&#34;`</span>
+	<span style="color:#268bd2">Ip</span>     <span style="color:#859900;font-weight:bold">string</span> <span style="color:#2aa198">`json:&#34;ip&#34;`</span>
+	<span style="color:#268bd2">UserId</span> <span style="color:#859900;font-weight:bold">string</span> <span style="color:#2aa198">`json:&#34;userId&#34;`</span>
+}
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">bodyId</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">Id</span> <span style="color:#859900">interface</span>{} <span style="color:#2aa198">`json:&#34;_id&#34; bson:&#34;_id&#34;`</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OperationMethod</span>) <span style="color:#268bd2">putOperation</span>() (<span style="color:#268bd2">err</span> <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#93a1a1;font-style:italic">// 更新操作要拿到操作id的话注意一定要统计使用的业务Id 对应 mongo 为 _id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 获取body中的数据
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">var</span> <span style="color:#268bd2">bodyBytes</span> []<span style="color:#859900;font-weight:bold">byte</span>
+	<span style="color:#859900">if</span> <span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Request</span>.<span style="color:#268bd2">Body</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">bodyBytes</span>, <span style="color:#268bd2">_</span> = <span style="color:#268bd2">ioutil</span>.<span style="color:#268bd2">ReadAll</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Request</span>.<span style="color:#268bd2">Body</span>)
+	}
+	<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Request</span>.<span style="color:#268bd2">Body</span> = <span style="color:#268bd2">ioutil</span>.<span style="color:#268bd2">NopCloser</span>(<span style="color:#268bd2">bytes</span>.<span style="color:#268bd2">NewBuffer</span>(<span style="color:#268bd2">bodyBytes</span>)) <span style="color:#93a1a1;font-style:italic">// 返回body中的原值
+</span><span style="color:#93a1a1;font-style:italic"></span>
+	<span style="color:#268bd2">bodyId</span> := &amp;<span style="color:#268bd2">bodyId</span>{}
+	<span style="color:#859900">var</span> <span style="color:#268bd2">putId</span> <span style="color:#859900">interface</span>{}
+	<span style="color:#268bd2">_</span> = <span style="color:#268bd2">json</span>.<span style="color:#268bd2">Unmarshal</span>(<span style="color:#268bd2">bodyBytes</span>, <span style="color:#268bd2">bodyId</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">bodyId</span>.<span style="color:#268bd2">Id</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Next</span>()
+		<span style="color:#268bd2">putId</span>, <span style="color:#268bd2">_</span> = <span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Get</span>(<span style="color:#2aa198">&#34;updateId&#34;</span>)
+	} <span style="color:#859900">else</span> {
+		<span style="color:#268bd2">putId</span> = <span style="color:#268bd2">bodyId</span>.<span style="color:#268bd2">Id</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 插入操作日志表中
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">userId</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">Atoi</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">UserId</span>)
+	<span style="color:#268bd2">staff</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">Staff</span>{}
+	<span style="color:#268bd2">staffData</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">staff</span>.<span style="color:#268bd2">GetNameById</span>(<span style="color:#cb4b16">uint64</span>(<span style="color:#268bd2">userId</span>))
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#268bd2">operationLog</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">OperationLog</span>{
+		<span style="color:#268bd2">OperationId</span>:   <span style="color:#cb4b16">int64</span>(<span style="color:#268bd2">userId</span>),
+		<span style="color:#268bd2">Operation</span>:     <span style="color:#2aa198">&#34;PUT&#34;</span>,
+		<span style="color:#268bd2">OperationName</span>: <span style="color:#268bd2">staffData</span>.<span style="color:#268bd2">Name</span>,
+		<span style="color:#268bd2">Ip</span>:            <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Ip</span>,
+		<span style="color:#268bd2">Business</span>:      <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Desc</span>,
+		<span style="color:#268bd2">Tables</span>:        <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Table</span>,
+		<span style="color:#268bd2">Data</span>:          <span style="color:#268bd2">putId</span>,
+	}
+
+	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">operationLog</span>.<span style="color:#268bd2">InsertLog</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#859900">return</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OperationMethod</span>) <span style="color:#268bd2">postOperation</span>() (<span style="color:#268bd2">err</span> <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#93a1a1;font-style:italic">// 新建操作 需要记录新插入的数据
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 获取插入数据的Id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Next</span>()                         <span style="color:#93a1a1;font-style:italic">// 直接跳过调用链 让其开始走api
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">insertId</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">Get</span>(<span style="color:#2aa198">&#34;insertId&#34;</span>) <span style="color:#93a1a1;font-style:italic">// 若不存在 也应该先插入操作记录 只是业务操作Insert没有返回id
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">userId</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">Atoi</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">UserId</span>)
+	<span style="color:#268bd2">staff</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">Staff</span>{}
+	<span style="color:#268bd2">staffData</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">staff</span>.<span style="color:#268bd2">GetNameById</span>(<span style="color:#cb4b16">uint64</span>(<span style="color:#268bd2">userId</span>))
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#268bd2">operationLog</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">OperationLog</span>{
+		<span style="color:#268bd2">OperationId</span>:   <span style="color:#cb4b16">int64</span>(<span style="color:#268bd2">userId</span>),
+		<span style="color:#268bd2">Operation</span>:     <span style="color:#2aa198">&#34;POST&#34;</span>,
+		<span style="color:#268bd2">OperationName</span>: <span style="color:#268bd2">staffData</span>.<span style="color:#268bd2">Name</span>,
+		<span style="color:#268bd2">Ip</span>:            <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Ip</span>,
+		<span style="color:#268bd2">Business</span>:      <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Desc</span>,
+		<span style="color:#268bd2">Tables</span>:        <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Table</span>,
+		<span style="color:#268bd2">Data</span>:          <span style="color:#268bd2">insertId</span>,
+	}
+
+	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">operationLog</span>.<span style="color:#268bd2">InsertLog</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#859900">return</span>
+}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OperationMethod</span>) <span style="color:#268bd2">deleteOperation</span>() (<span style="color:#268bd2">err</span> <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#268bd2">mongo</span>.<span style="color:#268bd2">Collection</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">Table</span>)
+	<span style="color:#93a1a1;font-style:italic">// 删除操作 需要对删除的旧数据进行记录
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">var</span> <span style="color:#268bd2">ids</span> []<span style="color:#859900;font-weight:bold">string</span>
+	<span style="color:#859900">if</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">QueryArray</span>(<span style="color:#2aa198">&#34;ids&#34;</span>)) != <span style="color:#2aa198;font-weight:bold">0</span> {
+		<span style="color:#268bd2">ids</span> = <span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">QueryArray</span>(<span style="color:#2aa198">&#34;ids&#34;</span>)
+		<span style="color:#268bd2">ids</span> = <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">string</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">ids</span>))
+	} <span style="color:#859900">else</span> <span style="color:#859900">if</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">QueryArray</span>(<span style="color:#2aa198">&#34;_id&#34;</span>)) != <span style="color:#2aa198;font-weight:bold">0</span> {
+		<span style="color:#268bd2">ids</span> = <span style="color:#268bd2">o</span>.<span style="color:#268bd2">C</span>.<span style="color:#268bd2">QueryArray</span>(<span style="color:#2aa198">&#34;_id&#34;</span>)
+		<span style="color:#268bd2">ids</span> = <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">string</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">ids</span>))
+	}
+
+	<span style="color:#268bd2">idsAll</span> := <span style="color:#2aa198">&#34;&#34;</span> <span style="color:#93a1a1;font-style:italic">// 对应敏感业务 软删除可以查询到删除的具体数据
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">ids</span> {
+		<span style="color:#859900">if</span> <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">ids</span>) == <span style="color:#2aa198;font-weight:bold">1</span> {
+			<span style="color:#268bd2">idsAll</span> = <span style="color:#268bd2">idsAll</span> + <span style="color:#268bd2">v</span>
+		} <span style="color:#859900">else</span> {
+			<span style="color:#268bd2">idsAll</span> = <span style="color:#268bd2">idsAll</span> + <span style="color:#268bd2">v</span> + <span style="color:#2aa198">&#34;,&#34;</span>
+		}
+	}
+
+	<span style="color:#268bd2">userId</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">Atoi</span>(<span style="color:#268bd2">o</span>.<span style="color:#268bd2">UserId</span>)
+	<span style="color:#268bd2">staff</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">Staff</span>{}
+	<span style="color:#268bd2">staffData</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">staff</span>.<span style="color:#268bd2">GetNameById</span>(<span style="color:#cb4b16">uint64</span>(<span style="color:#268bd2">userId</span>))
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#268bd2">operationLog</span> := <span style="color:#268bd2">entities</span>.<span style="color:#268bd2">OperationLog</span>{
+		<span style="color:#268bd2">OperationId</span>:   <span style="color:#cb4b16">int64</span>(<span style="color:#268bd2">userId</span>),
+		<span style="color:#268bd2">Operation</span>:     <span style="color:#2aa198">&#34;DELETE&#34;</span>,
+		<span style="color:#268bd2">OperationName</span>: <span style="color:#268bd2">staffData</span>.<span style="color:#268bd2">Name</span>,
+		<span style="color:#268bd2">Ip</span>:            <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Ip</span>,
+		<span style="color:#268bd2">Business</span>:      <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Desc</span>,
+		<span style="color:#268bd2">Tables</span>:        <span style="color:#268bd2">o</span>.<span style="color:#268bd2">Table</span>,
+		<span style="color:#268bd2">Data</span>:          <span style="color:#268bd2">idsAll</span>,
+	}
+
+	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">operationLog</span>.<span style="color:#268bd2">InsertLog</span>()
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#859900">return</span>
+}</code></pre></div>
+<p>为了获取 更新和新增的相关id，需要在调用具体api时，返回对应的id。然后利用gin.Context  调用 ctx.Set(&ldquo;insertId&rdquo;, id) 进行存储，这样方便中间件调用ctx.Get(&ldquo;insertId&rdquo;)，进行获取数据即可。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f&amp;text=Golang%20Gin%e6%a1%86%e6%9e%b6%e4%b8%ad%e9%97%b4%e4%bb%b6%e5%ae%9e%e7%8e%b0%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97%e7%bb%9f%e4%b8%80%e7%ae%a1%e7%90%86&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f&amp;title=Golang%20Gin%e6%a1%86%e6%9e%b6%e4%b8%ad%e9%97%b4%e4%bb%b6%e5%ae%9e%e7%8e%b0%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97%e7%bb%9f%e4%b8%80%e7%ae%a1%e7%90%86" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f&amp;title=Golang%20Gin%e6%a1%86%e6%9e%b6%e4%b8%ad%e9%97%b4%e4%bb%b6%e5%ae%9e%e7%8e%b0%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97%e7%bb%9f%e4%b8%80%e7%ae%a1%e7%90%86" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f&amp;title=Golang%20Gin%e6%a1%86%e6%9e%b6%e4%b8%ad%e9%97%b4%e4%bb%b6%e5%ae%9e%e7%8e%b0%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97%e7%bb%9f%e4%b8%80%e7%ae%a1%e7%90%86" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang-gin%25E6%25A1%2586%25E6%259E%25B6%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6%25E5%25AE%259E%25E7%258E%25B0%25E6%2593%258D%25E4%25BD%259C%25E6%2597%25A5%25E5%25BF%2597%25E7%25BB%259F%25E4%25B8%2580%25E7%25AE%25A1%25E7%2590%2586%2f&amp;description=Golang%20Gin%e6%a1%86%e6%9e%b6%e4%b8%ad%e9%97%b4%e4%bb%b6%e5%ae%9e%e7%8e%b0%e6%93%8d%e4%bd%9c%e6%97%a5%e5%bf%97%e7%bb%9f%e4%b8%80%e7%ae%a1%e7%90%86" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/go%E6%A0%87%E5%87%86%E5%BA%93%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A0%86heap/" data-toggle="tooltip" data-placement="top" title="Go标准库数据结构系列之堆heap">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2019
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
