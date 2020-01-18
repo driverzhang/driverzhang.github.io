@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Mongo开启事务之副本集采坑</title>
+  <meta property="og:title" content="Mongo开启事务之副本集采坑" />
+  <meta name="twitter:title" content="Mongo开启事务之副本集采坑" />
+  <meta name="description" content="使用数据库自带的事务功能在业务中是十分重要的！
+
+">
+  <meta property="og:description" content="使用数据库自带的事务功能在业务中是十分重要的！
+
+">
+  <meta name="twitter:description" content="使用数据库自带的事务功能在业务中是十分重要的！
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/mongo%E5%BC%80%E5%90%AF%E4%BA%8B%E5%8A%A1%E4%B9%8B%E5%89%AF%E6%9C%AC%E9%9B%86%E9%87%87%E5%9D%91/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/mongo%E5%BC%80%E5%90%AF%E4%BA%8B%E5%8A%A1%E4%B9%8B%E5%89%AF%E6%9C%AC%E9%9B%86%E9%87%87%E5%9D%91/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Mongo开启事务之副本集采坑</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 18, 2020
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>使用数据库自带的事务功能在业务中是十分重要的！</p>
+
+<p></p>
+
+<h1 id="1-单节点-mongo-事务如何配置">1. 单节点 mongo 事务如何配置</h1>
+
+<blockquote>
+<p>mongo 较新版本中已经支持事务了，但是前提条件是 你的 mongo模式必须为“副本集模式” 或者 &ldquo;分片模式&rdquo;，鉴于操作成本问题，这里只提 副本集模式。</p>
+</blockquote>
+
+<p>对于 go 语言开发的小伙伴，我推荐用官方包：go.mongodb.org/mongo-driver/mongo</p>
+
+<h2 id="这有两个点要提醒一下">这有两个点要提醒一下：</h2>
+
+<ul>
+<li><p>要使用mongo的自带事务，需要配置成 副本集或者分片模式。</p></li>
+
+<li><p>在非事务时mongo，插入数据时会自动建立表结构，但是使用事务中如何相关表不存在，就会报错。所有事务使用时建议先建立好对应的表结构。</p></li>
+</ul>
+
+<h2 id="配置单节点副本集模式">配置单节点副本集模式</h2>
+
+<blockquote>
+<p>其实很简单，在多节点即一般为三节点架构的mongo数据库配置副本集时，一般我们需要三个服务器分配配置不同的节点。但对于只用一个节点的mongo数据库服务器时，我们只想配一个节点的副本集模式（虽然这种单节点架构很不安全！）</p>
+</blockquote>
+
+<p>首先找到你的 mongod.conf 这个 mongo 对应的配置文件。在里面更改配置内容如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">systemLog:
+  destination: file
+  path: /usr/local/var/log/mongodb/mongo.log
+  logAppend: true
+storage:
+  dbPath: /usr/local/var/mongodb
+net:
+  bindIp: 127.0.0.1
+
+# 就是添加下方的内容
+replication:
+  replSetName: rs0 # 这个 replSetName 必须所有节点都得一致</pre></div>
+<p>然后我们重启mongo，运行如下命令（记得一定要重启，让mongo重新读取新修改的配置文件）：</p>
+
+<p>重启 mongo 带上配置文件位置</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">mongod -f /usr/local/etc/mongod.conf</pre></div>
+<p>运行 mongo 关键字进入mongo执行环境,再执行如下命令即可：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">rs.initiate()
+
+rs.slaveOk()</pre></div>
+<p>然后当你再次进入mongo后你会看见如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">---
+Enable MongoDB&#39;s free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+rs0:PRIMARY&gt;</pre></div>
+<p>运行查看副本集状态命令：rs.status() 如下所示：</p>
+
+<p>部分显示内如：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">	&#34;members&#34; : [
+		{
+			&#34;_id&#34; : 0,
+			&#34;name&#34; : &#34;127.0.0.1:27017&#34;,
+			&#34;ip&#34; : &#34;127.0.0.1&#34;,
+			&#34;health&#34; : 1,
+			&#34;state&#34; : 1,
+			&#34;stateStr&#34; : &#34;PRIMARY&#34;, // 这里表示该节点为主节点了
+			&#34;uptime&#34; : 78645,
+			&#34;optime&#34; : {
+				&#34;ts&#34; : Timestamp(1579066457, 2),
+				&#34;t&#34; : NumberLong(2)
+			},
+			&#34;optimeDate&#34; : ISODate(&#34;2020-01-15T05:34:17Z&#34;),
+			&#34;syncingTo&#34; : &#34;&#34;,
+			&#34;syncSourceHost&#34; : &#34;&#34;,
+			&#34;syncSourceId&#34; : -1,
+			&#34;infoMessage&#34; : &#34;&#34;,
+			&#34;electionTime&#34; : Timestamp(1578987825, 1),
+			&#34;electionDate&#34; : ISODate(&#34;2020-01-14T07:43:45Z&#34;),
+			&#34;configVersion&#34; : 1,
+			&#34;self&#34; : true,
+			&#34;lastHeartbeatMessage&#34; : &#34;&#34;
+		}
+	],
+	&#34;ok&#34; : 1, // 1 表示这个副本集节点是正常成功的
+	&#34;$clusterTime&#34; : {
+		&#34;clusterTime&#34; : Timestamp(1579066457, 2),
+		&#34;signature&#34; : {
+			&#34;hash&#34; : BinData(0,&#34;AAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34;),
+			&#34;keyId&#34; : NumberLong(0)
+		}
+	},
+	&#34;operationTime&#34; : Timestamp(1579066457, 2)</pre></div>
+<p>这样单节点副本集配置就完成了，你可以开始写关于事务的业务代码了。</p>
+
+<hr />
+
+<h1 id="事务代码-demo-展示">事务代码 demo 展示</h1>
+
+<p>当上述单节点副本集配置完成，接下来就是具体代码的实现而已：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> <span style="color:#268bd2">main</span>(){
+    <span style="color:#268bd2">connectString</span> := <span style="color:#2aa198">&#34;mongodb://127.0.0.1/test&#34;</span>
+    <span style="color:#268bd2">dbUrl</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">url</span>.<span style="color:#268bd2">Parse</span>(<span style="color:#268bd2">connectString</span>)
+    <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#cb4b16">panic</span>(<span style="color:#268bd2">err</span>)
+	}
+
+    <span style="color:#93a1a1;font-style:italic">//认证参数设置，否则连不上
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">opts</span> := &amp;<span style="color:#268bd2">options</span>.<span style="color:#268bd2">ClientOptions</span>{}
+	<span style="color:#268bd2">opts</span>.<span style="color:#268bd2">SetAuth</span>(<span style="color:#268bd2">options</span>.<span style="color:#268bd2">Credential</span>{
+			<span style="color:#268bd2">AuthMechanism</span>:<span style="color:#2aa198">&#34;SCRAM-SHA-1&#34;</span>,
+			<span style="color:#268bd2">AuthSource</span>:<span style="color:#2aa198">&#34;test&#34;</span>,
+			<span style="color:#268bd2">Username</span>:<span style="color:#2aa198">&#34;test&#34;</span>,
+			<span style="color:#268bd2">Password</span>:<span style="color:#2aa198">&#34;123456&#34;</span>})
+			
+    <span style="color:#268bd2">client</span>, <span style="color:#268bd2">err</span> = <span style="color:#268bd2">mongo</span>.<span style="color:#268bd2">Connect</span>(<span style="color:#268bd2">context</span>.<span style="color:#268bd2">Background</span>(), <span style="color:#268bd2">connectString</span>，<span style="color:#268bd2">opts</span>)
+    <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#cb4b16">panic</span>(<span style="color:#268bd2">err</span>)
+	}
+
+    <span style="color:#268bd2">db</span> := <span style="color:#268bd2">client</span>.<span style="color:#268bd2">Database</span>(<span style="color:#268bd2">dbUrl</span>.<span style="color:#268bd2">Path</span>[<span style="color:#2aa198;font-weight:bold">1</span>:])
+    
+    <span style="color:#268bd2">ctx</span> := <span style="color:#268bd2">context</span>.<span style="color:#268bd2">Background</span>()
+    <span style="color:#859900">defer</span> <span style="color:#268bd2">db</span>.<span style="color:#268bd2">Client</span>().<span style="color:#268bd2">Disconnect</span>(<span style="color:#268bd2">ctx</span>)
+    
+    <span style="color:#268bd2">col</span> := <span style="color:#268bd2">db</span>.<span style="color:#268bd2">Collection</span>(<span style="color:#2aa198">&#34;test&#34;</span>)
+    
+    <span style="color:#93a1a1;font-style:italic">//先在事务外写一条id为“111”的记录
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">_</span>,<span style="color:#268bd2">err</span> = <span style="color:#268bd2">col</span>.<span style="color:#268bd2">InsertOne</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">bson</span>.<span style="color:#268bd2">M</span>{<span style="color:#2aa198">&#34;_id&#34;</span>: <span style="color:#2aa198">&#34;111&#34;</span>, <span style="color:#2aa198">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;ddd&#34;</span>, <span style="color:#2aa198">&#34;age&#34;</span>: <span style="color:#2aa198;font-weight:bold">50</span>})
+    <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+        <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+        <span style="color:#859900">return</span>
+    }
+    
+    <span style="color:#93a1a1;font-style:italic">//第一个事务：成功执行
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">db</span>.<span style="color:#268bd2">Client</span>().<span style="color:#268bd2">UseSession</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#859900">func</span>(<span style="color:#268bd2">sessionContext</span> <span style="color:#268bd2">mongo</span>.<span style="color:#268bd2">SessionContext</span>) <span style="color:#859900;font-weight:bold">error</span> {
+        <span style="color:#268bd2">err</span> = <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">StartTransaction</span>()
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }
+
+        <span style="color:#93a1a1;font-style:italic">//在事务内写一条id为“222”的记录
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> = <span style="color:#268bd2">col</span>.<span style="color:#268bd2">InsertOne</span>(<span style="color:#268bd2">sessionContext</span>, <span style="color:#268bd2">bson</span>.<span style="color:#268bd2">M</span>{<span style="color:#2aa198">&#34;_id&#34;</span>: <span style="color:#2aa198">&#34;222&#34;</span>, <span style="color:#2aa198">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;ddd&#34;</span>, <span style="color:#2aa198">&#34;age&#34;</span>: <span style="color:#2aa198;font-weight:bold">50</span>})
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }
+
+        <span style="color:#93a1a1;font-style:italic">//在事务内写一条id为“333”的记录
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> = <span style="color:#268bd2">col</span>.<span style="color:#268bd2">InsertOne</span>(<span style="color:#268bd2">sessionContext</span>, <span style="color:#268bd2">bson</span>.<span style="color:#268bd2">M</span>{<span style="color:#2aa198">&#34;_id&#34;</span>: <span style="color:#2aa198">&#34;333&#34;</span>, <span style="color:#2aa198">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;ddd&#34;</span>, <span style="color:#2aa198">&#34;age&#34;</span>: <span style="color:#2aa198;font-weight:bold">50</span>})
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">AbortTransaction</span>(<span style="color:#268bd2">sessionContext</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }<span style="color:#859900">else</span> {
+            <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">CommitTransaction</span>(<span style="color:#268bd2">sessionContext</span>)
+        }
+        <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+    })
+	
+    <span style="color:#93a1a1;font-style:italic">//第二个事务：执行失败，事务没提交，因最后插入了一条重复id &#34;111&#34;,
+</span><span style="color:#93a1a1;font-style:italic"></span>    <span style="color:#268bd2">err</span> = <span style="color:#268bd2">db</span>.<span style="color:#268bd2">Client</span>().<span style="color:#268bd2">UseSession</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#859900">func</span>(<span style="color:#268bd2">sessionContext</span> <span style="color:#268bd2">mongo</span>.<span style="color:#268bd2">SessionContext</span>) <span style="color:#859900;font-weight:bold">error</span> {
+        <span style="color:#268bd2">err</span> := <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">StartTransaction</span>()
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }
+
+        <span style="color:#93a1a1;font-style:italic">//在事务内写一条id为“222”的记录
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> = <span style="color:#268bd2">col</span>.<span style="color:#268bd2">InsertOne</span>(<span style="color:#268bd2">sessionContext</span>, <span style="color:#268bd2">bson</span>.<span style="color:#268bd2">M</span>{<span style="color:#2aa198">&#34;_id&#34;</span>: <span style="color:#2aa198">&#34;444&#34;</span>, <span style="color:#2aa198">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;ddd&#34;</span>, <span style="color:#2aa198">&#34;age&#34;</span>: <span style="color:#2aa198;font-weight:bold">50</span>})
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Println</span>(<span style="color:#268bd2">err</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }
+
+		<span style="color:#93a1a1;font-style:italic">//写重复id
+</span><span style="color:#93a1a1;font-style:italic"></span>        <span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> = <span style="color:#268bd2">col</span>.<span style="color:#268bd2">InsertOne</span>(<span style="color:#268bd2">sessionContext</span>, <span style="color:#268bd2">bson</span>.<span style="color:#268bd2">M</span>{<span style="color:#2aa198">&#34;_id&#34;</span>: <span style="color:#2aa198">&#34;111&#34;</span>, <span style="color:#2aa198">&#34;name&#34;</span>: <span style="color:#2aa198">&#34;ddd&#34;</span>, <span style="color:#2aa198">&#34;age&#34;</span>: <span style="color:#2aa198;font-weight:bold">50</span>})
+        <span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+            <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">AbortTransaction</span>(<span style="color:#268bd2">sessionContext</span>)
+            <span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+        }
+        
+        <span style="color:#268bd2">sessionContext</span>.<span style="color:#268bd2">CommitTransaction</span>(<span style="color:#268bd2">sessionContext</span>)
+        <span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+    })
+} </code></pre></div>
+<hr />
+
+<h1 id="多节点-副本集-复制集">多节点 副本集（复制集）</h1>
+
+<h2 id="副本集的作用">副本集的作用：</h2>
+
+<ul>
+<li>MongoDB 复制集的主要意义就在于 =&gt; 实现服务的高可用</li>
+<li>它的现实依赖于两个方面的功能：</li>
+<li>数据写入时将数据迅速复制达到另外一个独立节点中</li>
+<li>在接受写入的节点发生故障时自动选举出一个新的替代节点</li>
+<li>在实现高可用的同时，复制集实现了其他几个附加作用：</li>
+<li>数据分发：将数据从一个区域复制到另外一个区域，减少另外一个区域的延迟</li>
+<li>读写分离：不同类型的压力分别在不同节点执行。比如主节点写入，副节点读取</li>
+<li>异地容灾：在数据中心故障时快速切换到异地。</li>
+</ul>
+
+<h2 id="典型副本集架构">典型副本集架构</h2>
+
+<p>一般典型的架构是三个及其以上节点组成，其中有：</p>
+
+<ul>
+<li>一个主节点（PRIMARY）: 接受写入操作和选举时投票</li>
+<li>两个（多个）从节点（SECONDARY）: 复制主节点上的新数据和选举时进行投票</li>
+</ul>
+
+<h2 id="数据复制过程">数据复制过程</h2>
+
+<ul>
+<li>当一个修改操作，到达主节点时，这种对数据的操作将被记录下来，这些记录称为 oplog</li>
+<li>从节点通过在主节点上打开一个 tailable 游标不断的获取新进入主节点的 oplog，并在自己的数据上回放，以此保持跟主节点的数据一致。</li>
+</ul>
+
+<h2 id="通过选举完成故障恢复">通过选举完成故障恢复</h2>
+
+<ul>
+<li>具有投票权的节点（最多7个）两两之间相互发送心跳；</li>
+<li>当 5 次心跳都未收到时判断为该节点失联了；</li>
+<li>如果失联的是主节点，从节点就会发起选举，选出新的主节点；</li>
+<li>如果失联的是从节点则不会选举</li>
+<li>选举基于 RAFT 一致性算法 实现，选举成功的必要条件是大多数投票节点是存活的；（如果总节点7个那么应该要有4个节点是存货的才能选举）</li>
+<li>副本集中最多可以有 50 个节点， 但具有投票权的最多只有7个。</li>
+</ul>
+
+<h2 id="开始搭建配置我们的三节点副本集吧">开始搭建配置我们的三节点副本集吧</h2>
+
+<p>我用的是 MacOS , linux 也可行的。</p>
+
+<p>首先请自行安装mongo，并设置好环境变量等。</p>
+
+<ul>
+<li><p>创建数据目录</p>
+
+<p>mkdir -p /data/db{1,2,3}</p></li>
+
+<li><p>配置文件</p></li>
+</ul>
+
+<p>三个不同的数据库存放路径：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/data/db1
+/data/db2
+/data/db3</pre></div>
+<p>三个不同的对应的日志文件路径：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/data/db1/mongod.log
+/data/db2/mongod.log
+/data/db3/mongod.log</pre></div>
+<p>分别建立 三个对应的配置文件</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">/data/db1/mongod.conf
+/data/db2/mongod.conf
+/data/db3/mongod.conf</pre></div>
+<p>配置文件模板如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">systemLog:
+  destination: file
+  path:  /data/db1/mongod.log
+  logAppend: true
+storage:
+  dbPath:/data/db1
+net:
+  bindIp: 0.0.0.0
+  port: 27017
+
+
+replication:
+  replSetName: rs0 # 这个 replSetName 必须所有节点都得一致
+  
+processManagement:
+  fork: true</pre></div>
+<p>启动 MongoDB 进程：</p>
+
+<p>mongod -f  /data/db1/mongod.conf
+mongod -f  /data/db2/mongod.conf
+mongod -f  /data/db3/mongod.conf</p>
+
+<p>最后就是配置复制集：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># mongo --port 27017
+
+&gt; rs.initiate({
+    _id: &#34;rs0&#34;,
+    members: [{
+        _id: 0,
+        host: &#34;localhost27017&#34;
+    },{
+         _id: 1,
+        host: &#34;localhost27018&#34;
+    },{
+         _id: 2,
+        host: &#34;localhost27019&#34;
+    }]
+
+})</pre></div>
+<p>你可以试着验证</p>
+
+<p>主节点写入：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># mongo localhost:27017
+
+&gt; db.test.insert({a:1})
+
+&gt; db.test.insert({a:2})</pre></div>
+<p>从节点读取：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"># mongo localhost:27018
+
+// 这里默认丛节点没有开启读取功能所以要开启
+&gt; rs.slaverOk()
+
+&gt; db.test.find()</pre></div>
+
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f&amp;text=Mongo%e5%bc%80%e5%90%af%e4%ba%8b%e5%8a%a1%e4%b9%8b%e5%89%af%e6%9c%ac%e9%9b%86%e9%87%87%e5%9d%91&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f&amp;title=Mongo%e5%bc%80%e5%90%af%e4%ba%8b%e5%8a%a1%e4%b9%8b%e5%89%af%e6%9c%ac%e9%9b%86%e9%87%87%e5%9d%91" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f&amp;title=Mongo%e5%bc%80%e5%90%af%e4%ba%8b%e5%8a%a1%e4%b9%8b%e5%89%af%e6%9c%ac%e9%9b%86%e9%87%87%e5%9d%91" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f&amp;title=Mongo%e5%bc%80%e5%90%af%e4%ba%8b%e5%8a%a1%e4%b9%8b%e5%89%af%e6%9c%ac%e9%9b%86%e9%87%87%e5%9d%91" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fmongo%25E5%25BC%2580%25E5%2590%25AF%25E4%25BA%258B%25E5%258A%25A1%25E4%25B9%258B%25E5%2589%25AF%25E6%259C%25AC%25E9%259B%2586%25E9%2587%2587%25E5%259D%2591%2f&amp;description=Mongo%e5%bc%80%e5%90%af%e4%ba%8b%e5%8a%a1%e4%b9%8b%e5%89%af%e6%9c%ac%e9%9b%86%e9%87%87%e5%9d%91" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang-gin%E6%A1%86%E6%9E%B6%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AE%9E%E7%8E%B0%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E7%BB%9F%E4%B8%80%E7%AE%A1%E7%90%86/" data-toggle="tooltip" data-placement="top" title="Golang Gin框架中间件实现操作日志统一管理">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2020
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
