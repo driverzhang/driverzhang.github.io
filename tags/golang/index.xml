@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Fri, 29 Nov 2019 21:11:49 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 11 Feb 2020 13:37:21 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang写一个简单的键值存储系统</title>
+      <link>https://driverzhang.github.io/post/golang%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E9%94%AE%E5%80%BC%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Tue, 11 Feb 2020 13:37:21 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E9%94%AE%E5%80%BC%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;p&gt;利用 golang 中的 map 数据结构写一个带超时限制的键值存储组件&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang Gin框架中间件实现操作日志统一管理</title>
