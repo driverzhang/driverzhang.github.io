@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 13:37:21 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Mar 2020 19:28:48 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang生成二维码并合并海报图</title>
+      <link>https://driverzhang.github.io/post/golang%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%B9%B6%E5%90%88%E5%B9%B6%E6%B5%B7%E6%8A%A5%E5%9B%BE/</link>
+      <pubDate>Mon, 02 Mar 2020 19:28:48 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%B9%B6%E5%90%88%E5%B9%B6%E6%B5%B7%E6%8A%A5%E5%9B%BE/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;项目业务中，有需求要将数据生成到二维码中，再将二维码与背景海报进行合并，当然你还可以获取微信头像嵌入到海报中。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang写一个简单的键值存储系统</title>
