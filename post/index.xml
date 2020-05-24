@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 19:28:48 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 24 May 2020 22:49:54 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>UML时序图实践</title>
+      <link>https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Sun, 24 May 2020 22:49:54 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/</guid>
+      <description>&lt;h2 id=&#34;什么是uml&#34;&gt;什么是UML&lt;/h2&gt;
+
+&lt;p&gt;统一建模语言（Unified Modeling Language，UML）。&lt;/p&gt;
+
+&lt;p&gt;UML 是一种编制软蓝图的标准化语言，它的目标之一就是为开发团队提供标准通用的设计语言来开发和构建计算机应用。&lt;/p&gt;
+
+&lt;p&gt;UML 提出了一套 IT 专业人员期待多年的统一的标准建模符号。通过使用UML，这些人员能够阅读和交流系统架构和设计规划。&lt;/p&gt;
+
+&lt;p&gt;UML支持面向对象的技术，能够准确的方便地表达面向对像的概念，体现面向对象的分析和设计风格.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang生成二维码并合并海报图</title>
