@@ -7,10 +7,27 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Thu, 06 Sep 2018 11:26:43 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 11 Jun 2020 22:56:29 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何防止写出慢SQL之MySQL索引解析</title>
+      <link>https://driverzhang.github.io/post/%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E5%86%99%E5%87%BA%E6%85%A2sql%E4%B9%8Bmysql%E7%B4%A2%E5%BC%95%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Thu, 11 Jun 2020 22:56:29 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E5%86%99%E5%87%BA%E6%85%A2sql%E4%B9%8Bmysql%E7%B4%A2%E5%BC%95%E8%A7%A3%E6%9E%90/</guid>
+      <description>&lt;h2 id=&#34;先来给-mysql-中的-sql-定义个量变&#34;&gt;先来给 MySQL 中的 sql 定义个量变&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;慢 SQL 对数据库的影响，是一个量变到质变的过程，对“量”的把握，就很重要&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一台单机 MySQL 数据库，大致处理能力的极限是，每秒一万条左右的简单 SQL，这里的“简单 SQL”，指的是类似于主键查询这种不需要遍历很多条记录的 SQL，这里的一万 TPS 是中位数的经验值，具体还是要看咋们的服务器是否给力。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>高性能数据库集群：分库分表</title>

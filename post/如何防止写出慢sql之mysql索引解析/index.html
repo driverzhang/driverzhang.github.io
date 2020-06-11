@@ -5,51 +5,47 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>UML时序图实践</title>
-  <meta property="og:title" content="UML时序图实践" />
-  <meta name="twitter:title" content="UML时序图实践" />
-  <meta name="description" content="什么是UML
+  <title>如何防止写出慢SQL之MySQL索引解析</title>
+  <meta property="og:title" content="如何防止写出慢SQL之MySQL索引解析" />
+  <meta name="twitter:title" content="如何防止写出慢SQL之MySQL索引解析" />
+  <meta name="description" content="先来给 MySQL 中的 sql 定义个量变
 
-统一建模语言（Unified Modeling Language，UML）。
 
-UML 是一种编制软蓝图的标准化语言，它的目标之一就是为开发团队提供标准通用的设计语言来开发和构建计算机应用。
+慢 SQL 对数据库的影响，是一个量变到质变的过程，对“量”的把握，就很重要
 
-UML 提出了一套 IT 专业人员期待多年的统一的标准建模符号。通过使用UML，这些人员能够阅读和交流系统架构和设计规划。
 
-UML支持面向对象的技术，能够准确的方便地表达面向对像的概念，体现面向对象的分析和设计风格.
+一台单机 MySQL 数据库，大致处理能力的极限是，每秒一万条左右的简单 SQL，这里的“简单 SQL”，指的是类似于主键查询这种不需要遍历很多条记录的 SQL，这里的一万 TPS 是中位数的经验值，具体还是要看咋们的服务器是否给力。
 
 ">
-  <meta property="og:description" content="什么是UML
+  <meta property="og:description" content="先来给 MySQL 中的 sql 定义个量变
 
-统一建模语言（Unified Modeling Language，UML）。
 
-UML 是一种编制软蓝图的标准化语言，它的目标之一就是为开发团队提供标准通用的设计语言来开发和构建计算机应用。
+慢 SQL 对数据库的影响，是一个量变到质变的过程，对“量”的把握，就很重要
 
-UML 提出了一套 IT 专业人员期待多年的统一的标准建模符号。通过使用UML，这些人员能够阅读和交流系统架构和设计规划。
 
-UML支持面向对象的技术，能够准确的方便地表达面向对像的概念，体现面向对象的分析和设计风格.
+一台单机 MySQL 数据库，大致处理能力的极限是，每秒一万条左右的简单 SQL，这里的“简单 SQL”，指的是类似于主键查询这种不需要遍历很多条记录的 SQL，这里的一万 TPS 是中位数的经验值，具体还是要看咋们的服务器是否给力。
 
 ">
-  <meta name="twitter:description" content="什么是UML
+  <meta name="twitter:description" content="先来给 MySQL 中的 sql 定义个量变
 
-统一建模语言（Unified Modeling Language，UML）。
 
-UML 是一种编制软蓝图的标准化语言，它的目标之一就是为开发团队提供标准通用的设计语言来开发和构建计算机应用。
+慢 SQL 对数据库的影响，是一个量变到质变的过程，对“量”的把握，就很重要
 
-UML 提出了一套 IT 专业人员期待多年的统一的标准建模符号。通过使用UML，这些人员能够阅读和交流系统架构和设计规划。
 
-UML支持面向对象的技术，能够准确的方便地表达面向对像的概念，体 …">
+一台单机 MySQL 数据库，大致处理能力的极限是，每秒一万条左右的简单 SQL，这里的“简单 SQL”，指的是类似于主键查询这种不需要遍历很多条记录的 SQL，这里的一万 TPS 是中位数的经验值，具体还是要看咋们的服务器是否给力。
+
+">
   <meta name="author" content="Gopherzhang"/>
   <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E5%86%99%E5%87%BA%E6%85%A2sql%E4%B9%8Bmysql%E7%B4%A2%E5%BC%95%E8%A7%A3%E6%9E%90/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Gopherzhang" />
 
   <meta name="generator" content="Hugo 0.48" />
-  <link rel="canonical" href="https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E5%86%99%E5%87%BA%E6%85%A2sql%E4%B9%8Bmysql%E7%B4%A2%E5%BC%95%E8%A7%A3%E6%9E%90/" />
   <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -212,13 +208,13 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>UML时序图实践</h1>
+              <h1>如何防止写出慢SQL之MySQL索引解析</h1>
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on May 24, 2020
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on June 11, 2020
   
   
   
@@ -239,133 +235,132 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <h2 id="什么是uml">什么是UML</h2>
+        <h2 id="先来给-mysql-中的-sql-定义个量变">先来给 MySQL 中的 sql 定义个量变</h2>
 
-<p>统一建模语言（Unified Modeling Language，UML）。</p>
+<blockquote>
+<p>慢 SQL 对数据库的影响，是一个量变到质变的过程，对“量”的把握，就很重要</p>
+</blockquote>
 
-<p>UML 是一种编制软蓝图的标准化语言，它的目标之一就是为开发团队提供标准通用的设计语言来开发和构建计算机应用。</p>
-
-<p>UML 提出了一套 IT 专业人员期待多年的统一的标准建模符号。通过使用UML，这些人员能够阅读和交流系统架构和设计规划。</p>
-
-<p>UML支持面向对象的技术，能够准确的方便地表达面向对像的概念，体现面向对象的分析和设计风格.</p>
+<p>一台单机 MySQL 数据库，大致处理能力的极限是，每秒一万条左右的简单 SQL，这里的“简单 SQL”，指的是类似于主键查询这种不需要遍历很多条记录的 SQL，这里的一万 TPS 是中位数的经验值，具体还是要看咋们的服务器是否给力。</p>
 
 <p></p>
 
-<h2 id="uml图的种类">UML图的种类</h2>
+<p>一般一台 MySQL 服务器，平均每秒钟执行的 SQL 数量在几百左右，就已经是非常繁忙了，即使看起来 CPU 利用率和磁盘繁忙程度没那么高，你也需要考虑给数据库“减负”了。</p>
+
+<p>遍历行数在千万左右，是 MySQL 查询的一个坎儿。MySQL 中单个表数据量，也要尽量控制在一千万条以下，最多不要超过二三千万这个量级。</p>
+
+<p>对一个千万级别的表执行查询，加上几个 WHERE 条件过滤一下，符合条件的数据最多可能在几十万或者百万量级，这还可以接受。但如果再和其他的表做一个联合查询，遍历的数据量很可能就超过千万级别了。所以，每个表的数据量最好小于千万级别。</p>
 
 <blockquote>
-<p>UML的本意是要成为一种标准的统一语言，使得IT专业人员能够进行计算机应用程序的建模</p>
+<p>所以我们在做一些平台级别的产品时，普遍量都比较大，再加上微服务架构的拆服务重构问题，都不建议直接用join进行连表查询，在阿里的JAVA某公开手册中是有明确规定禁止使用join连表的，个人也不建议疯狂的秀sql语句，一个查询写了一堆嵌套的sql，这也不便于后人维护和优化。</p>
 </blockquote>
 
-<p>提供了多种类型的模型描述图（diagram），当在某种给定的方法学中使用这些图时，它使得开发中的应用程序的更易理解。UML的内涵远不只是这些模型描述图，但是对于入门来说，这些图对这门语言及其用法背后的基本原理提供了很好的介绍。通过把标准的UML图放进您的工作产品中，精通UML的人员就更加容易加入您的项目并迅速进入角色。</p>
+<p>如果数据库中的数据量就是很多，而且查询业务逻辑就需要遍历大量数据怎么办？</p>
 
-<p>最常用的UML图包括：</p>
+<p>很简单，加上 “必要的且合理的” 索引即可。</p>
+
+<blockquote>
+<p>为什么这里是  “必要的且合理的” ，这里就要说到索引的原理和使用方法及其优化方案，篇幅问题，我会在另外文章再来记录。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="如何查看自己写的sql性能的可能性">如何查看自己写的sql性能的可能性</h2>
+
+<blockquote>
+<p>大部分就是查看sql是否命中索引以及命中索引的类型和filter</p>
+
+<p>逻辑不是很复杂的单表查询，我们可能还可以分析出来，查询会使用哪个索引。但如果是比较复杂的多表联合查询，我们单看 SQL 语句本身，就很难分析出查询到底会命中哪些索引，会遍历多少行数据。MySQL 和大部分数据库，都提供一个帮助我们分析查询功能：执行计划。</p>
+</blockquote>
+
+<h3 id="分析-sql-执行计划">分析 SQL 执行计划:</h3>
+
+<blockquote>
+<p>只要在你的 SQL 语句前面加上 EXPLAIN 关键字，然后执行这个查询语句就可以了。</p>
+</blockquote>
+
+<p>举个栗子，有一个用户表，包含用户 ID、姓名、部门编号和状态这几个字段：</p>
+
+<p><img src="https://raw.githubusercontent.com/driverzhang/image-storage/master/20200608230125.png" alt="" /></p>
+
+<p>我们现在按照 部门代号以 00028 开头的所有人。</p>
+
+<p>下面这两个 SQL，他们的查询结果是一样的，都满足要求，但是，哪个查询性能更好呢？</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">SELECT * FROM user WHERE left(department_code, 5) = &#39;00028&#39;;
+SELECT * FROM user WHERE department_code LIKE &#39;00028%&#39;;</pre></div>
+<p>所以来看看分析计划吧：</p>
+
+<p>执行：</p>
+
+<p>explain SELECT * FROM user WHERE left(department_code, 5) = &lsquo;00028&rsquo;;</p>
+
+<p><img src="https://raw.githubusercontent.com/driverzhang/image-storage/master/20200608230422.png" alt="" /></p>
+
+<p>如上图中看见（可能需要你科学上网才能看见图片吧）：</p>
+
+<p>Left 是Mysql自由函数，type显示ALL，没有命中索引走的是全表查询，跑了4534行，最垃圾的效果。</p>
+
+<p>而Like 虽然type是range 走的范围索引类型，但别人至少命中索引了，rows显示只跑了8行搞定。</p>
+
+<p>通过对比这两个 SQL 的执行计划，就可以看出来，第二个 SQL 虽然使用了普遍认为低效的 LIKE 查询条件，但是仍然可以用到索引的范围查找，遍历数据的行数远远少于第一个 SQL，查询性能更好。</p>
+
+<hr />
+
+<h2 id="explain-sql-出来的字段表示具体含义">explain sql 出来的字段表示具体含义</h2>
+
+<p>这里主要注意，title中的type字段含义：</p>
+
+<p>type 表示显示联结类型，显示查询使用了何种类型有如下：</p>
+
+<p>下面有好到坏的排序：</p>
 
 <ul>
-<li>用例图、</li>
-<li>类图、</li>
-<li>序列图、</li>
-<li>状态图、</li>
-<li>活动图、</li>
-<li>组件图、</li>
-<li>部署图</li>
+<li>system</li>
+<li>const</li>
+<li>eq_ref</li>
+<li>ref</li>
+<li>fulltext</li>
+<li>ref_or_null</li>
+<li>index_merge</li>
+<li>unique_subquery</li>
+<li>index_subquery</li>
+<li>range</li>
+<li>index</li>
+<li>ALL</li>
 </ul>
 
-<p>今天要说的则是个人再需求分析定义为具体程序流程图的：序列图（时序图）。</p>
+<p>这里就不再多参数了，可以去官网和一些分享文档中自行查看即可：</p>
 
-<h2 id="序列图-时序图">序列图（时序图）</h2>
+<h3 id="参考">参考：</h3>
 
-<p>序列图显示具体用例（或者是用例的一部分）的详细流程。它几乎是自描述的，并且显示了流程中中不同对象之间的调用关系，同时还可以很详细地显示对不同对象的不同调用。</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">官方权位文档-EXPLAIN Output Format</a></p>
 
-<p>序列图有两个维度：</p>
+<p><a href="https://blog.csdn.net/jiadajing267/article/details/81269067">MySQL优化——看懂explain</a></p>
 
-<ul>
-<li><p>垂直维度以发生的时间顺序显示消息/调用的序列；</p></li>
-
-<li><p>水平维度显示消息被发送到的对象实例。</p></li>
-</ul>
-
-<ol>
-<li>所以序列图主要是两个元素：</li>
-</ol>
-
-<p>时间顺序 和 对象实例</p>
-
-<ol>
-<li>所要表达的就是：</li>
-</ol>
-
-<p>一个较为详细的调用过程，等同于我们代码中实现的业务逻辑。每个组件之间何时调用哪个组件进行怎样的数据交互等过程。</p>
-
-<h3 id="序列图绘制">序列图绘制：</h3>
-
-<p>序列图的绘制非常简单。和你自己在纸上画业务流程图几乎一样，只是对应的图像节点组件稍微变了下，被定义的更为统一好看。</p>
-
-<p>如下图：</p>
-
-<p><img src="https://static.oschina.net/uploads/space/2013/0115/145236_ta6X_573470.jpg" alt="" /></p>
-
-<p><img src="http://www.uml.org.cn/oobject/images/3101_figure11.jpg" alt="" /></p>
-
-<p><img src="http://www.edrawsoft.cn/wp/wp-content/uploads/2018/03/umllizi-463x348.png" alt="" /></p>
-
-<p>没错大部分序列图都是长成上面的一些样子。</p>
-
-<p>你只需要关注 什么时候画 实线、虚线、回调线、粗线箭头、生命框（就是那些矩形的柱子）。</p>
-
-<p>具体请参考
-<a href="https://blog.csdn.net/xingjiarong/article/details/50232199">UML之时序图详解</a></p>
+<hr />
 
 <h2 id="总结">总结：</h2>
 
-<h4 id="对应画时序图可能一开始你没用过不怎么习惯-但是一旦开始画起来用起来-多画便于帮你更加理清业务逻辑">对应画时序图可能一开始你没用过不怎么习惯，但是一旦开始画起来用起来，多画便于帮你更加理清业务逻辑。</h4>
+<p>在写db层sql语句时，你应该有意识的去扫一下是否用到了索引，大致预估下能跑多少行。</p>
 
-<h4 id="一个逻辑完整时序图-应该是反复修改后得到的产物-当然如果你已经可以-只需要画一次就能收工-说明你思路清晰-需求稳定-可喜可贺">一个逻辑完整时序图，应该是反复修改后得到的产物。当然如果你已经可以 只需要画一次就能收工，说明你思路清晰，需求稳定，可喜可贺~~</h4>
+<p>尽量针对业务写出效率较高的查询语句。比如：</p>
 
-<h4 id="这里推荐你直接使用类似-markdown-语法形式来定义时序图">这里推荐你直接使用类似 markdown 语法形式来定义时序图</h4>
+<ul>
+<li><p>where 最左原则的过滤字段顺序、</p></li>
 
-<ol>
-<li><a href="https://bramp.github.io/js-sequence-diagrams/">js-sequence-diagrams</a></li>
-</ol>
+<li><p>where 中填入的值是否已经代码转化好了对应表的数据类型（如果让数据库给你转化的话就可能不会迟到索引，即便该字段你加了index）</p></li>
 
-<p>这种方式是基于一个简单的 javascript 库进行实现的,几乎零等待渲染生成极快，方便好用。
-唯一缺点就是 全是黑色线框和文字。</p>
+<li><p>order by 字段是否有必要，是否走的内存排序还是临时表排序、</p></li>
 
-<ol>
-<li><a href="https://mermaid-js.github.io/mermaid/#/">Mermaid</a></li>
-</ol>
-
-<p><a href="https://mermaid-js.github.io/mermaid-live-editor/#/edit/">Mermaid Live Editor</a>
-类似这个工具就强大一些了，也是用js写的。但是自带好看的颜色框框。还能画各种其他流程图</p>
-
-<h4 id="提醒在-mermaid-中想要多行文字-换行请用-br-把中间空格去掉即可">提醒在 Mermaid 中想要多行文字,换行请用&lt; br/ &gt; (把中间空格去掉即可)</h4>
-
-<ol>
-<li><p>这是一篇介绍上面两种方法的文章 <a href="https://support.typora.io/Draw-Diagrams-With-Markdown/">Draw Diagrams With Markdown</a></p>
-
-<h2 id="工具">工具：</h2></li>
-</ol>
-
-<p><a href="https://plantuml.com/zh/sequence-diagram">plantuml时序图官网介绍</a></p>
-
-<p><a href="http://www.plantuml.com/plantuml/umla/SoWkIImgAStDuNe-PSMpZktEprUlLz2rKt3CoKnELR1Io4ZDoSddSaZDIm6g0G00">在线UML时序图工具</a></p>
-
-<p><a href="https://www.websequencediagrams.com/">自己常用的在线UML工具</a></p>
-
-<h2 id="参考">参考：</h2>
-
-<p><a href="https://blog.csdn.net/xingjiarong/article/details/50232199">UML之时序图详解</a></p>
-
-<p><a href="https://www.w3cschool.cn/uml_tutorial/">UML 教程</a></p>
-
-<p><a href="https://www.ibm.com/developerworks/cn/rational/r-uml/index.html">UML基础-IBM</a></p>
+<li><p>select 是否可以走个覆盖索引、</p></li>
+</ul>
 
         
           <div class="blog-tags">
             
-              <a href="https://driverzhang.github.io//tags/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
+              <a href="https://driverzhang.github.io//tags/mysql/">MySQL</a>&nbsp;
             
-              <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+              <a href="https://driverzhang.github.io//tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>&nbsp;
             
           </div>
         
@@ -378,7 +373,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;text=UML%e6%97%b6%e5%ba%8f%e5%9b%be%e5%ae%9e%e8%b7%b5&amp;via="
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f&amp;text=%e5%a6%82%e4%bd%95%e9%98%b2%e6%ad%a2%e5%86%99%e5%87%ba%e6%85%a2SQL%e4%b9%8bMySQL%e7%b4%a2%e5%bc%95%e8%a7%a3%e6%9e%90&amp;via="
        target="_blank" alt="" title="Share on Twitter">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -389,7 +384,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f" target="_blank" title="Share on Google Plus">
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f" target="_blank" title="Share on Google Plus">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
@@ -399,7 +394,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f" target="_blank" title="Share on Facebook">
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f" target="_blank" title="Share on Facebook">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
@@ -409,7 +404,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=UML%e6%97%b6%e5%ba%8f%e5%9b%be%e5%ae%9e%e8%b7%b5" target="_blank" title="Share on Reddit">
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=%e5%a6%82%e4%bd%95%e9%98%b2%e6%ad%a2%e5%86%99%e5%87%ba%e6%85%a2SQL%e4%b9%8bMySQL%e7%b4%a2%e5%bc%95%e8%a7%a3%e6%9e%90" target="_blank" title="Share on Reddit">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
@@ -419,7 +414,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=UML%e6%97%b6%e5%ba%8f%e5%9b%be%e5%ae%9e%e8%b7%b5" target="_blank"
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=%e5%a6%82%e4%bd%95%e9%98%b2%e6%ad%a2%e5%86%99%e5%87%ba%e6%85%a2SQL%e4%b9%8bMySQL%e7%b4%a2%e5%bc%95%e8%a7%a3%e6%9e%90" target="_blank"
        title="Share on LinkedIn">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -430,7 +425,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;title=UML%e6%97%b6%e5%ba%8f%e5%9b%be%e5%ae%9e%e8%b7%b5" target="_blank"
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f&amp;title=%e5%a6%82%e4%bd%95%e9%98%b2%e6%ad%a2%e5%86%99%e5%87%ba%e6%85%a2SQL%e4%b9%8bMySQL%e7%b4%a2%e5%bc%95%e8%a7%a3%e6%9e%90" target="_blank"
        title="Share on StumbleUpon">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -441,7 +436,7 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
 
 
 <li>
-    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fuml%25E6%2597%25B6%25E5%25BA%258F%25E5%259B%25BE%25E5%25AE%259E%25E8%25B7%25B5%2f&amp;description=UML%e6%97%b6%e5%ba%8f%e5%9b%be%e5%ae%9e%e8%b7%b5" target="_blank"
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%25A6%2582%25E4%25BD%2595%25E9%2598%25B2%25E6%25AD%25A2%25E5%2586%2599%25E5%2587%25BA%25E6%2585%25A2sql%25E4%25B9%258Bmysql%25E7%25B4%25A2%25E5%25BC%2595%25E8%25A7%25A3%25E6%259E%2590%2f&amp;description=%e5%a6%82%e4%bd%95%e9%98%b2%e6%ad%a2%e5%86%99%e5%87%ba%e6%85%a2SQL%e4%b9%8bMySQL%e7%b4%a2%e5%bc%95%e8%a7%a3%e6%9e%90" target="_blank"
        title="Share on Pinterest">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -459,13 +454,9 @@ UML支持面向对象的技术，能够准确的方便地表达面向对像的�
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://driverzhang.github.io/post/golang%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%B9%B6%E5%90%88%E5%B9%B6%E6%B5%B7%E6%8A%A5%E5%9B%BE/" data-toggle="tooltip" data-placement="top" title="Golang生成二维码并合并海报图">&larr; Previous Post</a>
+              <a href="https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/" data-toggle="tooltip" data-placement="top" title="UML时序图实践">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://driverzhang.github.io/post/%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E5%86%99%E5%87%BA%E6%85%A2sql%E4%B9%8Bmysql%E7%B4%A2%E5%BC%95%E8%A7%A3%E6%9E%90/" data-toggle="tooltip" data-placement="top" title="如何防止写出慢SQL之MySQL索引解析">Next Post &rarr;</a>
-            </li>
           
         </ul>
       

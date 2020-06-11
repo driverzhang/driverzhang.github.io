@@ -230,6 +230,56 @@
           
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/">
+                <h2 class="post-title">Golang 关于 nil 的认识</h2>
+                
+                
+              </a>
+
+              <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 17, 2018
+  
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  <h1 id="golang-关于-nil-的认识">Golang 关于 nil 的认识</h1>
+
+<h2 id="1-什么是-nil">1. 什么是 nil ？</h2>
+
+<p>大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bool      -&gt; false                              
+numbers -&gt; 0                                 
+string    -&gt; &#34;&#34;      
+
+pointers -&gt; nil
+slices -&gt; nil
+maps -&gt; nil
+channels -&gt; nil
+functions -&gt; nil
+interfaces -&gt; nil</pre></div>
+<p></p>
+                  <a href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+                  
+                    <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+                  
+                </div>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/">
                 <h2 class="post-title">Golang 中对请求超时设置时间</h2>
                 
@@ -489,51 +539,6 @@ open ./</pre></div>
                 <div class="blog-tags">
                   
                     <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/">
-                <h2 class="post-title">iota实例情况</h2>
-                
-                
-              </a>
-
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 24, 2018
-  
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h1 id="iota-的一个实例">iota 的一个实例</h1>
-
-<blockquote>
-<p>iota是golang语言的常量计数器,只能在常量的表达式中使用。</p>
-
-<p>iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。</p>
-</blockquote>
-
-<p>使用iota能简化定义，在定义枚举时很有用。</p>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
                   
                 </div>
               
