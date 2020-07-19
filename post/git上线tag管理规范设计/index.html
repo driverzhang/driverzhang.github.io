@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Git上线tag管理规范设计</title>
+  <meta property="og:title" content="Git上线tag管理规范设计" />
+  <meta name="twitter:title" content="Git上线tag管理规范设计" />
+  <meta name="description" content="1. 如何用 git 打 tag
+
+
+使用tag标签对重要版本进行标记
+
+
+当根据项目设计完成所有功能之后，项目就可以进行线上部署了。
+
+为了保留线上项目的历史版本，便于回滚到历史上任意一个上线版本，对于每次进行线上部署，需要使用tag进行管理。
+
+">
+  <meta property="og:description" content="1. 如何用 git 打 tag
+
+
+使用tag标签对重要版本进行标记
+
+
+当根据项目设计完成所有功能之后，项目就可以进行线上部署了。
+
+为了保留线上项目的历史版本，便于回滚到历史上任意一个上线版本，对于每次进行线上部署，需要使用tag进行管理。
+
+">
+  <meta name="twitter:description" content="1. 如何用 git 打 tag
+
+
+使用tag标签对重要版本进行标记
+
+
+当根据项目设计完成所有功能之后，项目就可以进行线上部署了。
+
+为了保留线上项目的历史版本，便于回滚到历史上任意一个上线版本，对于每次进行线上部署，需要使用tag进行管理。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/git%E4%B8%8A%E7%BA%BFtag%E7%AE%A1%E7%90%86%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/git%E4%B8%8A%E7%BA%BFtag%E7%AE%A1%E7%90%86%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Git上线tag管理规范设计</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on July 19, 2020
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="1-如何用-git-打-tag">1. 如何用 git 打 tag</h2>
+
+<blockquote>
+<p>使用tag标签对重要版本进行标记</p>
+</blockquote>
+
+<p>当根据项目设计完成所有功能之后，项目就可以进行线上部署了。</p>
+
+<p>为了保留线上项目的历史版本，便于回滚到历史上任意一个上线版本，对于每次进行线上部署，需要使用tag进行管理。</p>
+
+<p></p>
+
+<p>需要回滚到某个历史版本时，切换到对应的tag就可以了。tag不同于分支，而是相当于一个个里程碑，对每个重要的上线版本进行标记。</p>
+
+<p>另外tag不区分分支，在同一个项目不同分支上都可以看见打上去的tag。</p>
+
+<h3 id="1-1-具体命令操作">1.1 具体命令操作：</h3>
+
+<ol>
+<li><p>创建tag，-a指定标签名，-m是提交信息</p>
+
+<p>git tag -a live1.0.0 -m &ldquo;live项目第一个上线版本&rdquo;</p></li>
+</ol>
+
+<blockquote>
+<p>不用 -a 选项也可以执行的，但它不会记录这标签是啥时候打的，谁打的，也不会让你添加个标签的注解</p>
+</blockquote>
+
+<p>这里建议 打tag 必须带上 -a 和 -m</p>
+
+<ol>
+<li><p>查看tag</p>
+
+<p>git tag</p></li>
+</ol>
+
+<p>带过滤查询:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git tag -l &#34;live&#34;</pre></div>
+<p>查看具体某一个 tag 的详情：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git show live1.0.0</pre></div>
+<ol>
+<li><p>将tag提交到远程仓库</p>
+
+<p>git push origin live1.0.0</p></li>
+
+<li><p>需要回滚切换到这个tag</p>
+
+<p>git checkout v1.0</p>
+
+<p>git reset &ndash;hard xxxxxxx</p></li>
+</ol>
+
+<blockquote>
+<p>注意：可以利用命令行 git reflog 查询你本地所有操作记录，便于几时回退</p>
+</blockquote>
+
+<ol>
+<li><p>基于任意一个commit补上tag</p>
+
+<p>git tag -a live1.0.0  9fceb02 -m &ldquo;my tag&rdquo;</p></li>
+
+<li><p>删除某个tag</p></li>
+</ol>
+
+<p>本地删除：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git tag -d v0.1.2 </pre></div>
+<p>远程删除（一般不删除远程）：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git push origin :refs/tags/v0.1.2</pre></div>
+<hr />
+
+<h2 id="2-如何利用-tag-维护线上版本管理并修复-bug">2. 如何利用 tag 维护线上版本管理并修复 BUG</h2>
+
+<h3 id="2-1-版本管理标签定义规则">2.1 版本管理标签定义规则：</h3>
+
+<h4 id="版本号格式-x-y-z-主版本号-次版本号-补丁版本号">版本号格式：X.Y.Z（主版本号，次版本号，补丁版本号）</h4>
+
+<ul>
+<li><p>修复Bug但不影响API增长补丁版本号；</p></li>
+
+<li><p>API保持向下兼容的增加/修改时增长次版本号；</p></li>
+
+<li><p>进行不向下兼容的修改时增长主版本号。</p></li>
+</ul>
+
+<blockquote>
+<p>另外注意一点就是，高版次升级，底版次需要清零。</p>
+</blockquote>
+
+<h3 id="2-2-修复旧版本线上bug与版本回退具体流程">2.2 修复旧版本线上BUG与版本回退具体流程</h3>
+
+<p>建设一种场景：</p>
+
+<p>当你某个服务发布了v1.0.0版本，并且打了tag成功上线运行了。</p>
+
+<p>接着开发团队继续在此版本基础上继续进行代码提交各种commit提交了。</p>
+
+<p>这时线上发现以前的v1.0.0版本出现了一个严重的BUG，需要开发团队进行基于该版本的修复并提交，而且不能把后面开发的业务代码提交上线。</p>
+
+<h4 id="解决方案流程">解决方案流程：</h4>
+
+<p>首先讲讲我们的分支管理：</p>
+
+<p>目前我们项目只有一个主开发分支dev，还没有使用master。</p>
+
+<blockquote>
+<p>所有开发都是基于dev分支进行fork与pr。</p>
+</blockquote>
+
+<h4 id="1-现有情况-只有一个主分支dev版本">1. 现有情况&ndash;只有一个主分支dev版本：</h4>
+
+<blockquote>
+<p>假设此时处于正常开发状态中，保存commit为 9527abc</p>
+</blockquote>
+
+<ol>
+<li>v1.0.0出现BUG，切到该tag版本</li>
+</ol>
+
+<blockquote>
+<p>此时处于：主分支dev</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checkout v1.0.0</pre></div>
+<p>当然你也可以使用：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git reset hard --111abc</pre></div>
+<p>但并不推荐，因为你会失去这个commit之后的所有commit记录，当然也有办法看到，用</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git reflog</pre></div>
+<p>查看你本地的所有记录行为。</p>
+
+<ol>
+<li>立马基于v1.0.0，建立新分支 bugfix</li>
+</ol>
+
+<blockquote>
+<p>此时处于：BUG分支 bugfix</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checeout -b bugfix</pre></div>
+<ol>
+<li>回头来立刻将主分支dev，切换为原来的commit</li>
+</ol>
+
+<blockquote>
+<p>此时处于最初commit：9527abc</p>
+</blockquote>
+
+<p>这时回退到tag版本使用的是 git checkout 的优势就有所体现了。</p>
+
+<p>直接运行命令：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checkout dev</pre></div>
+<p>即可回到你最初的commit。</p>
+
+<ol>
+<li>进入正题，回到BUG分子 bugfix 进行bug修复。</li>
+</ol>
+
+<blockquote>
+<p>此时处于bug分支： bugfix</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checkout bugfix</pre></div>
+<ol>
+<li>修复完BUG后可以提交限上线了，就要打 tag v1.0.1</li>
+</ol>
+
+<blockquote>
+<p>此时处于bug分支： bugfix</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git tag -a v1.0.1 -m &#34;修复线上BUG，xxxx&#34;</pre></div>
+<p>提交这个本地tag 到远处分支：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git push origin v1.0.1</pre></div>
+<h4 id="注意-这个时候其实已经可以开始基于tag-v1-0-1-上线部署了-毕竟修复bug赶时间要紧嘛">注意：这个时候其实已经可以开始基于tag  v1.0.1 上线部署了，毕竟修复BUG赶时间要紧嘛。</h4>
+
+<p>修复线上BUG后，你的主开发分支dev，也有可能存在这个bug，所以我们还需要把这个修复后添加的代码版本v1.0.1合并进入才行。</p>
+
+<ol>
+<li>合并修复的BUG，将分支bugfix合并进入到开发主分支dev</li>
+</ol>
+
+<blockquote>
+<p>此时处于分支：dev</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">git checkout dev
+
+git merge --no-ff -m &#34;合并修复bug版本v1.0.1&#34; dev</pre></div>
+<blockquote>
+<p>这里建议 git merge 一定带上 &ndash;no-ff 并且加上合并备注</p>
+
+<p>git checkout 可以替换为 git switch</p>
+</blockquote>
+
+<p>这里的合并，多半会出现冲突，因为这里我们值存在主开发分支dev，两边可能都在基于同一个文件进行更改。解决掉冲突即可。</p>
+
+<blockquote>
+<p>（其实可以设置master分支专门放发行版本的代码和tag，就很省去一些中间时间,如下的设计情况）</p>
+</blockquote>
+
+<h4 id="现有情况总结">现有情况总结：</h4>
+
+<ul>
+<li>回退到打标签的那次提交</li>
+<li>再新建分支bugfix</li>
+<li>在bugfix分支，修改bug，发版本，打新标签，手动推送标签到远程（测试后可以上线发版）</li>
+<li>合并bugfix分支到主干上</li>
+</ul>
+
+<hr />
+
+<h4 id="2-设计情况-dev开发主分支-master发版分支-release-打-tag临时分支">2. 设计情况&ndash;dev开发主分支，master发版分支，release 打 tag临时分支：</h4>
+
+<p>主要操作流程基本与上面的情况一样，命令行基本相同，这个设计不同情况在于，设置多分支来作为不同功能，有有利版本管理高效、干净。</p>
+
+<ul>
+<li>主要开发代码依旧在 dev 分支</li>
+<li>master 分支放的都是我们的发行正式版，包含全部上线应有的tag</li>
+<li>release 专门用来临时打 tag，每次打完合并到master分支、dev分支。</li>
+</ul>
+
+<p>这里简单说明一些流程问题：</p>
+
+<blockquote>
+<p>首选master分支要禁止直接push，所以要采取合并的方式</p>
+</blockquote>
+
+<ul>
+<li>回退到打标签的那次提交</li>
+<li>新建bug分支修复</li>
+<li>在bugfix分支，修改bug。推送待测试环境，进行测试</li>
+<li>测试通过后切换分支release，发版本，打新标签，手动推送标签到远程。（这里其实就可以发版上线了，合并问题后续处理）</li>
+<li>合并到master分支，这里应该不会存在冲突问题</li>
+<li>合并bugfix分支到开发分支dev上，这里就会存在冲突，需要解决即可。</li>
+</ul>
+
+<h2 id="参考">参考：</h2>
+
+<p><a href="https://www.eet-china.com/mp/a22448.html">Git如何优雅地回退代码</a></p>
+
+<p><a href="https://zhuanlan.zhihu.com/p/80115683">公司使用Gitlab管理项目实践指南</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/git/">git</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/">项目管理</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;text=Git%e4%b8%8a%e7%ba%bftag%e7%ae%a1%e7%90%86%e8%a7%84%e8%8c%83%e8%ae%be%e8%ae%a1&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Git%e4%b8%8a%e7%ba%bftag%e7%ae%a1%e7%90%86%e8%a7%84%e8%8c%83%e8%ae%be%e8%ae%a1" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Git%e4%b8%8a%e7%ba%bftag%e7%ae%a1%e7%90%86%e8%a7%84%e8%8c%83%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Git%e4%b8%8a%e7%ba%bftag%e7%ae%a1%e7%90%86%e8%a7%84%e8%8c%83%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgit%25E4%25B8%258A%25E7%25BA%25BFtag%25E7%25AE%25A1%25E7%2590%2586%25E8%25A7%2584%25E8%258C%2583%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;description=Git%e4%b8%8a%e7%ba%bftag%e7%ae%a1%e7%90%86%e8%a7%84%e8%8c%83%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/%E7%9B%B4%E6%92%AD%E5%8D%8F%E8%AE%AErtmphlshttp-flv/" data-toggle="tooltip" data-placement="top" title="直播协议RTMP、HLS、HTTP FLV">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2020
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

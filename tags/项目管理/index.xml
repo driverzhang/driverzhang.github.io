@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>项目管理 on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/</link>
+    <description>Recent content in 项目管理 on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sun, 19 Jul 2020 23:22:51 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Git上线tag管理规范设计</title>
+      <link>https://driverzhang.github.io/post/git%E4%B8%8A%E7%BA%BFtag%E7%AE%A1%E7%90%86%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Sun, 19 Jul 2020 23:22:51 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/git%E4%B8%8A%E7%BA%BFtag%E7%AE%A1%E7%90%86%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1/</guid>
+      <description>&lt;h2 id=&#34;1-如何用-git-打-tag&#34;&gt;1. 如何用 git 打 tag&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;使用tag标签对重要版本进行标记&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;当根据项目设计完成所有功能之后，项目就可以进行线上部署了。&lt;/p&gt;
+
+&lt;p&gt;为了保留线上项目的历史版本，便于回滚到历史上任意一个上线版本，对于每次进行线上部署，需要使用tag进行管理。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
