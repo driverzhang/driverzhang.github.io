@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang利用策略模式优化if…else和switch</title>
+  <meta property="og:title" content="Golang利用策略模式优化if…else和switch" />
+  <meta name="twitter:title" content="Golang利用策略模式优化if…else和switch" />
+  <meta name="description" content="都知道大量 if else 对代码维护和设计都及其不友好，即便是你换成 switch 也并不那么理想，这里推荐主要利用策略模式优化。
+
+
+需求：比如有20个甚至更多的消息模板，每个模板ID 对应要操作都可能不一样，比如文案，参数计算等。如果一个一个去独立写对应函数然后if else继续条件流程调用显得格外鸡肋，那么请用策略模式优化吧。
+
+
+">
+  <meta property="og:description" content="都知道大量 if else 对代码维护和设计都及其不友好，即便是你换成 switch 也并不那么理想，这里推荐主要利用策略模式优化。
+
+
+需求：比如有20个甚至更多的消息模板，每个模板ID 对应要操作都可能不一样，比如文案，参数计算等。如果一个一个去独立写对应函数然后if else继续条件流程调用显得格外鸡肋，那么请用策略模式优化吧。
+
+
+">
+  <meta name="twitter:description" content="都知道大量 if else 对代码维护和设计都及其不友好，即便是你换成 switch 也并不那么理想，这里推荐主要利用策略模式优化。
+
+
+需求：比如有20个甚至更多的消息模板，每个模板ID 对应要操作都可能不一样，比如文案，参数计算等。如果一个一个去独立写对应函数然后if else继续条件流程调用显得格外鸡肋，那么请用策略模式优化吧。
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%88%A9%E7%94%A8%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96ifelse%E5%92%8Cswitch/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%88%A9%E7%94%A8%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96ifelse%E5%92%8Cswitch/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang利用策略模式优化if…else和switch</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 29, 2020
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>都知道大量 if else 对代码维护和设计都及其不友好，即便是你换成 switch 也并不那么理想，这里推荐主要利用策略模式优化。</p>
+
+<blockquote>
+<p>需求：比如有20个甚至更多的消息模板，每个模板ID 对应要操作都可能不一样，比如文案，参数计算等。如果一个一个去独立写对应函数然后if else继续条件流程调用显得格外鸡肋，那么请用策略模式优化吧。</p>
+</blockquote>
+
+<p></p>
+
+<h1 id="策略模式">策略模式：</h1>
+
+<p>策略模式（strategy pattern） 又叫为政策模式（policy pattern），它将定义的算法家族分别封装起来，让它们之间可以互相切换，让算法的变化不会影响到使用算法的用户，属于 行为型设计模式。</p>
+
+<blockquote>
+<p>原理就是面向对象的继承和多态，实现同一行为在不同条件场景下具备不同的实现。</p>
+</blockquote>
+
+<h2 id="应用场景">应用场景：</h2>
+
+<p>比如：在你支付时选择支付方式有 微信支付、支付宝支付、京东支付、银行卡支付等</p>
+
+<p>解决在多重相似算法情况下使用了 if&hellip;else 和 switch&hellip;case 带来的复杂性和臃肿性问题。</p>
+
+<p>策略模式适用于以下场景：</p>
+
+<ol>
+<li>针对同一类型问题，有多种处理方式，每一种都能独立解决问题。</li>
+<li>需要自由切换选择不同类型算法场景。</li>
+<li>需要闭屏算法具体实现规则场景。</li>
+</ol>
+
+<h2 id="具体组长模块">具体组长模块：</h2>
+
+<p>一般要实现一个较为完整的策略模式，需要如下组成单元：</p>
+
+<ol>
+<li>上下文控制函数：用来拒绝切换不同算法，屏蔽高层模块（调用者）对策略、算法的直接访问，封装可能存在的变化&ndash;可以用简单工程与单例模式封装该函数</li>
+<li>抽象要实现的策略接口：定义一个interface，决定好内部包含的具体函数方法定义。</li>
+<li>具体的策略角色：实现每个类实现抽象接口的方法，进行内部具体算法的维护实现即可。</li>
+</ol>
+
+<h2 id="话不多说-代码搞起来">话不多说，代码搞起来：</h2>
+
+<h3 id="先来一个可以待优化的实例">先来一个可以待优化的实例：</h3>
+
+<p>定义一个抽象接口：</p>
+
+<ol>
+<li>只要实现一个方法 getTemplateData 获取模板对应返回的数据即可。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#93a1a1;font-style:italic">// TemplateData ...
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">TemplateData</span> <span style="color:#859900">interface</span> {
+	<span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>)
+}</code></pre></div>
+<ol>
+<li>写出具体你要定义的类，对应到底有哪些情况对应的模板输出。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#93a1a1;font-style:italic">// PayOk 1支付成功
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">PayOk</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">p</span> <span style="color:#268bd2">PayOk</span>) <span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#859900">return</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+		<span style="color:#2aa198">&#34;first&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;尊敬的用户，您的订单已支付成功，我们会尽快为您发货。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword2&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">1</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword1&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">0</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+
+		<span style="color:#2aa198">&#34;remark&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;请耐心等待收货，收到货后记得回来确认哦。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+	}, <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// AutoCancelOrder 2自动取消订单
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">AutoCancelOrder</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">a</span> <span style="color:#268bd2">AutoCancelOrder</span>) <span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#859900">return</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+		<span style="color:#2aa198">&#34;first&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;尊敬的用户，您的订单未在指定时间内支付，已自动取消。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword2&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">1</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword1&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">0</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+
+		<span style="color:#2aa198">&#34;remark&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;感谢您的购买。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+	}, <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// OrderDelivery 3订单发货
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">OrderDelivery</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> <span style="color:#268bd2">OrderDelivery</span>) <span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#859900">return</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+		<span style="color:#2aa198">&#34;first&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;尊敬的用户，您的订单已发货，正快马加鞭向您飞奔而去。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword4&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">3</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword1&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">0</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword2&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">1</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword3&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">2</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+
+		<span style="color:#2aa198">&#34;remark&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;请前往订单详情，查看物流详情。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+	}, <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// OrderAutoTake 4订单自动收货
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">type</span> <span style="color:#268bd2">OrderAutoTake</span> <span style="color:#859900">struct</span>{}
+
+<span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> <span style="color:#268bd2">OrderAutoTake</span>) <span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#859900">return</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+		<span style="color:#2aa198">&#34;first&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;尊敬的客户，您的订单已自动收货：&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword3&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">2</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword1&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">0</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+		<span style="color:#2aa198">&#34;keyword2&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#268bd2">data</span>[<span style="color:#2aa198;font-weight:bold">1</span>],
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+
+		<span style="color:#2aa198">&#34;remark&#34;</span>: <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{
+			<span style="color:#2aa198">&#34;value&#34;</span>: <span style="color:#2aa198">&#34;祝您购物愉快。&#34;</span>,
+			<span style="color:#2aa198">&#34;color&#34;</span>: <span style="color:#268bd2">Color</span>,
+		},
+	}, <span style="color:#859900;font-weight:bold">nil</span>
+}</code></pre></div>
+<p>这里暂时给出三个模板即可，可能有20个或者40个不等。</p>
+
+<ol>
+<li>最后封装一个上下文控制工厂函数，用户调用者根据具体协商的参数进行调用对应的算法即可。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">func</span> <span style="color:#268bd2">FactoryTemplate</span>(<span style="color:#268bd2">tagID</span> <span style="color:#859900;font-weight:bold">string</span>, <span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#859900">switch</span> <span style="color:#268bd2">tagID</span> {
+	<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;1&#34;</span>:
+		<span style="color:#859900">return</span> <span style="color:#268bd2">DoTemplate</span>(<span style="color:#cb4b16">new</span>(<span style="color:#268bd2">PayOk</span>), <span style="color:#268bd2">data</span>)
+	<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;2&#34;</span>:
+		<span style="color:#859900">return</span> <span style="color:#268bd2">DoTemplate</span>(<span style="color:#cb4b16">new</span>(<span style="color:#268bd2">AutoCancelOrder</span>), <span style="color:#268bd2">data</span>)
+	<span style="color:#859900">case</span> <span style="color:#2aa198">&#34;3&#34;</span>:
+		<span style="color:#859900">return</span> <span style="color:#268bd2">DoTemplate</span>(<span style="color:#cb4b16">new</span>(<span style="color:#268bd2">OrderDelivery</span>), <span style="color:#268bd2">data</span>)
+	<span style="color:#859900">default</span>:
+		<span style="color:#859900">return</span> <span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}{}, <span style="color:#268bd2">errors</span>.<span style="color:#268bd2">New</span>(<span style="color:#2aa198">&#34;no found the tagID: &#34;</span> + <span style="color:#268bd2">tagID</span>)
+	}
+}</code></pre></div>
+<p>如上代码，给出的是用一个switch给出工厂选出具体算法，可是一旦模板多了也不好维护，代码也不够优雅。</p>
+
+<p>下面我们利用 单例模式 和 简单工厂模式构造一个map结构优化该方法.</p>
+
+<h3 id="4-优化-factorytemplate-函数">4. 优化 FactoryTemplate 函数</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">var</span> <span style="color:#268bd2">doTep</span> <span style="color:#268bd2">sync</span>.<span style="color:#268bd2">Once</span>
+<span style="color:#859900">var</span> <span style="color:#268bd2">Template</span> = <span style="color:#cb4b16">make</span>(<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#268bd2">TemplateData</span>)
+
+<span style="color:#93a1a1;font-style:italic">// FactoryTemplate ...
+</span><span style="color:#93a1a1;font-style:italic">// tagID: 模板ID
+</span><span style="color:#93a1a1;font-style:italic">// data: 对应模板参数keyword
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">FactoryTemplate</span>(<span style="color:#268bd2">tagID</span> <span style="color:#859900;font-weight:bold">string</span>, <span style="color:#268bd2">data</span> []<span style="color:#859900;font-weight:bold">string</span>) (<span style="color:#859900">map</span>[<span style="color:#859900;font-weight:bold">string</span>]<span style="color:#859900">interface</span>{}, <span style="color:#859900;font-weight:bold">error</span>)  {
+	<span style="color:#268bd2">doTep</span>.<span style="color:#268bd2">Do</span>(<span style="color:#859900">func</span>() {
+		<span style="color:#268bd2">Template</span>[<span style="color:#2aa198">&#34;1&#34;</span>]= <span style="color:#cb4b16">new</span>(<span style="color:#268bd2">PayOk</span>)
+		<span style="color:#268bd2">Template</span>[<span style="color:#2aa198">&#34;2&#34;</span>]= <span style="color:#cb4b16">new</span>(<span style="color:#268bd2">AutoCancelOrder</span>)
+		<span style="color:#268bd2">Template</span>[<span style="color:#2aa198">&#34;3&#34;</span>]= <span style="color:#cb4b16">new</span>(<span style="color:#268bd2">OrderDelivery</span>)
+	})
+	
+	<span style="color:#859900">if</span> <span style="color:#268bd2">_</span>,<span style="color:#268bd2">ok</span> :=<span style="color:#268bd2">Template</span>[<span style="color:#268bd2">tagID</span>]; !<span style="color:#268bd2">ok</span> {
+		<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>, <span style="color:#268bd2">errors</span>.<span style="color:#268bd2">New</span>(<span style="color:#2aa198">&#34;tagID invalid&#34;</span>)
+	}
+	
+	<span style="color:#859900">return</span> <span style="color:#268bd2">Template</span>[<span style="color:#268bd2">tagID</span>].<span style="color:#268bd2">getTemplateData</span>(<span style="color:#268bd2">data</span>)
+}</code></pre></div>
+<h2 id="总结">总结</h2>
+
+<h3 id="优点">优点：</h3>
+
+<ol>
+<li>策略模式符合开闭原则</li>
+<li>避免使用多重条件语句， if&hellip;else; switch&hellip;case语句</li>
+<li>使用策略模式可以提高算法的保密性和安全性</li>
+</ol>
+
+<h2 id="缺点">缺点：</h2>
+
+<ol>
+<li>调用者必须提前约定好对应的调用条件，并自行决定使用哪一个策略类算法。</li>
+<li>代码在一开始写的时候会比较多，在写的时候可能会加大工作量，但是在后续维护添加时简洁清晰、一目了然。</li>
+</ol>
+
+<p>对应设计模式，还有很多精妙之处，特别是在很多优秀的开源框架中大量利用设计模式解决较为复杂的问题，适当的利用合适的设计模式有利于项目的完整安全性。</p>
+
+<p>当然对于golang来说也应该适当轻量化面向对象的设计方式，提倡组合的方式。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f&amp;text=Golang%e5%88%a9%e7%94%a8%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f%e4%bc%98%e5%8c%96if%e2%80%a6else%e5%92%8cswitch&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f&amp;title=Golang%e5%88%a9%e7%94%a8%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f%e4%bc%98%e5%8c%96if%e2%80%a6else%e5%92%8cswitch" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f&amp;title=Golang%e5%88%a9%e7%94%a8%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f%e4%bc%98%e5%8c%96if%e2%80%a6else%e5%92%8cswitch" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f&amp;title=Golang%e5%88%a9%e7%94%a8%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f%e4%bc%98%e5%8c%96if%e2%80%a6else%e5%92%8cswitch" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%2588%25A9%25E7%2594%25A8%25E7%25AD%2596%25E7%2595%25A5%25E6%25A8%25A1%25E5%25BC%258F%25E4%25BC%2598%25E5%258C%2596ifelse%25E5%2592%258Cswitch%2f&amp;description=Golang%e5%88%a9%e7%94%a8%e7%ad%96%e7%95%a5%e6%a8%a1%e5%bc%8f%e4%bc%98%e5%8c%96if%e2%80%a6else%e5%92%8cswitch" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/git%E4%B8%8A%E7%BA%BFtag%E7%AE%A1%E7%90%86%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1/" data-toggle="tooltip" data-placement="top" title="Git上线tag管理规范设计">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2020
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
