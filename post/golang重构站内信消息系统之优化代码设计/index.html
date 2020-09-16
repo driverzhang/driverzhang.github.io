@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang重构站内信消息系统之优化代码设计</title>
+  <meta property="og:title" content="Golang重构站内信消息系统之优化代码设计" />
+  <meta name="twitter:title" content="Golang重构站内信消息系统之优化代码设计" />
+  <meta name="description" content="1. 消息系统业务功能说明简介：
+
+首先消息系统需求目的就是为了实现后台商家可以主动管理推送消息到对应相关用户，以及查看用户的业务被动触发消息。
+
+其中包括，站内信的消息 与 微信公众号模板消息推送
+
+">
+  <meta property="og:description" content="1. 消息系统业务功能说明简介：
+
+首先消息系统需求目的就是为了实现后台商家可以主动管理推送消息到对应相关用户，以及查看用户的业务被动触发消息。
+
+其中包括，站内信的消息 与 微信公众号模板消息推送
+
+">
+  <meta name="twitter:description" content="1. 消息系统业务功能说明简介：
+
+首先消息系统需求目的就是为了实现后台商家可以主动管理推送消息到对应相关用户，以及查看用户的业务被动触发消息。
+
+其中包括，站内信的消息 与 微信公众号模板消息推送
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E9%87%8D%E6%9E%84%E7%AB%99%E5%86%85%E4%BF%A1%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E9%87%8D%E6%9E%84%E7%AB%99%E5%86%85%E4%BF%A1%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang重构站内信消息系统之优化代码设计</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 16, 2020
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="1-消息系统业务功能说明简介">1. 消息系统业务功能说明简介：</h2>
+
+<p>首先消息系统需求目的就是为了实现后台商家可以主动管理推送消息到对应相关用户，以及查看用户的业务被动触发消息。</p>
+
+<p>其中包括，站内信的消息 与 微信公众号模板消息推送</p>
+
+<p></p>
+
+<h4 id="说明-目前我们系统主要是web为主-客户端只有h5链接纯web界面-并木有app客户端-所以不考虑想app那种推送消息">说明：目前我们系统主要是WEB为主，客户端只有H5链接纯WEB界面，并木有APP客户端，所以不考虑想APP那种推送消息。</h4>
+
+<blockquote>
+<p>主动推送：推送系统消息+优惠活动；推送人到：全部用户、指定用户、顾客、团长等&hellip;</p>
+
+<p>业务触发推送：用户下单成功，售后退款成功，物流发货等。都会有被动业务触发记录到站内信消息，并且触发主动公众号模板推送到对应你关注企业商家阿德微信公众号上。</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-表结构功能设计替换">2. 表结构功能设计替换：</h2>
+
+<h3 id="php-版本表包括如下两个">PHP 版本表包括如下两个：</h3>
+
+<p>把业务分为了 单发与群发的区分，
+这张表 letter_multiple 就是群发表。</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> `<span style="color:#268bd2">letter_multiple</span>` (
+  `<span style="color:#268bd2">id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#268bd2">AUTO_INCREMENT</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;主键&#39;</span>,
+  `<span style="color:#268bd2">letter_type_id</span>` <span style="color:#268bd2">tinyint</span>(<span style="color:#2aa198;font-weight:bold">3</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;消息类型&#39;</span>,
+  `<span style="color:#268bd2">company_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span>,
+  `<span style="color:#268bd2">user_type_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户等级id，0表示所有用户,其他取值于商店系统member_type&#39;</span>,
+  `<span style="color:#268bd2">user_type_name</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">50</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户类型名称，如全部用户，全部店主等&#39;</span>,
+  `<span style="color:#268bd2">params_value</span>` <span style="color:#cb4b16">text</span> <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;参数值&#39;</span>,
+  `<span style="color:#268bd2">belong_product</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">100</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;所属产品&#39;</span>,
+  `<span style="color:#268bd2">title</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">100</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;标题&#39;</span>,
+  .......
+  `<span style="color:#268bd2">created_at</span>` <span style="color:#859900">timestamp</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#859900">CURRENT_TIMESTAMP</span>,
+  `<span style="color:#268bd2">updated_at</span>` <span style="color:#859900">timestamp</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#859900">CURRENT_TIMESTAMP</span> <span style="color:#859900">ON</span> <span style="color:#859900">UPDATE</span> <span style="color:#859900">CURRENT_TIMESTAMP</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> (`<span style="color:#268bd2">id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">letter_template_index</span>` (`<span style="color:#268bd2">letter_template_id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+  ........
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">user_type_name</span>` (`<span style="color:#268bd2">user_type_name</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>
+) <span style="color:#268bd2">ENGINE</span>=<span style="color:#268bd2">InnoDB</span> <span style="color:#268bd2">AUTO_INCREMENT</span>=<span style="color:#2aa198;font-weight:bold">86</span> <span style="color:#859900">DEFAULT</span> <span style="color:#268bd2">CHARSET</span>=<span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span>=<span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">COMMENT</span>=<span style="color:#2aa198">&#39;群发消息表&#39;</span>;</code></pre></div>
+<p>单发表：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> `<span style="color:#268bd2">letter_record</span>` (
+  `<span style="color:#268bd2">id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#268bd2">AUTO_INCREMENT</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;主键&#39;</span>,
+  `<span style="color:#268bd2">company_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span>,
+  `<span style="color:#268bd2">letter_type_id</span>` <span style="color:#268bd2">tinyint</span>(<span style="color:#2aa198;font-weight:bold">3</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;消息类型&#39;</span>,
+  `<span style="color:#268bd2">letter_multiple_id</span>` <span style="color:#268bd2">tinyint</span>(<span style="color:#2aa198;font-weight:bold">3</span>) <span style="color:#268bd2">unsigned</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span>,
+  `<span style="color:#268bd2">user_type_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户类型 对应店铺那边member_type表 -1指定用户&#39;</span>,
+  `<span style="color:#268bd2">params_value</span>` <span style="color:#cb4b16">text</span> <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;参数值&#39;</span>,
+  `<span style="color:#268bd2">title</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">100</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;模板标题&#39;</span>,
+ ......
+  `<span style="color:#268bd2">user_id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;接受用户&#39;</span>,
+  `<span style="color:#268bd2">user_type_name</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">50</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span>,
+  ......
+  `<span style="color:#268bd2">created_at</span>` <span style="color:#859900">timestamp</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#859900">CURRENT_TIMESTAMP</span>,
+  `<span style="color:#268bd2">updated_at</span>` <span style="color:#859900">timestamp</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#859900">CURRENT_TIMESTAMP</span> <span style="color:#859900">ON</span> <span style="color:#859900">UPDATE</span> <span style="color:#859900">CURRENT_TIMESTAMP</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> (`<span style="color:#268bd2">id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">letter_template_index</span>` (`<span style="color:#268bd2">letter_template_id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+    ......
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">letter_type_id</span>` (`<span style="color:#268bd2">letter_type_id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>
+) <span style="color:#268bd2">ENGINE</span>=<span style="color:#268bd2">InnoDB</span> <span style="color:#268bd2">AUTO_INCREMENT</span>=<span style="color:#2aa198;font-weight:bold">162604</span> <span style="color:#859900">DEFAULT</span> <span style="color:#268bd2">CHARSET</span>=<span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span>=<span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">COMMENT</span>=<span style="color:#2aa198">&#39;单发消息表&#39;</span>;</code></pre></div>
+<p>首先这套设计方案在 单发和群发上做了区分，将消息来源分别 记录到了两张表中，并且又把消息的已读未读已冗余大哦了单反表中进行记录。（这显然不符合我们单一职责的设计原则）。</p>
+
+<h3 id="重构表结构设计方案">重构表结构设计方案：</h3>
+
+<p>大体思路就是 消息来源表1 只记录消息本身不区分单群发。</p>
+
+<p>然后再加一个 letter_read 消息已读表2 这表只记录已读取和用户已经删除的数据，未读数据不进行记录。</p>
+
+<p>由于 PHP主体服务 在各方面的业务触发处都会将触发数据记录到 lettert_record 这张表中，所以就拿 letter_record 表作为消息记录表，兼容之前的业务处理等。</p>
+
+<p>表 letter_read 结构如下：</p>
+
+<blockquote>
+<p>表 letter_record 基本不动。只需要添加一个，user_type_count 字段表示发送时用户类型对应当前的数量</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#859900">CREATE</span> <span style="color:#859900">TABLE</span> `<span style="color:#268bd2">letter_read</span>` (
+  `<span style="color:#268bd2">id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#268bd2">AUTO_INCREMENT</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;ID&#39;</span>,
+  `<span style="color:#268bd2">company_id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;企业ID&#39;</span>,
+  `<span style="color:#268bd2">customer_id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户ID&#39;</span>,
+  `<span style="color:#268bd2">customer_name</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">50</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户名&#39;</span>
+  `<span style="color:#268bd2">letter_record_id</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;消息ID&#39;</span>,
+  `<span style="color:#268bd2">letter_type_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;消息类型ID&#39;</span>,
+  `<span style="color:#268bd2">user_type_id</span>` <span style="color:#cb4b16">int</span>(<span style="color:#2aa198;font-weight:bold">10</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;0&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户类型 对应店铺那边member_type表 -1指定用户&#39;</span>,
+  `<span style="color:#268bd2">user_type_name</span>` <span style="color:#cb4b16">varchar</span>(<span style="color:#2aa198;font-weight:bold">50</span>) <span style="color:#cb4b16">CHARACTER</span> <span style="color:#859900">SET</span> <span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span> <span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198">&#39;&#39;</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;用户类型名称，全部用户、指定用户等&#39;</span>,
+  `<span style="color:#268bd2">deleted_at</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;删除时间&#39;</span>,
+  `<span style="color:#268bd2">created_at</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;创建时间&#39;</span>,
+  `<span style="color:#268bd2">updated_at</span>` <span style="color:#cb4b16">bigint</span>(<span style="color:#2aa198;font-weight:bold">20</span>) <span style="color:#859900">NOT</span> <span style="color:#859900">NULL</span> <span style="color:#859900">DEFAULT</span> <span style="color:#2aa198;font-weight:bold">0</span> <span style="color:#859900">COMMENT</span> <span style="color:#2aa198">&#39;更新时间&#39;</span>,
+  <span style="color:#859900">PRIMARY</span> <span style="color:#859900">KEY</span> (`<span style="color:#268bd2">id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">dix_company_id</span>` (`<span style="color:#268bd2">company_id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>,
+  ......
+  <span style="color:#859900">KEY</span> `<span style="color:#268bd2">dix_letter_record_id</span>` (`<span style="color:#268bd2">letter_record_id</span>`) <span style="color:#859900">USING</span> <span style="color:#268bd2">BTREE</span>
+) <span style="color:#268bd2">ENGINE</span>=<span style="color:#268bd2">InnoDB</span> <span style="color:#268bd2">AUTO_INCREMENT</span>=<span style="color:#2aa198;font-weight:bold">1</span> <span style="color:#859900">DEFAULT</span> <span style="color:#268bd2">CHARSET</span>=<span style="color:#268bd2">utf8mb4</span> <span style="color:#859900">COLLATE</span>=<span style="color:#268bd2">utf8mb4_general_ci</span> <span style="color:#859900">COMMENT</span>=<span style="color:#2aa198">&#39;消息已读表&#39;</span>;</code></pre></div>
+<hr />
+
+<h2 id="3-代码实现">3. 代码实现：</h2>
+
+<h3 id="第一版本-sql-原句联表-for-循环-多-io-版">第一版本 sql 原句联表 + for 循环 多 IO 版：</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">letterType</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">letterTypes</span> {
+        <span style="color:#93a1a1;font-style:italic">// 1 一次联表的sql查询
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">nums</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">s</span>.<span style="color:#268bd2">Store</span>.<span style="color:#268bd2">SelectLetterUnReadNums</span>(<span style="color:#268bd2">letterType</span>.<span style="color:#268bd2">ID</span>, <span style="color:#268bd2">userID</span>, <span style="color:#268bd2">userTypeID</span>)
+		<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+			<span style="color:#268bd2">s</span>.<span style="color:#268bd2">Logger</span>.<span style="color:#268bd2">Error</span>(<span style="color:#2aa198">&#34;GetMessageTypeList err.err:%v&#34;</span>, <span style="color:#268bd2">err</span>)
+			<span style="color:#268bd2">s</span>.<span style="color:#268bd2">RespOKCode</span>(<span style="color:#268bd2">c</span>, <span style="color:#268bd2">constant</span>.<span style="color:#268bd2">ErrServerError</span>, <span style="color:#268bd2">err</span>, <span style="color:#2aa198">&#34;&#34;</span>)
+			<span style="color:#859900">return</span>
+		}
+		<span style="color:#268bd2">GetRecordsItem</span> := <span style="color:#268bd2">protocol</span>.<span style="color:#268bd2">GetRecordsItem</span>{
+			<span style="color:#268bd2">LetterType</span>: <span style="color:#268bd2">protocol</span>.<span style="color:#268bd2">NewLetterType</span>(&amp;<span style="color:#268bd2">letterType</span>),
+			<span style="color:#268bd2">UnreadNum</span>:  <span style="color:#268bd2">nums</span>,
+		}
+		
+		<span style="color:#93a1a1;font-style:italic">// 2 第二次 联表的sql查询
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">letters</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">s</span>.<span style="color:#268bd2">Store</span>.<span style="color:#268bd2">SelectLetters</span>(<span style="color:#268bd2">letterType</span>.<span style="color:#268bd2">ID</span>, <span style="color:#268bd2">userID</span>, <span style="color:#268bd2">userTypeID</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">1</span>)
+		<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+			<span style="color:#268bd2">s</span>.<span style="color:#268bd2">Logger</span>.<span style="color:#268bd2">Error</span>(<span style="color:#2aa198">&#34;GetMessageTypeList err.err:%v&#34;</span>, <span style="color:#268bd2">err</span>)
+			<span style="color:#268bd2">s</span>.<span style="color:#268bd2">RespOKCode</span>(<span style="color:#268bd2">c</span>, <span style="color:#268bd2">constant</span>.<span style="color:#268bd2">ErrServerError</span>, <span style="color:#268bd2">err</span>, <span style="color:#2aa198">&#34;&#34;</span>)
+			<span style="color:#859900">return</span>
+		}
+		<span style="color:#859900">for</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">letter</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">letters</span> {
+			<span style="color:#268bd2">GetRecordsItem</span>.<span style="color:#268bd2">Item</span> = <span style="color:#268bd2">protocol</span>.<span style="color:#268bd2">NewLetterRecord</span>(&amp;<span style="color:#268bd2">letter</span>)
+
+		}
+		<span style="color:#268bd2">ret</span> = <span style="color:#cb4b16">append</span>(<span style="color:#268bd2">ret</span>, <span style="color:#268bd2">GetRecordsItem</span>)
+	}</code></pre></div>
+<p>其中 SelectLetterUnReadNums 方法包含了个 sql联表：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&#34;select count(1) from letter_record l left join letter_read r on l.letter_type_id=r.id and (l.user_id=? or l.user_type_id=? or l.user_type_id=0) and l.letter_type_id=? and l.user_id=r.customer_id and l.company_id=r.company_id where l.is_read=0 and r.id is null and (l.user_id=? or (l.user_id=0 and (l.user_type_id = ? or l.user_type_id = ?)))and l.letter_type_id = ?&#34;</pre></div>
+<p>其中 SelectLetters 方法也有一个sql如下自行体验：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&#34;select l.*,l.id&lt;=&gt;r.letter_record_id as is_read from letter_record as l  left join letter_read as r on l.id=r.letter_record_id and r.deleted_at=0 where (l.letter_type_id = ? and (l.user_id=0 and (l.user_type_id = ? or l.user_type_id=0))) or l.user_id = ? and l.status = 1 and r.deleted_at is null order by id desc limit ?,?&#34;</pre></div>
+<p>这一版实现上来看，从代码逻辑的可维护性和for 里面循环多IO来看都是不太友好的一版，so~ ，重构没的说。</p>
+
+<h3 id="第二版本-goroutine-并发执行多类型sql">第二版本 goroutine 并发执行多类型sql：</h3>
+
+<blockquote>
+<p>引入辅助工具包: &ldquo;&ldquo;golang.org/x/sync/errgroup&rdquo;&rdquo;</p>
+</blockquote>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">letterTypeIds</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int64</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">letterTypeList</span>))
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">letterTypeList</span> {
+		<span style="color:#268bd2">letterTypeIds</span>[<span style="color:#268bd2">i</span>] = <span style="color:#268bd2">v</span>.<span style="color:#268bd2">ID</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// todo: 考虑一次性查表 并加入 时间阶段 预期 30天内的
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">var</span> <span style="color:#268bd2">g</span> <span style="color:#268bd2">errgroup</span>.<span style="color:#268bd2">Group</span>
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span>, <span style="color:#268bd2">letterType</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">letterTypeList</span> {
+		<span style="color:#268bd2">i</span>, <span style="color:#268bd2">letterType</span> := <span style="color:#268bd2">i</span>, <span style="color:#268bd2">letterType</span>
+		<span style="color:#268bd2">g</span>.<span style="color:#268bd2">Go</span>(<span style="color:#859900">func</span>() <span style="color:#859900;font-weight:bold">error</span> {
+			<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">s</span>.<span style="color:#268bd2">getUnReadAndLastRecord</span>(<span style="color:#268bd2">letterType</span>, <span style="color:#268bd2">userID</span>, <span style="color:#268bd2">userTypeID</span>)
+			<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> == <span style="color:#859900;font-weight:bold">nil</span> {
+				<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>] = <span style="color:#268bd2">resp</span>
+			}
+			<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+		})
+	}
+
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> := <span style="color:#268bd2">g</span>.<span style="color:#268bd2">Wait</span>(); <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">s</span>.<span style="color:#268bd2">RespErr</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">constant</span>.<span style="color:#268bd2">ErrServerError</span>, <span style="color:#268bd2">err</span>)
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#268bd2">RespOK</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">result</span>)</code></pre></div>
+<p>这里只是优化了 把同步执行多个 消息类型去查询 改为异步并发执行。</p>
+
+<p>然后从设计上去掉了联表查询 由以前的一条联表 sql 拆成了两条简单 sql，2条变4条 sql。</p>
+
+<p>但是这里依旧还是有 for 循，依旧需要优化。</p>
+
+<p>只是刚好想到 errorgroug 捡起来用一下。</p>
+
+<h3 id="最终版-一次性批量查询多消息类型-从设计上去掉联表查询">最终版，一次性批量查询多消息类型，从设计上去掉联表查询。</h3>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">letterTypeIds</span> := <span style="color:#cb4b16">make</span>([]<span style="color:#859900;font-weight:bold">int64</span>, <span style="color:#cb4b16">len</span>(<span style="color:#268bd2">letterTypeList</span>))
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">letterTypeList</span> {
+		<span style="color:#268bd2">letterTypeIds</span>[<span style="color:#268bd2">i</span>] = <span style="color:#268bd2">v</span>.<span style="color:#268bd2">ID</span>
+		<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">ID</span> = <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">FormatInt</span>(<span style="color:#268bd2">v</span>.<span style="color:#268bd2">ID</span>, <span style="color:#2aa198;font-weight:bold">10</span>)
+		<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">Title</span> = <span style="color:#268bd2">v</span>.<span style="color:#268bd2">Title</span>
+		<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">Group</span> = <span style="color:#268bd2">v</span>.<span style="color:#268bd2">Group</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 获取未读数 与 最近一条消息
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">lastListMap</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">s</span>.<span style="color:#268bd2">getUnReadAndLastRecord</span>(<span style="color:#268bd2">letterTypeIds</span>, <span style="color:#268bd2">userID</span>, <span style="color:#268bd2">userTypeID</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">s</span>.<span style="color:#268bd2">RespErr</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">constant</span>.<span style="color:#268bd2">ErrServerError</span>, <span style="color:#268bd2">err</span>)
+		<span style="color:#859900">return</span>
+	}
+
+	<span style="color:#859900">for</span> <span style="color:#268bd2">i</span>, <span style="color:#268bd2">v</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">result</span> {
+		<span style="color:#268bd2">letterTypeID</span>, <span style="color:#268bd2">_</span> := <span style="color:#268bd2">strconv</span>.<span style="color:#268bd2">ParseInt</span>(<span style="color:#268bd2">v</span>.<span style="color:#268bd2">ID</span>, <span style="color:#2aa198;font-weight:bold">10</span>, <span style="color:#2aa198;font-weight:bold">64</span>)
+		<span style="color:#859900">if</span> <span style="color:#268bd2">_</span>, <span style="color:#268bd2">ok</span> := <span style="color:#268bd2">lastListMap</span>[<span style="color:#268bd2">letterTypeID</span>]; !<span style="color:#268bd2">ok</span> {
+			<span style="color:#268bd2">lastListMap</span>[<span style="color:#268bd2">letterTypeID</span>] = &amp;<span style="color:#268bd2">protocol</span>.<span style="color:#268bd2">GetMessageTypeListResp</span>{}
+		}
+		<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">UnreadNum</span> = <span style="color:#268bd2">lastListMap</span>[<span style="color:#268bd2">letterTypeID</span>].<span style="color:#268bd2">UnreadNum</span>
+		<span style="color:#268bd2">result</span>[<span style="color:#268bd2">i</span>].<span style="color:#268bd2">Item</span> = <span style="color:#268bd2">lastListMap</span>[<span style="color:#268bd2">letterTypeID</span>].<span style="color:#268bd2">Item</span>
+	}</code></pre></div>
+<p>这里其实 把所有的消息类型信息 查出来，进行一次性的批量查询，从而取消了 再 for 循环里面的反复的多次sql。</p>
+
+<h4 id="业务重构后设计说明">业务重构后设计说明：</h4>
+
+<ol>
+<li>对于群发给全部用户的消息，不做未读已读处理。</li>
+<li>对于未读标记，直接交给前端处理，后端只需要根据每次请求的分页对应的record_id 给出对应已读的 ids 集合即可。</li>
+<li>对于用户调用已读接口，直接在read插入对应消息数据即可，没读就不插入数据。</li>
+</ol>
+
+<p>方案一压测：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">开始启动  并发数:<span style="color:#2aa198;font-weight:bold">200</span> 请求数:<span style="color:#2aa198;font-weight:bold">1</span> 请求参数:
+<span style="color:#268bd2">request</span>:
+ <span style="color:#268bd2">form</span>:<span style="color:#268bd2">http</span>
+ <span style="color:#268bd2">url</span>:<span style="color:#268bd2">http</span>://<span style="color:#2aa198;font-weight:bold">127</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">1</span>:<span style="color:#2aa198;font-weight:bold">8081</span>/<span style="color:#268bd2">notice</span>-<span style="color:#268bd2">v1</span>/<span style="color:#268bd2">customers</span>/<span style="color:#268bd2">letter</span>/<span style="color:#268bd2">cover</span>/<span style="color:#268bd2">list</span>?<span style="color:#268bd2">company_id</span>=<span style="color:#2aa198;font-weight:bold">10018</span>&amp;<span style="color:#268bd2">user_id</span>=<span style="color:#2aa198;font-weight:bold">259394</span>&amp;<span style="color:#268bd2">user_type_id</span>=<span style="color:#2aa198;font-weight:bold">140</span>
+ <span style="color:#859900">method</span>:<span style="color:#859900">GET</span>
+ <span style="color:#268bd2">headers</span>:<span style="color:#859900">map</span>[<span style="color:#268bd2">Postman</span>-<span style="color:#268bd2">Token</span>:<span style="color:#268bd2">d8709940</span>-<span style="color:#268bd2">b501</span>-<span style="color:#2aa198;font-weight:bold">4</span><span style="color:#268bd2">e2c</span>-<span style="color:#2aa198;font-weight:bold">989</span><span style="color:#268bd2">f</span>-<span style="color:#2aa198;font-weight:bold">3</span><span style="color:#268bd2">bc3511c4285</span> <span style="color:#859900">cache</span>-<span style="color:#268bd2">control</span>:<span style="color:#859900">no</span>-<span style="color:#859900">cache</span>]
+ <span style="color:#859900">data</span>:
+ <span style="color:#268bd2">verify</span>:<span style="color:#268bd2">statusCode</span>
+ <span style="color:#268bd2">timeout</span>:<span style="color:#2aa198;font-weight:bold">30</span><span style="color:#268bd2">s</span>
+ <span style="color:#268bd2">debug</span>:<span style="color:#859900">false</span>
+
+
+
+─────┬───────┬───────┬───────┬────────┬────────┬────────┬────────┬────────
+ 耗时│ 并发数│ 成功数│ 失败数│   <span style="color:#268bd2">qps</span>  │最长耗时│最短耗时│平均耗时│ 错误码
+─────┼───────┼───────┼───────┼────────┼────────┼────────┼────────┼────────
+   <span style="color:#2aa198;font-weight:bold">1</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">2</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">3</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">4</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">5</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">6</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│    <span style="color:#2aa198;font-weight:bold">154</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">1757</span>.<span style="color:#2aa198;font-weight:bold">50</span>│  <span style="color:#2aa198;font-weight:bold">150</span>.<span style="color:#2aa198;font-weight:bold">37</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">57</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">154</span>
+   <span style="color:#2aa198;font-weight:bold">7</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">191</span>│    <span style="color:#2aa198;font-weight:bold">191</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">142</span>.<span style="color:#2aa198;font-weight:bold">83</span>│ <span style="color:#2aa198;font-weight:bold">6911</span>.<span style="color:#2aa198;font-weight:bold">20</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">7</span>.<span style="color:#2aa198;font-weight:bold">00</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">191</span>
+   <span style="color:#2aa198;font-weight:bold">8</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">198</span>│    <span style="color:#2aa198;font-weight:bold">198</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">123</span>.<span style="color:#2aa198;font-weight:bold">56</span>│ <span style="color:#2aa198;font-weight:bold">7911</span>.<span style="color:#2aa198;font-weight:bold">59</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">8</span>.<span style="color:#2aa198;font-weight:bold">09</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">198</span>
+   <span style="color:#2aa198;font-weight:bold">8</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">118</span>.<span style="color:#2aa198;font-weight:bold">78</span>│ <span style="color:#2aa198;font-weight:bold">8171</span>.<span style="color:#2aa198;font-weight:bold">76</span>│   <span style="color:#2aa198;font-weight:bold">83</span>.<span style="color:#2aa198;font-weight:bold">22</span>│    <span style="color:#2aa198;font-weight:bold">8</span>.<span style="color:#2aa198;font-weight:bold">42</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">200</span>
+
+
+*************************  结果 <span style="color:#268bd2">stat</span>  ****************************
+处理协程数量: <span style="color:#2aa198;font-weight:bold">200</span>
+请求总数（并发数*请求数 -<span style="color:#859900">c</span> * -<span style="color:#268bd2">n</span>）: <span style="color:#2aa198;font-weight:bold">200</span> 总请求时间: <span style="color:#2aa198;font-weight:bold">8</span>.<span style="color:#2aa198;font-weight:bold">181</span> 秒 <span style="color:#268bd2">successNum</span>: <span style="color:#2aa198;font-weight:bold">200</span> <span style="color:#268bd2">failureNum</span>: <span style="color:#2aa198;font-weight:bold">0</span>
+*************************  结果 <span style="color:#859900">end</span>   ****************************</code></pre></div>
+<p>方案二压测：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">开始启动  并发数:<span style="color:#2aa198;font-weight:bold">200</span> 请求数:<span style="color:#2aa198;font-weight:bold">1</span> 请求参数:
+<span style="color:#268bd2">request</span>:
+ <span style="color:#268bd2">form</span>:<span style="color:#268bd2">http</span>
+ <span style="color:#268bd2">url</span>:<span style="color:#268bd2">http</span>://<span style="color:#2aa198;font-weight:bold">127</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">1</span>:<span style="color:#2aa198;font-weight:bold">8081</span>/<span style="color:#268bd2">notice</span>-<span style="color:#268bd2">v1</span>/<span style="color:#268bd2">customers</span>/<span style="color:#268bd2">letter</span>/<span style="color:#268bd2">cover</span>/<span style="color:#268bd2">list</span>?<span style="color:#268bd2">company_id</span>=<span style="color:#2aa198;font-weight:bold">10018</span>&amp;<span style="color:#268bd2">user_id</span>=<span style="color:#2aa198;font-weight:bold">259394</span>&amp;<span style="color:#268bd2">user_type_id</span>=<span style="color:#2aa198;font-weight:bold">140</span>
+ <span style="color:#859900">method</span>:<span style="color:#859900">GET</span>
+ <span style="color:#268bd2">headers</span>:<span style="color:#859900">map</span>[<span style="color:#268bd2">Postman</span>-<span style="color:#268bd2">Token</span>:<span style="color:#268bd2">d8709940</span>-<span style="color:#268bd2">b501</span>-<span style="color:#2aa198;font-weight:bold">4</span><span style="color:#268bd2">e2c</span>-<span style="color:#2aa198;font-weight:bold">989</span><span style="color:#268bd2">f</span>-<span style="color:#2aa198;font-weight:bold">3</span><span style="color:#268bd2">bc3511c4285</span> <span style="color:#859900">cache</span>-<span style="color:#268bd2">control</span>:<span style="color:#859900">no</span>-<span style="color:#859900">cache</span>]
+ <span style="color:#859900">data</span>:
+ <span style="color:#268bd2">verify</span>:<span style="color:#268bd2">statusCode</span>
+ <span style="color:#268bd2">timeout</span>:<span style="color:#2aa198;font-weight:bold">30</span><span style="color:#268bd2">s</span>
+ <span style="color:#268bd2">debug</span>:<span style="color:#859900">false</span>
+
+
+
+─────┬───────┬───────┬───────┬────────┬────────┬────────┬────────┬────────
+ 耗时│ 并发数│ 成功数│ 失败数│   <span style="color:#268bd2">qps</span>  │最长耗时│最短耗时│平均耗时│ 错误码
+─────┼───────┼───────┼───────┼────────┼────────┼────────┼────────┼────────
+   <span style="color:#2aa198;font-weight:bold">1</span><span style="color:#268bd2">s</span>│     <span style="color:#2aa198;font-weight:bold">74</span>│     <span style="color:#2aa198;font-weight:bold">74</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│ <span style="color:#2aa198;font-weight:bold">3054</span>.<span style="color:#2aa198;font-weight:bold">09</span>│  <span style="color:#2aa198;font-weight:bold">103</span>.<span style="color:#2aa198;font-weight:bold">05</span>│   <span style="color:#2aa198;font-weight:bold">40</span>.<span style="color:#2aa198;font-weight:bold">23</span>│    <span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">33</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">74</span>
+   <span style="color:#2aa198;font-weight:bold">2</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">160</span>│    <span style="color:#2aa198;font-weight:bold">160</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">206</span>.<span style="color:#2aa198;font-weight:bold">48</span>│ <span style="color:#2aa198;font-weight:bold">1895</span>.<span style="color:#2aa198;font-weight:bold">35</span>│   <span style="color:#2aa198;font-weight:bold">40</span>.<span style="color:#2aa198;font-weight:bold">23</span>│    <span style="color:#2aa198;font-weight:bold">4</span>.<span style="color:#2aa198;font-weight:bold">84</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">160</span>
+   <span style="color:#2aa198;font-weight:bold">3</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">157</span>.<span style="color:#2aa198;font-weight:bold">95</span>│ <span style="color:#2aa198;font-weight:bold">2690</span>.<span style="color:#2aa198;font-weight:bold">15</span>│   <span style="color:#2aa198;font-weight:bold">40</span>.<span style="color:#2aa198;font-weight:bold">23</span>│    <span style="color:#2aa198;font-weight:bold">6</span>.<span style="color:#2aa198;font-weight:bold">33</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">200</span>
+
+
+*************************  结果 <span style="color:#268bd2">stat</span>  ****************************
+处理协程数量: <span style="color:#2aa198;font-weight:bold">200</span>
+请求总数（并发数*请求数 -<span style="color:#859900">c</span> * -<span style="color:#268bd2">n</span>）: <span style="color:#2aa198;font-weight:bold">200</span> 总请求时间: <span style="color:#2aa198;font-weight:bold">2</span>.<span style="color:#2aa198;font-weight:bold">718</span> 秒 <span style="color:#268bd2">successNum</span>: <span style="color:#2aa198;font-weight:bold">200</span> <span style="color:#268bd2">failureNum</span>: <span style="color:#2aa198;font-weight:bold">0</span>
+*************************  结果 <span style="color:#859900">end</span>   ****************************</code></pre></div>
+<p>方案三压测：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">开始启动  并发数:<span style="color:#2aa198;font-weight:bold">200</span> 请求数:<span style="color:#2aa198;font-weight:bold">1</span> 请求参数:
+<span style="color:#268bd2">request</span>:
+ <span style="color:#268bd2">form</span>:<span style="color:#268bd2">http</span>
+ <span style="color:#268bd2">url</span>:<span style="color:#268bd2">http</span>://<span style="color:#2aa198;font-weight:bold">127</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">0</span>.<span style="color:#2aa198;font-weight:bold">1</span>:<span style="color:#2aa198;font-weight:bold">8081</span>/<span style="color:#268bd2">notice</span>-<span style="color:#268bd2">v1</span>/<span style="color:#268bd2">customers</span>/<span style="color:#268bd2">letters</span>/<span style="color:#268bd2">cover</span>/<span style="color:#268bd2">list</span>?<span style="color:#268bd2">company_id</span>=<span style="color:#2aa198;font-weight:bold">10018</span>&amp;<span style="color:#268bd2">user_id</span>=<span style="color:#2aa198;font-weight:bold">259394</span>&amp;<span style="color:#268bd2">user_type_id</span>=<span style="color:#2aa198;font-weight:bold">140</span>
+ <span style="color:#859900">method</span>:<span style="color:#859900">GET</span>
+ <span style="color:#268bd2">headers</span>:<span style="color:#859900">map</span>[<span style="color:#268bd2">Postman</span>-<span style="color:#268bd2">Token</span>:<span style="color:#268bd2">d8709940</span>-<span style="color:#268bd2">b501</span>-<span style="color:#2aa198;font-weight:bold">4</span><span style="color:#268bd2">e2c</span>-<span style="color:#2aa198;font-weight:bold">989</span><span style="color:#268bd2">f</span>-<span style="color:#2aa198;font-weight:bold">3</span><span style="color:#268bd2">bc3511c4285</span> <span style="color:#859900">cache</span>-<span style="color:#268bd2">control</span>:<span style="color:#859900">no</span>-<span style="color:#859900">cache</span>]
+ <span style="color:#859900">data</span>:
+ <span style="color:#268bd2">verify</span>:<span style="color:#268bd2">statusCode</span>
+ <span style="color:#268bd2">timeout</span>:<span style="color:#2aa198;font-weight:bold">30</span><span style="color:#268bd2">s</span>
+ <span style="color:#268bd2">debug</span>:<span style="color:#859900">false</span>
+
+
+
+─────┬───────┬───────┬───────┬────────┬────────┬────────┬────────┬────────
+ 耗时│ 并发数│ 成功数│ 失败数│   <span style="color:#268bd2">qps</span>  │最长耗时│最短耗时│平均耗时│ 错误码
+─────┼───────┼───────┼───────┼────────┼────────┼────────┼────────┼────────
+   <span style="color:#2aa198;font-weight:bold">1</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">198</span>│    <span style="color:#2aa198;font-weight:bold">198</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">489</span>.<span style="color:#2aa198;font-weight:bold">54</span>│  <span style="color:#2aa198;font-weight:bold">986</span>.<span style="color:#2aa198;font-weight:bold">02</span>│   <span style="color:#2aa198;font-weight:bold">30</span>.<span style="color:#2aa198;font-weight:bold">75</span>│    <span style="color:#2aa198;font-weight:bold">2</span>.<span style="color:#2aa198;font-weight:bold">04</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">198</span>
+   <span style="color:#2aa198;font-weight:bold">1</span><span style="color:#268bd2">s</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│    <span style="color:#2aa198;font-weight:bold">200</span>│      <span style="color:#2aa198;font-weight:bold">0</span>│  <span style="color:#2aa198;font-weight:bold">482</span>.<span style="color:#2aa198;font-weight:bold">72</span>│  <span style="color:#2aa198;font-weight:bold">996</span>.<span style="color:#2aa198;font-weight:bold">62</span>│   <span style="color:#2aa198;font-weight:bold">30</span>.<span style="color:#2aa198;font-weight:bold">75</span>│    <span style="color:#2aa198;font-weight:bold">2</span>.<span style="color:#2aa198;font-weight:bold">07</span>│<span style="color:#2aa198;font-weight:bold">200</span>:<span style="color:#2aa198;font-weight:bold">200</span>
+
+
+*************************  结果 <span style="color:#268bd2">stat</span>  ****************************
+处理协程数量: <span style="color:#2aa198;font-weight:bold">200</span>
+请求总数（并发数*请求数 -<span style="color:#859900">c</span> * -<span style="color:#268bd2">n</span>）: <span style="color:#2aa198;font-weight:bold">200</span> 总请求时间: <span style="color:#2aa198;font-weight:bold">1</span>.<span style="color:#2aa198;font-weight:bold">014</span> 秒 <span style="color:#268bd2">successNum</span>: <span style="color:#2aa198;font-weight:bold">200</span> <span style="color:#268bd2">failureNum</span>: <span style="color:#2aa198;font-weight:bold">0</span>
+*************************  结果 <span style="color:#859900">end</span>   ****************************</code></pre></div>
+<p>以上只是本地外网简单测试，不具有严谨性。</p>
+
+<p>但是也能看出来 同样的并发数量都是200 ，差距一倍的耗时，因为大部分都是在等 IO。</p>
+
+<hr />
+
+<h2 id="总结">总结：</h2>
+
+<blockquote>
+<p>这种站内信消息系统，对于传统解决方案就是，每发一次消息就对应去推送给对应的目标用户，进行记录到表中。但是如果当你的用户量数量足够庞大的时候，在批量用户推送插入数据表的时候很吃数据库的IO的，导致表不停的加锁阻塞其他线程吃不到资源。</p>
+</blockquote>
+
+<ol>
+<li>利用用户端主动拉取消息列表时，采用被动查询（可能涉及多表）的方式能解决问题，如果发布消息端会有时间选择时也可以避免设计出定时任务的资源损耗，直接在查询时比较下发布时间即可。</li>
+<li>同样的业务逻辑设计方式在 电商中的 优惠券下发 场景也可以采用这种被动查询的方式。</li>
+</ol>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/%E4%B8%9A%E5%8A%A1%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1/">业务模块设计</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;text=Golang%e9%87%8d%e6%9e%84%e7%ab%99%e5%86%85%e4%bf%a1%e6%b6%88%e6%81%af%e7%b3%bb%e7%bb%9f%e4%b9%8b%e4%bc%98%e5%8c%96%e4%bb%a3%e7%a0%81%e8%ae%be%e8%ae%a1&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Golang%e9%87%8d%e6%9e%84%e7%ab%99%e5%86%85%e4%bf%a1%e6%b6%88%e6%81%af%e7%b3%bb%e7%bb%9f%e4%b9%8b%e4%bc%98%e5%8c%96%e4%bb%a3%e7%a0%81%e8%ae%be%e8%ae%a1" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Golang%e9%87%8d%e6%9e%84%e7%ab%99%e5%86%85%e4%bf%a1%e6%b6%88%e6%81%af%e7%b3%bb%e7%bb%9f%e4%b9%8b%e4%bc%98%e5%8c%96%e4%bb%a3%e7%a0%81%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;title=Golang%e9%87%8d%e6%9e%84%e7%ab%99%e5%86%85%e4%bf%a1%e6%b6%88%e6%81%af%e7%b3%bb%e7%bb%9f%e4%b9%8b%e4%bc%98%e5%8c%96%e4%bb%a3%e7%a0%81%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E9%2587%258D%25E6%259E%2584%25E7%25AB%2599%25E5%2586%2585%25E4%25BF%25A1%25E6%25B6%2588%25E6%2581%25AF%25E7%25B3%25BB%25E7%25BB%259F%25E4%25B9%258B%25E4%25BC%2598%25E5%258C%2596%25E4%25BB%25A3%25E7%25A0%2581%25E8%25AE%25BE%25E8%25AE%25A1%2f&amp;description=Golang%e9%87%8d%e6%9e%84%e7%ab%99%e5%86%85%e4%bf%a1%e6%b6%88%e6%81%af%e7%b3%bb%e7%bb%9f%e4%b9%8b%e4%bc%98%e5%8c%96%e4%bb%a3%e7%a0%81%e8%ae%be%e8%ae%a1" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%88%A9%E7%94%A8%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96ifelse%E5%92%8Cswitch/" data-toggle="tooltip" data-placement="top" title="Golang利用策略模式优化if…else和switch">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2020
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

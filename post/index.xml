@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sat, 29 Aug 2020 15:39:40 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 16 Sep 2020 22:10:53 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang重构站内信消息系统之优化代码设计</title>
+      <link>https://driverzhang.github.io/post/golang%E9%87%8D%E6%9E%84%E7%AB%99%E5%86%85%E4%BF%A1%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 16 Sep 2020 22:10:53 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E9%87%8D%E6%9E%84%E7%AB%99%E5%86%85%E4%BF%A1%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9F%E4%B9%8B%E4%BC%98%E5%8C%96%E4%BB%A3%E7%A0%81%E8%AE%BE%E8%AE%A1/</guid>
+      <description>&lt;h2 id=&#34;1-消息系统业务功能说明简介&#34;&gt;1. 消息系统业务功能说明简介：&lt;/h2&gt;
+
+&lt;p&gt;首先消息系统需求目的就是为了实现后台商家可以主动管理推送消息到对应相关用户，以及查看用户的业务被动触发消息。&lt;/p&gt;
+
+&lt;p&gt;其中包括，站内信的消息 与 微信公众号模板消息推送&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang利用策略模式优化if…else和switch</title>
