@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Wed, 16 Sep 2020 22:10:53 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 18 Sep 2020 23:29:07 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang函数内联优化</title>
+      <link>https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Fri, 18 Sep 2020 23:29:07 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/</guid>
+      <description>&lt;h2 id=&#34;内联优化背景&#34;&gt;内联优化背景：&lt;/h2&gt;
+
+&lt;p&gt;最近使用 onec.Do 对应 sync 的 once.go 文件的源码，发现在最近一年内发生了不小的变动，而且这模式的变动在多处被以相同的方法进行了优化，就是函数内联优化。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang重构站内信消息系统之优化代码设计</title>

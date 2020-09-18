@@ -230,6 +230,49 @@
           
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/">
+                <h2 class="post-title">Go语言核心36讲-040606程序实体</h2>
+                
+                  <h3 class="post-subtitle">
+                  程序实体之变量、类型推断
+                  </h3>
+                
+                
+              </a>
+
+              <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 8, 2018
+  
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  04.05.06 | 程序实体知识点汇总 04 程序实体哪些事（上） 问题1： 声明变量有几种方式  var :=  问题解析： 考点：  #### 1. 类型推断   简单地说，类型推断是一种编程语言在编译期自动解释表达式类型的能力。
+ var name = &#34;zhang&#34; 这里利用了 Go 语言自身的类型推断省去了 string 它只能用于对变量或常量的初始化。
+ #### 2. 短变量声明用法  知识扩展 1. ==Go 语言的类型推断可以带来哪些好处==？  通过使用 Go 语言的类型推断，而节省下来的键盘敲击次数几乎可以忽略不计。但它真正的好处往往体现在我们写代码之后的事情上， 比如代码的 重构。
+ 重构： 通常把“不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。 重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。
+package main import ( &#34;flag&#34; &#34;fmt&#34; ) func main() { var name = getTheFlag() flag.Parse() fmt.Printf(&#34;Hello, %v!\n&#34;, *name) } func getTheFlag() *string { return flag.
+                  <a href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2-040606%E7%A8%8B%E5%BA%8F%E5%AE%9E%E4%BD%93/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+                  
+                    <a href="https://driverzhang.github.io//tags/go%E8%AF%AD%E8%A8%80%E6%A0%B8%E5%BF%8336%E8%AE%B2/">Go语言核心36讲</a>&nbsp;
+                  
+                </div>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
                 <h2 class="post-title">高性能数据库集群：分库分表</h2>
                 
@@ -503,49 +546,6 @@ interfaces -&gt; nil</pre></div>
                     <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
                   
                     <a href="https://driverzhang.github.io//tags/%E6%A0%87%E5%87%86%E5%BA%93/">标准库</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/">
-                <h2 class="post-title">域名解析cname和A记录</h2>
-                
-                
-              </a>
-
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 6, 2018
-  
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h1 id="域名解析cname和a记录">域名解析cname和A记录</h1>
-
-<h2 id="什么是-cname">什么是 cname？</h2>
-
-<blockquote>
-<p>CNAME 被称为规范名字。这种记录允许您将多个名字映射到同一台计算机。 通常用于同时提供WWW和MAIL服务的计算机。例如，有一台计算机名为“r0WSPFSx58.”（A记录）。 它同时提供WWW和MAIL服务，为了便于用户访问服务。可以为该计算机设置两个别名（CNAME）：WWW和MAIL。</p>
-</blockquote>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90cname%E5%92%8Ca%E8%AE%B0%E5%BD%95/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
                   
                 </div>
               

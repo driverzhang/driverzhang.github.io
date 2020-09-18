@@ -5,21 +5,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Golang</title>
-  <meta property="og:title" content="Golang" />
-  <meta name="twitter:title" content="Golang" />
+  <title>代码优化</title>
+  <meta property="og:title" content="代码优化" />
+  <meta name="twitter:title" content="代码优化" />
   <meta name="author" content="Gopherzhang"/>
   <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://driverzhang.github.io/tags/golang/" />
+  <meta property="og:url" content="https://driverzhang.github.io/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Gopherzhang" />
 
   <meta name="generator" content="Hugo 0.48" />
-  <link rel="canonical" href="https://driverzhang.github.io/tags/golang/" />
-  <link rel="alternate" href="https://driverzhang.github.io/tags/golang/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="canonical" href="https://driverzhang.github.io/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/" />
+  <link rel="alternate" href="https://driverzhang.github.io/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/index.xml" type="application/rss+xml" title="Gopherzhang">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -170,7 +170,7 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Golang</h1>
+              <h1>#代码优化</h1>
               <hr class="small">
             </div>
           </div>
@@ -187,8 +187,8 @@
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/">
-                <h2 class="post-title">Golang 关于 nil 的认识</h2>
+              <a href="https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/">
+                <h2 class="post-title">Golang函数内联优化</h2>
 
                 
               </a>
@@ -197,7 +197,7 @@
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 17, 2018
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 18, 2020
   
   
   
@@ -207,168 +207,21 @@
               </p>
               <div class="post-entry">
                 
-                  <h1 id="golang-关于-nil-的认识">Golang 关于 nil 的认识</h1>
+                  <h2 id="内联优化背景">内联优化背景：</h2>
 
-<h2 id="1-什么是-nil">1. 什么是 nil ？</h2>
+<p>最近使用 onec.Do 对应 sync 的 once.go 文件的源码，发现在最近一年内发生了不小的变动，而且这模式的变动在多处被以相同的方法进行了优化，就是函数内联优化。</p>
 
-<p>大家都清楚，当你声明了一个变量 但却还并木优赋值时，golang中会自动给你的变量类型给一个对应的默认零值。这是每种类型对应的零值：</p>
-<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">bool      -&gt; false                              
-numbers -&gt; 0                                 
-string    -&gt; &#34;&#34;      
-
-pointers -&gt; nil
-slices -&gt; nil
-maps -&gt; nil
-channels -&gt; nil
-functions -&gt; nil
-interfaces -&gt; nil</pre></div>
 <p></p>
-                  <a href="https://driverzhang.github.io/post/golang-%E5%85%B3%E4%BA%8E-nil-%E7%9A%84%E8%AE%A4%E8%AF%86/" class="post-read-more">[Read More]</a>
+                  <a href="https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/" class="post-read-more">[Read More]</a>
                 
               </div>
 
               
                 <div class="blog-tags">
                   
-                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
+                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
                   
-                    <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/">
-                <h2 class="post-title">Golang 中对请求超时设置时间</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on August 16, 2018
-  
-  
-  
-</span>
-
-
-              </p>
-              <div class="post-entry">
-                
-                  <h1 id="golang-中对请求超时设置时间">Golang 中对请求超时设置时间</h1>
-
-<p>http中有Get/Post/PostForm方法</p>
-
-<p>可以通过http包中设置client 请求配置 ，然后通过client.Do方法实现请求</p>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/golang-%E4%B8%AD%E5%AF%B9%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6%E8%AE%BE%E7%BD%AE%E6%97%B6%E9%97%B4/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E6%A0%87%E5%87%86%E5%BA%93/">标准库</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/">
-                <h2 class="post-title">Golang自学路劲资料讲解</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on May 1, 2018
-  
-  
-  
-</span>
-
-
-              </p>
-              <div class="post-entry">
-                
-                  <h1 id="go语言-自学讲解与资料">Go语言 自学讲解与资料</h1>
-
-<blockquote>
-<p>简单说下自己情况，本人目前已有一年多开发经验（前端+后端nodejs）,再次基础上自学golang，并成功找到一家用 golang 的公司，下面开始表演真正的技术时候。</p>
-</blockquote>
-
-<p>各位老铁，如果你想转语言或者学习新的语言，我再这里墙裂推荐 Golang 既骚气又帅气 Google 亲儿子。</p>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/golang%E8%87%AA%E5%AD%A6%E8%B7%AF%E5%8A%B2%E8%B5%84%E6%96%99%E8%AE%B2%E8%A7%A3/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/">
-                <h2 class="post-title">iota实例情况</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 24, 2018
-  
-  
-  
-</span>
-
-
-              </p>
-              <div class="post-entry">
-                
-                  <h1 id="iota-的一个实例">iota 的一个实例</h1>
-
-<blockquote>
-<p>iota是golang语言的常量计数器,只能在常量的表达式中使用。</p>
-
-<p>iota在const关键字出现时将被重置为0(const内部的第一行之前)，const中每新增一行常量声明将使iota计数一次(iota可理解为const语句块中的行索引)。</p>
-</blockquote>
-
-<p>使用iota能简化定义，在定义枚举时很有用。</p>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/iota%E5%AE%9E%E4%BE%8B%E6%83%85%E5%86%B5/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">Golang</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E5%9F%BA%E7%A1%80/">基础</a>&nbsp;
+                    <a href="https://driverzhang.github.io//tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/">代码优化</a>&nbsp;
                   
                 </div>
               
@@ -376,15 +229,6 @@ interfaces -&gt; nil</pre></div>
             </article>
           
         </div>
-        
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/tags/golang/page/4/">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
       </div>
     </div>
@@ -415,7 +259,7 @@ interfaces -&gt; nil</pre></div>
           
           <li>
             
-            <a href="https://driverzhang.github.io/tags/golang/index.xml" title="RSS">
+            <a href="https://driverzhang.github.io/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/index.xml" title="RSS">
             
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>

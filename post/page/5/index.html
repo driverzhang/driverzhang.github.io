@@ -187,6 +187,44 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/">
+                <h2 class="post-title">Cassandra中的key</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on January 30, 2019
+  
+  
+  
+</span>
+
+
+              </p>
+              <div class="post-entry">
+                
+                  <p>最近在封装公司数据层操作，公司用的分布式菲关系数据库 cassandra，对于go语言关于cassandra的第三方库主要有一下两个：</p>
+
+<p></p>
+                  <a href="https://driverzhang.github.io/post/cassandra%E4%B8%AD%E7%9A%84key/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/cassandra/">cassandra</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/%E9%80%89%E6%8B%A9mqtt%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85/">
                 <h2 class="post-title">mqtt服务安装</h2>
 
@@ -414,52 +452,6 @@
                 <div class="blog-tags">
                   
                     <a href="https://driverzhang.github.io//tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/%E9%80%9A%E8%BF%87channel%E6%8E%A7%E5%88%B6goroutine%E6%95%B0%E9%87%8F%E5%BD%A2%E6%88%90%E5%8D%8F%E7%A8%8B%E6%B1%A0/">
-                <h2 class="post-title">通过channel控制goroutine数量形成协程池</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    还需要多加强并发编程能力
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 31, 2018
-  
-  
-  
-</span>
-
-
-              </p>
-              <div class="post-entry">
-                
-                  最近业务上需要利用大量开goroutine去并发拉取数据，但是不能无限制的 for 数据长度来开启那么多的goroutine，就要写个协程池来协调，通过channel来限制goroutine的开启数量。
-业务需求： 需要生产者去每日定时拉去第三方平台数据，放入到channel缓存通道中（类型存入消息队列），消费者需要开goroutine并发的进行拉取第三方平台数据整合后再插入表中，其中goroutine开启数与channel缓存接受到的数据之间形成了协程池，从而通过了channel控制goroutine开启的数据（原理就是带缓存channel不够时会阻塞，当缓存满时也会阻塞等待消费）
-代码详解：  首先声明相关变量常量等数据：  假设拉取数据可达到10W条：
-const ( channelBufferSize = 1000 // channel 缓存数  goSize = 100 // 协程开启 最大数  ) // 声明一个用于定义channel的结构体 type Job struct { BucketName string // 存放 bucket 名称  Count int // 计算 重试次数 } // 全局声明该 带缓存的 channel var channlBucket = make(chan *Job, channelBufferSize)  构建生产者:
-func Producer() (err error) { // 获取第三方业务相关数据,用于消费者函数调用的参数 bucketNameList, err := qiniu.GetV2sBucketNameList() if err !
-                  <a href="https://driverzhang.github.io/post/%E9%80%9A%E8%BF%87channel%E6%8E%A7%E5%88%B6goroutine%E6%95%B0%E9%87%8F%E5%BD%A2%E6%88%90%E5%8D%8F%E7%A8%8B%E6%B1%A0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/goroutine/">goroutine</a>&nbsp;
                   
                 </div>
               
