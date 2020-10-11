@@ -105,7 +105,7 @@
     <item>
       <title>Golang</title>
       <link>https://driverzhang.github.io/tags/golang/</link>
-      <pubDate>Mon, 05 Oct 2020 23:53:35 +0800</pubDate>
+      <pubDate>Sun, 11 Oct 2020 21:16:09 +0800</pubDate>
       
       <guid>https://driverzhang.github.io/tags/golang/</guid>
       <description></description>
@@ -202,6 +202,15 @@
     </item>
     
     <item>
+      <title>Mq</title>
+      <link>https://driverzhang.github.io/tags/mq/</link>
+      <pubDate>Sun, 11 Oct 2020 21:16:09 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/tags/mq/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Mysql</title>
       <link>https://driverzhang.github.io/tags/mysql/</link>
       <pubDate>Thu, 11 Jun 2020 22:56:29 +0800</pubDate>
@@ -216,6 +225,15 @@
       <pubDate>Thu, 01 Mar 2018 19:21:50 +0000</pubDate>
       
       <guid>https://driverzhang.github.io/tags/node.js/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rabbitmq</title>
+      <link>https://driverzhang.github.io/tags/rabbitmq/</link>
+      <pubDate>Sun, 11 Oct 2020 21:16:09 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/tags/rabbitmq/</guid>
       <description></description>
     </item>
     

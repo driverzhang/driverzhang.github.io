@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Rabbitmq实战golang实现</title>
+  <meta property="og:title" content="Rabbitmq实战golang实现" />
+  <meta name="twitter:title" content="Rabbitmq实战golang实现" />
+  <meta name="description" content="1. Rabbitmq 架构及原理
+
+
+消息队列，又叫做消息中间件。是指用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息队列模型，可以在分布式环境下扩展进程的通信（维基百科）
+
+
+">
+  <meta property="og:description" content="1. Rabbitmq 架构及原理
+
+
+消息队列，又叫做消息中间件。是指用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息队列模型，可以在分布式环境下扩展进程的通信（维基百科）
+
+
+">
+  <meta name="twitter:description" content="1. Rabbitmq 架构及原理
+
+
+消息队列，又叫做消息中间件。是指用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息队列模型，可以在分布式环境下扩展进程的通信（维基百科）
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/rabbitmq%E5%AE%9E%E6%88%98golang%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/rabbitmq%E5%AE%9E%E6%88%98golang%E5%AE%9E%E7%8E%B0/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Rabbitmq实战golang实现</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 11, 2020
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="1-rabbitmq-架构及原理">1. Rabbitmq 架构及原理</h2>
+
+<blockquote>
+<p>消息队列，又叫做消息中间件。是指用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息队列模型，可以在分布式环境下扩展进程的通信（维基百科）</p>
+</blockquote>
+
+<p></p>
+
+<h4 id="mq-的作用">MQ 的作用：</h4>
+
+<ol>
+<li>实现异步通信</li>
+<li>系统解耦</li>
+<li>流量削峰</li>
+</ol>
+
+<h4 id="mq-带来的问题">MQ 带来的问题：</h4>
+
+<ol>
+<li>引入消息队列带来的延迟问题</li>
+<li>增加了系统的复杂度</li>
+<li>可能产生数据不一致的问题</li>
+</ol>
+
+<blockquote>
+<p>消息丢失和消息重复消费的问题。一旦消息没有被正确地消费，就会带来数据不一致性的问题。</p>
+</blockquote>
+
+<p>RabbitMQ 是一个流行的开源消息队列系统，是AMQP（高级消息队列协议）标准的实现。</p>
+
+<blockquote>
+<p>关于AMQP 协议具体文档参考 <a href="https://www.amqp.org/sites/amqp.org/files/amqp.pdf">https://www.amqp.org/sites/amqp.org/files/amqp.pdf</a></p>
+</blockquote>
+
+<p>由以高性能、健壮、可伸缩性出名的Erlang语言开发，并继承了这些优点。rabbitmq简单架构如下：</p>
+
+<p><img src="http://www.topgoer.com/static/9.3/1.png" alt="架构示意图" /></p>
+
+<ul>
+<li><p>Broker（代理/中介）:  RabbitMQ 用于收发消息的服务，默认是 5672 的端口。</p></li>
+
+<li><p>Virtual Host（vhost）:虚拟主机；标识一批交换机、消息队列和相关对象。</p></li>
+</ul>
+
+<p>虚拟主机是共享相同的身份认证和加密环境的独立服务器域。每个vhost本质上就是一个mini版的RabbitMQ服务器，拥有自己的队列、交换器、绑定和权限机制。vhost是AMQP概念的基础，必须在链接时指定，RabbitMQ默认的vhost是 /。</p>
+
+<ul>
+<li><p>Exchange：交换器，用来接收生产者发送的消息并将这些消息路由给服务器中的队列。</p></li>
+
+<li><p>Queue：消息队列，用来保存消息直到发送给消费者。它是消息的容器，也是消息的终点。一个消息可投入一个或多个队列。</p></li>
+
+<li><p>Banding：绑定，用于消息队列和交换机之间的关联。</p></li>
+</ul>
+
+<p>一个绑定就是基于路由键将交换机和消息队列连接起来的路由规则，所以可以将交换器理解成一个由绑定构成的路由表。</p>
+
+<ul>
+<li>Channel：信道，多路复用连接中的一条独立的双向数据流通道。</li>
+</ul>
+
+<p>直接创建和释放 TCP 长连接的话，对于 Broker 来说肯定会造成很大的性能损耗，因为 TCP 连接是非常宝贵的资源，创建和释放也要消耗时间。所以在 AMQP 里面引入了 Channel 的概念，它是一个虚拟的连接</p>
+
+<ul>
+<li>Connection：无论是生产者发送消息，还是消费者接收消息，都必须要跟 Broker 之间建立一个连接，这个连接是一个 TCP 的长连接。</li>
+</ul>
+
+<hr />
+
+<h2 id="2-rabbitmq的六种工作模式">2. RabbitMQ的六种工作模式：</h2>
+
+<blockquote>
+<p><a href="https://www.rabbitmq.com/getstarted.html">https://www.rabbitmq.com/getstarted.html</a> 官方网站有详细示意图</p>
+</blockquote>
+
+<ol>
+<li>simple简单模式</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/python-one-overall.png" alt="" /></p>
+
+<ol>
+<li>work工作模式</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/python-two.png" alt="" /></p>
+
+<ol>
+<li>Publish/Subscribe 发布订阅模式（fanout）</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/bindings.png" alt="" /></p>
+
+<ol>
+<li>Routing 路由模式 (direct)</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/direct-exchange.png" alt="" /></p>
+
+<ol>
+<li>Topics 主题模式（路由模式的一种）(topic)</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/python-five.png" alt="" /></p>
+
+<ol>
+<li>RPC</li>
+</ol>
+
+<p><img src="https://www.rabbitmq.com/img/tutorials/python-six.png" alt="" /></p>
+
+<ol>
+<li>Publisher Confirms 发布确认</li>
+</ol>
+
+<p>具体demo参考如下地址：</p>
+
+<p><a href="http://www.topgoer.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/go%E6%93%8D%E4%BD%9CRabbitMQ/"> go操作RabbitMQ</a></p>
+
+<hr />
+
+<h2 id="3-延迟队列实现-基于死信队列转发">3. 延迟队列实现（基于死信队列转发）</h2>
+
+<h3 id="3-1-消息过期时间">3.1 消息过期时间：</h3>
+
+<p>有两种设置方式：</p>
+
+<ol>
+<li>通过队列属性设置消息过期时间，所有队列中的消息超过时间未被消费时，都会过期。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">QueueDeclare</span>(
+		<span style="color:#268bd2">queueName</span>,
+		<span style="color:#859900;font-weight:bold">true</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>, <span style="color:#93a1a1;font-style:italic">// 队列解锁
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#268bd2">amqp</span>.<span style="color:#268bd2">Table</span>{
+			<span style="color:#2aa198">&#34;x-message-ttl&#34;</span>: <span style="color:#2aa198;font-weight:bold">4000</span>, <span style="color:#93a1a1;font-style:italic">// 在队列中声明ttl 超时时间 单位为毫秒级，类型为int
+</span><span style="color:#93a1a1;font-style:italic"></span>		},
+	)</code></pre></div>
+<ol>
+<li>设置单条消息的过期时间，在发送消息的时候指定消息属性（推荐使用消息超时）。</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">expiration</span> := <span style="color:#2aa198">&#34;4000&#34;</span> <span style="color:#93a1a1;font-style:italic">// 4S 4000MS
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">err</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">Publish</span>(
+		<span style="color:#2aa198">&#34;&#34;</span>,
+		<span style="color:#268bd2">queueName</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#268bd2">amqp</span>.<span style="color:#268bd2">Publishing</span>{
+			<span style="color:#268bd2">ContentType</span>: <span style="color:#2aa198">&#34;text/plain&#34;</span>,
+			<span style="color:#268bd2">Body</span>:        []<span style="color:#cb4b16">byte</span>(<span style="color:#268bd2">message</span>),
+			<span style="color:#268bd2">Expiration</span>:  <span style="color:#268bd2">expiration</span>, <span style="color:#93a1a1;font-style:italic">// push 时 在消息本体上设置expiration超时时间，单位为毫秒级别 类型为 string
+</span><span style="color:#93a1a1;font-style:italic"></span>		})</code></pre></div>
+<h3 id="3-2-死信队列">3.2 死信队列：</h3>
+
+<blockquote>
+<p>消息在某些情况下会变成死信（Dead Letter）</p>
+
+<p>队列在创建的时候可以指定一个死信交换机 DLX（Dead Letter Exchange）。</p>
+
+<p>死信交换机绑定的队列被称为死信队列 DLQ（Dead Letter Queue），DLX 实际上也是普通的交换机，DLQ 也是普通的队列。</p>
+</blockquote>
+
+<h4 id="三种情况会让消息变成死信">三种情况会让消息变成死信：</h4>
+
+<ul>
+<li>消息被消费者拒绝并且未设置重回队列：(NACK || Reject ) &amp;&amp; requeue== false</li>
+<li>消息过期</li>
+<li>队列达到最大长度，超过了 Max length（消息数）或者 Max length bytes（字节数），最先入队的消息会被发送到 DLX。
+&gt; 关于这个队里的默认长度，官方没有给出，网上找了下有说是没有设置就动态增长不限。也就是根据你机器的配置情况了。</li>
+</ul>
+
+<p>死信队列声明如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">QueueDeclare</span>(
+		<span style="color:#268bd2">queueName</span>, <span style="color:#93a1a1;font-style:italic">// 这里就是将一个队列声明为如下死信交换机的死信队列
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900;font-weight:bold">true</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>, 
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#268bd2">amqp</span>.<span style="color:#268bd2">Table</span>{
+			<span style="color:#2aa198">&#34;x-dead-letter-exchange&#34;</span>:    <span style="color:#268bd2">dlxExchange</span>, <span style="color:#93a1a1;font-style:italic">// 声明当前队列绑定的 死信交换机
+</span><span style="color:#93a1a1;font-style:italic"></span>		},
+	)</code></pre></div>
+<h3 id="3-3-延迟队列demo">3.3 延迟队列demo：</h3>
+
+<p><img src="https://pic4.zhimg.com/80/v2-f11a9021dd0f55ae75a60a2ef083e4db_720w.jpg" alt="延迟队列原理示意图" /></p>
+
+<p>pusher:</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">RabbitMQ</span>) <span style="color:#268bd2">PublishDelayQueue</span>(<span style="color:#268bd2">queue</span>, <span style="color:#268bd2">message</span>, <span style="color:#268bd2">dlxExchange</span>, <span style="color:#268bd2">routing</span>, <span style="color:#268bd2">expiration</span> <span style="color:#859900;font-weight:bold">string</span>) <span style="color:#859900;font-weight:bold">error</span> {
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">r</span>.<span style="color:#268bd2">CloseMq</span>()
+	<span style="color:#268bd2">queueName</span> := <span style="color:#268bd2">queue</span> + <span style="color:#2aa198">&#34;_delay&#34;</span>
+	<span style="color:#268bd2">_</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">QueueDeclare</span>(
+		<span style="color:#268bd2">queueName</span>,
+		<span style="color:#859900;font-weight:bold">true</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>, <span style="color:#93a1a1;font-style:italic">// 队列解锁
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#268bd2">amqp</span>.<span style="color:#268bd2">Table</span>{
+			<span style="color:#2aa198">&#34;x-dead-letter-exchange&#34;</span>:    <span style="color:#268bd2">dlxExchange</span>, <span style="color:#93a1a1;font-style:italic">// 声明当前队列绑定的 死信交换机
+</span><span style="color:#93a1a1;font-style:italic"></span>			<span style="color:#2aa198">&#34;x-dead-letter-routing-key&#34;</span>: <span style="color:#268bd2">routing</span>,     <span style="color:#93a1a1;font-style:italic">// routing 模式路由名
+</span><span style="color:#93a1a1;font-style:italic"></span>		},
+	)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 注入消息 注册路由 routingKey
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">Publish</span>(
+		<span style="color:#2aa198">&#34;&#34;</span>,
+		<span style="color:#268bd2">queueName</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#268bd2">amqp</span>.<span style="color:#268bd2">Publishing</span>{
+			<span style="color:#268bd2">ContentType</span>: <span style="color:#2aa198">&#34;text/plain&#34;</span>,
+			<span style="color:#268bd2">Body</span>:        []<span style="color:#cb4b16">byte</span>(<span style="color:#268bd2">message</span>),
+			<span style="color:#268bd2">Expiration</span>:  <span style="color:#268bd2">expiration</span>,
+		})
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;push messag %s\n&#34;</span>, <span style="color:#268bd2">message</span>)
+	<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+}</code></pre></div>
+<p>Consumer：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#859900">func</span> (<span style="color:#268bd2">r</span> *<span style="color:#268bd2">RabbitMQ</span>) <span style="color:#268bd2">ConsumeDelayQueue</span>(<span style="color:#268bd2">queueName</span>, <span style="color:#268bd2">dlxExchange</span>, <span style="color:#268bd2">routing</span> <span style="color:#859900;font-weight:bold">string</span>, <span style="color:#268bd2">f</span> <span style="color:#859900">func</span>(<span style="color:#859900">interface</span>{})) <span style="color:#859900;font-weight:bold">error</span> {
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">r</span>.<span style="color:#268bd2">CloseMq</span>()
+	<span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">ExchangeDeclare</span>(
+		<span style="color:#268bd2">dlxExchange</span>,
+		<span style="color:#268bd2">RoutingKind</span>, <span style="color:#93a1a1;font-style:italic">// 交换机类型 路由模式接收
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900;font-weight:bold">true</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">nil</span>,
+	)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 声明 死信队列（用于与死信交换机绑定）
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">q</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">QueueDeclare</span>(
+		<span style="color:#268bd2">queueName</span>,
+		<span style="color:#859900;font-weight:bold">true</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">nil</span>,
+	)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 绑定队列到 exchange 中
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">QueueBind</span>(
+		<span style="color:#268bd2">q</span>.<span style="color:#268bd2">Name</span>,
+		<span style="color:#268bd2">routing</span>,
+		<span style="color:#268bd2">dlxExchange</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">nil</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#93a1a1;font-style:italic">// 消费消息
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">data</span>, <span style="color:#268bd2">err</span> := <span style="color:#268bd2">r</span>.<span style="color:#268bd2">channel</span>.<span style="color:#268bd2">Consume</span>(
+		<span style="color:#268bd2">q</span>.<span style="color:#268bd2">Name</span>,
+		<span style="color:#2aa198">&#34;&#34;</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">false</span>,
+		<span style="color:#859900;font-weight:bold">nil</span>,
+	)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+	}
+
+	<span style="color:#268bd2">forever</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#859900;font-weight:bold">bool</span>)
+	<span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+		<span style="color:#859900">for</span> <span style="color:#268bd2">d</span> := <span style="color:#859900">range</span> <span style="color:#268bd2">data</span> {
+			<span style="color:#268bd2">fmt</span>.<span style="color:#268bd2">Printf</span>(<span style="color:#2aa198">&#34;Received a message: %s\n&#34;</span>, <span style="color:#268bd2">d</span>.<span style="color:#268bd2">Body</span>)
+			<span style="color:#268bd2">f</span>(<span style="color:#268bd2">d</span>.<span style="color:#268bd2">Body</span>)
+		}
+	}()
+	&lt;-<span style="color:#268bd2">forever</span>
+	<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+}</code></pre></div>
+<hr />
+
+<h2 id="参考">参考：</h2>
+
+<p><a href="https://www.cnblogs.com/qlsem/p/11538340.html">RabbitMQ工作模型与基本原理</a></p>
+
+<p><a href="https://blog.csdn.net/vipshop_fin_dev/article/details/81612935?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param">rabbitmq消息队列原理</a></p>
+
+<p><a href="http://www.topgoer.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/go%E6%93%8D%E4%BD%9CRabbitMQ/"> go操作RabbitMQ</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/mq/">mq</a>&nbsp;
+            
+              <a href="https://driverzhang.github.io//tags/rabbitmq/">rabbitmq</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f&amp;text=Rabbitmq%e5%ae%9e%e6%88%98golang%e5%ae%9e%e7%8e%b0&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f&amp;title=Rabbitmq%e5%ae%9e%e6%88%98golang%e5%ae%9e%e7%8e%b0" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f&amp;title=Rabbitmq%e5%ae%9e%e6%88%98golang%e5%ae%9e%e7%8e%b0" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f&amp;title=Rabbitmq%e5%ae%9e%e6%88%98golang%e5%ae%9e%e7%8e%b0" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2frabbitmq%25E5%25AE%259E%25E6%2588%2598golang%25E5%25AE%259E%25E7%258E%25B0%2f&amp;description=Rabbitmq%e5%ae%9e%e6%88%98golang%e5%ae%9e%e7%8e%b0" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/go%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%92%8C%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5demo/" data-toggle="tooltip" data-placement="top" title="Go语言函数和最佳实践demo">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2020
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

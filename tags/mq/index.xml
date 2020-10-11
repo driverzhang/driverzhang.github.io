@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mq on Gopherzhang</title>
+    <link>https://driverzhang.github.io/tags/mq/</link>
+    <description>Recent content in Mq on Gopherzhang</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <copyright>All rights reserved 2016 - 2018</copyright>
+    <lastBuildDate>Sun, 11 Oct 2020 21:16:09 +0800</lastBuildDate>
+    
+	<atom:link href="https://driverzhang.github.io/tags/mq/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rabbitmq实战golang实现</title>
+      <link>https://driverzhang.github.io/post/rabbitmq%E5%AE%9E%E6%88%98golang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Sun, 11 Oct 2020 21:16:09 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/rabbitmq%E5%AE%9E%E6%88%98golang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>&lt;h2 id=&#34;1-rabbitmq-架构及原理&#34;&gt;1. Rabbitmq 架构及原理&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;消息队列，又叫做消息中间件。是指用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息队列模型，可以在分布式环境下扩展进程的通信（维基百科）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
