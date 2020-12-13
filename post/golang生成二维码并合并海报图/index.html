@@ -202,7 +202,7 @@
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on March 2, 2020
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on December 13, 2020
   
   
   
@@ -498,11 +498,54 @@
 		<span style="color:#268bd2">t</span>.<span style="color:#268bd2">Fatal</span>(<span style="color:#268bd2">err</span>)
 	}
 	<span style="color:#268bd2">t</span>.<span style="color:#268bd2">Log</span>(<span style="color:#268bd2">addr</span>)</code></pre></div>
-<p><img src="https://raw.githubusercontent.com/wiki/driverzhang/image-storage/1.jpg" alt="test-image" /></p>
-
 <p>完整代码可见地址如下：</p>
 
 <p><a href="https://github.com/driverzhang/golang-qrcode">https://github.com/driverzhang/golang-qrcode</a></p>
+
+<h2 id="转折">转折：</h2>
+
+<p>由于换了家公司，遇见一个功能要求后端渲染分享图生成分享海报，要求更为复杂数据和模式变的多了些，以上的代码库可能就显得力不从心</p>
+
+<p>这里直接给出 更好的解决方案，换个三方库吧：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">github.com/fogleman/gg</pre></div>
+<p>没错这个库实现的功能非常丰富，即可切圆形头像，也能任意嵌入图片和数据并且压缩调整你的分享图样式。</p>
+
+<p>实例代码如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-golang" data-lang="golang"><span style="color:#93a1a1;font-style:italic">// DrawCircleImg 头像圆图
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">DrawCircleImg</span>(<span style="color:#268bd2">im</span> <span style="color:#268bd2">image</span>.<span style="color:#268bd2">Image</span>) (<span style="color:#268bd2">image</span>.<span style="color:#268bd2">Image</span>, <span style="color:#859900;font-weight:bold">error</span>) {
+	<span style="color:#268bd2">loadStart</span> := <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>()
+	<span style="color:#859900">defer</span> <span style="color:#859900">func</span>() {
+		<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;生成圆头像耗时: %v\n&#34;</span>, <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>().<span style="color:#268bd2">Sub</span>(<span style="color:#268bd2">loadStart</span>).<span style="color:#268bd2">Milliseconds</span>())
+	}()
+	<span style="color:#268bd2">b</span> := <span style="color:#268bd2">im</span>.<span style="color:#268bd2">Bounds</span>()
+	<span style="color:#268bd2">w</span> := <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">b</span>.<span style="color:#268bd2">Dx</span>())
+	<span style="color:#268bd2">h</span> := <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">b</span>.<span style="color:#268bd2">Dy</span>())
+	<span style="color:#268bd2">dc</span> := <span style="color:#268bd2">gg</span>.<span style="color:#268bd2">NewContext</span>(<span style="color:#cb4b16">int</span>(<span style="color:#268bd2">w</span>), <span style="color:#cb4b16">int</span>(<span style="color:#268bd2">h</span>))
+
+	<span style="color:#268bd2">r</span> := <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">w</span> / <span style="color:#2aa198;font-weight:bold">2</span>) <span style="color:#93a1a1;font-style:italic">// 半径
+</span><span style="color:#93a1a1;font-style:italic"></span>
+	<span style="color:#268bd2">dc</span>.<span style="color:#268bd2">DrawRoundedRectangle</span>(<span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#268bd2">w</span>, <span style="color:#268bd2">h</span>, <span style="color:#268bd2">r</span>)
+	<span style="color:#268bd2">dc</span>.<span style="color:#268bd2">Clip</span>()
+	<span style="color:#268bd2">dc</span>.<span style="color:#268bd2">DrawImage</span>(<span style="color:#268bd2">im</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">0</span>)
+	<span style="color:#859900">return</span> <span style="color:#268bd2">dc</span>.<span style="color:#268bd2">Image</span>(), <span style="color:#859900;font-weight:bold">nil</span>
+}
+
+
+<span style="color:#93a1a1;font-style:italic">// ScaleImage 缩放图片
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">ScaleImage</span>(<span style="color:#268bd2">image</span> <span style="color:#268bd2">image</span>.<span style="color:#268bd2">Image</span>, <span style="color:#268bd2">x</span>, <span style="color:#268bd2">y</span> <span style="color:#859900;font-weight:bold">int</span>) <span style="color:#268bd2">image</span>.<span style="color:#268bd2">Image</span> {
+	<span style="color:#268bd2">loadStart</span> := <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>()
+	<span style="color:#859900">defer</span> <span style="color:#859900">func</span>() {
+		<span style="color:#268bd2">log</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;缩放耗时: %v\n&#34;</span>, <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Now</span>().<span style="color:#268bd2">Sub</span>(<span style="color:#268bd2">loadStart</span>).<span style="color:#268bd2">Milliseconds</span>())
+	}()
+	<span style="color:#268bd2">w</span> := <span style="color:#268bd2">image</span>.<span style="color:#268bd2">Bounds</span>().<span style="color:#268bd2">Size</span>().<span style="color:#268bd2">X</span>
+	<span style="color:#268bd2">h</span> := <span style="color:#268bd2">image</span>.<span style="color:#268bd2">Bounds</span>().<span style="color:#268bd2">Size</span>().<span style="color:#268bd2">Y</span>
+	<span style="color:#268bd2">dc</span> := <span style="color:#268bd2">gg</span>.<span style="color:#268bd2">NewContext</span>(<span style="color:#268bd2">x</span>, <span style="color:#268bd2">y</span>)
+	<span style="color:#859900">var</span> <span style="color:#268bd2">ax</span> <span style="color:#859900;font-weight:bold">float64</span> = <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">x</span>) / <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">w</span>)
+	<span style="color:#859900">var</span> <span style="color:#268bd2">ay</span> <span style="color:#859900;font-weight:bold">float64</span> = <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">y</span>) / <span style="color:#cb4b16">float64</span>(<span style="color:#268bd2">h</span>)
+	<span style="color:#268bd2">dc</span>.<span style="color:#268bd2">Scale</span>(<span style="color:#268bd2">ax</span>, <span style="color:#268bd2">ay</span>)
+	<span style="color:#268bd2">dc</span>.<span style="color:#268bd2">DrawImage</span>(<span style="color:#268bd2">image</span>, <span style="color:#2aa198;font-weight:bold">0</span>, <span style="color:#2aa198;font-weight:bold">0</span>)
+	<span style="color:#859900">return</span> <span style="color:#268bd2">dc</span>.<span style="color:#268bd2">Image</span>()
+}</code></pre></div>
 
         
           <div class="blog-tags">
@@ -601,13 +644,9 @@
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://driverzhang.github.io/post/%E7%9B%B4%E9%9D%A2%E9%97%AE%E9%A2%98%E8%B0%88%E8%B0%88%E7%84%A6%E8%99%91%E8%B0%88%E8%B0%88%E7%83%A6%E6%81%BC%E8%B0%88%E5%A6%82%E4%BD%95%E6%88%90%E9%95%BF/" data-toggle="tooltip" data-placement="top" title="直面问题，谈谈焦虑，谈谈烦恼，谈如何成长">&larr; Previous Post</a>
+              <a href="https://driverzhang.github.io/post/jzwp%E7%A6%BB%E8%81%8C%E5%90%8E%E6%80%BB%E7%BB%93/" data-toggle="tooltip" data-placement="top" title="JZWP离职后总结">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://driverzhang.github.io/post/uml%E6%97%B6%E5%BA%8F%E5%9B%BE%E5%AE%9E%E8%B7%B5/" data-toggle="tooltip" data-placement="top" title="UML时序图实践">Next Post &rarr;</a>
-            </li>
           
         </ul>
       
