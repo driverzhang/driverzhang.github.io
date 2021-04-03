@@ -7,10 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 13 Dec 2020 21:02:48 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 03 Apr 2021 18:04:24 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Goroutine并发编程注意事项</title>
+      <link>https://driverzhang.github.io/post/goroutine%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</link>
+      <pubDate>Sat, 03 Apr 2021 18:04:24 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/goroutine%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</guid>
+      <description>goroutine并发编程注意事项 总结在实际编写代码中，使用 goroutine 协程时的注意要点和一些编写规范。
+ 在实践业务代码中，我们会经常看见启用 goroutine 方式： go func() {&amp;ldquo;这都是你业务代码，代码中没出现任何管控方式！&amp;rdquo;}，然后就完事了，这里绝对不推荐这种方式，因为没有满足下面的三个条件：
+ 1. 并发业务内容应该让调用者来开启go func(){} 或 go func_xxx() 显示的声明来开启协程。（有利于直观维护性） 2. 开启goroutine 协程跑业务代码，开启者你必须清楚的知道它的生命周期。（什么时候结束，考虑会不会长时间hang住，或者考虑有没有什么异常情况你无法控制） 3. 开启协程必定要加，超时控制退出 或 控制 channel 通知退出。（防止内存泄露出现 野G）  注意：也许有人会说，不好意思，我就没有控制生命周期线上依旧正常运行啊。
+这里只能说，线上跑起来正常不表示你代码就没有BUG，只不过没有满足触发你BUG的条件摆了~
+ goroutine 开启的集几种姿势和控制方案 1. 直接协程go 匿名函数func()方式： 简单demo如下：
+// 5秒超时控制避免 野G ctxTime, cancel := context.WithTimeout(ctx, 5*time.Second) defer cancel() go func() { errCtx := make(chan error) // 调用业务函数返回 error 一个参数，当然这里你也可以返回自己定义的response struct 	errCtx &amp;lt;- qwc.InsertCallbackContent(ctxTime, qwCallbackService.InsertCallbackContentReq{}) select { case &amp;lt;-ctxTime.</description>
+    </item>
     
     <item>
       <title>Golang生成二维码并合并海报图</title>

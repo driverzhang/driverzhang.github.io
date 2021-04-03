@@ -187,6 +187,49 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/goroutine%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
+                <h2 class="post-title">Goroutine并发编程注意事项</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on April 3, 2021
+  
+  
+  
+</span>
+
+
+              </p>
+              <div class="post-entry">
+                
+                  goroutine并发编程注意事项 总结在实际编写代码中，使用 goroutine 协程时的注意要点和一些编写规范。
+ 在实践业务代码中，我们会经常看见启用 goroutine 方式： go func() {&ldquo;这都是你业务代码，代码中没出现任何管控方式！&rdquo;}，然后就完事了，这里绝对不推荐这种方式，因为没有满足下面的三个条件：
+ 1. 并发业务内容应该让调用者来开启go func(){} 或 go func_xxx() 显示的声明来开启协程。（有利于直观维护性） 2. 开启goroutine 协程跑业务代码，开启者你必须清楚的知道它的生命周期。（什么时候结束，考虑会不会长时间hang住，或者考虑有没有什么异常情况你无法控制） 3. 开启协程必定要加，超时控制退出 或 控制 channel 通知退出。（防止内存泄露出现 野G）  注意：也许有人会说，不好意思，我就没有控制生命周期线上依旧正常运行啊。
+这里只能说，线上跑起来正常不表示你代码就没有BUG，只不过没有满足触发你BUG的条件摆了~
+ goroutine 开启的集几种姿势和控制方案 1. 直接协程go 匿名函数func()方式： 简单demo如下：
+// 5秒超时控制避免 野G ctxTime, cancel := context.WithTimeout(ctx, 5*time.Second) defer cancel() go func() { errCtx := make(chan error) // 调用业务函数返回 error 一个参数，当然这里你也可以返回自己定义的response struct 	errCtx &lt;- qwc.InsertCallbackContent(ctxTime, qwCallbackService.InsertCallbackContentReq{}) select { case &lt;-ctxTime.
+                  <a href="https://driverzhang.github.io/post/goroutine%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+                  
+                    <a href="https://driverzhang.github.io//tags/goroutine/">goroutine</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/%E9%80%9A%E8%BF%87channel%E6%8E%A7%E5%88%B6goroutine%E6%95%B0%E9%87%8F%E5%BD%A2%E6%88%90%E5%8D%8F%E7%A8%8B%E6%B1%A0/">
                 <h2 class="post-title">通过channel控制goroutine数量形成协程池</h2>
 
