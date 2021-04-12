@@ -251,13 +251,15 @@
 
 <p>简单demo如下：</p>
 <div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#93a1a1;font-style:italic">// 5秒超时控制避免 野G
-</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">ctxTime</span>, <span style="color:#268bd2">cancel</span> := <span style="color:#268bd2">context</span>.<span style="color:#268bd2">WithTimeout</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#2aa198;font-weight:bold">5</span>*<span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>)
-<span style="color:#859900">defer</span> <span style="color:#268bd2">cancel</span>()
+</span><span style="color:#93a1a1;font-style:italic">// 5秒超时控制避免 野G
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">ctxTime</span>, <span style="color:#268bd2">cancel</span> := <span style="color:#268bd2">context</span>.<span style="color:#268bd2">WithTimeout</span>(<span style="color:#268bd2">context</span>.<span style="color:#268bd2">Background</span>(), <span style="color:#2aa198;font-weight:bold">5</span>*<span style="color:#268bd2">time</span>.<span style="color:#268bd2">Second</span>)
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">cancel</span>()
 
-<span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
 	<span style="color:#268bd2">errCtx</span> := <span style="color:#cb4b16">make</span>(<span style="color:#859900">chan</span> <span style="color:#859900;font-weight:bold">error</span>)
 	<span style="color:#93a1a1;font-style:italic">// 调用业务函数返回 error 一个参数，当然这里你也可以返回自己定义的response struct
-</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">errCtx</span> &lt;- <span style="color:#268bd2">qwc</span>.<span style="color:#268bd2">InsertCallbackContent</span>(<span style="color:#268bd2">ctxTime</span>, <span style="color:#268bd2">qwCallbackService</span>.<span style="color:#268bd2">InsertCallbackContentReq</span>{})
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">go</span> <span style="color:#859900">func</span>() {
+		<span style="color:#268bd2">errCtx</span> &lt;- <span style="color:#268bd2">qwc</span>.<span style="color:#268bd2">InsertCallbackContent</span>(<span style="color:#268bd2">ctxTime</span>, <span style="color:#268bd2">qwCallbackService</span>.<span style="color:#268bd2">InsertCallbackContentReq</span>{})
+	}()
 
 	<span style="color:#859900">select</span> {
 	<span style="color:#859900">case</span> &lt;-<span style="color:#268bd2">ctxTime</span>.<span style="color:#268bd2">Done</span>():
@@ -268,8 +270,7 @@
 			<span style="color:#268bd2">logger</span>.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;TwEventCallback插入回调记录失败：%v&#34;</span>, <span style="color:#268bd2">err</span>.<span style="color:#268bd2">Error</span>())
 		}
 		<span style="color:#859900">return</span>
-	}
-}()</code></pre></div>
+	}</code></pre></div>
 <h2 id="2-直接-go-func-xx-params-无返回结果方式">2. 直接 go func_xx(params) 无返回结果方式：</h2>
 
 <p>首先这个方式与上面区别就很大了，没有返回结果，那你如何控制你的 goroutine 的生命周期呢？</p>
