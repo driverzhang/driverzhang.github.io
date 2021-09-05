@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sat, 03 Apr 2021 18:04:24 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 05 Sep 2021 18:29:34 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang实现oauth2认证</title>
+      <link>https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/</link>
+      <pubDate>Sun, 05 Sep 2021 18:29:34 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/</guid>
+      <description>&lt;h1 id=&#34;goalng实现oauth2-0认证授权&#34;&gt;Goalng实现oauth2.0认证授权&lt;/h1&gt;
+
+&lt;h2 id=&#34;oauth2-0介绍&#34;&gt;oauth2.0介绍：&lt;/h2&gt;
+
+&lt;p&gt;这里不再多说给出参考链接：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html&#34;&gt;理解OAuth 2.0&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;总的来说，OAuth 不是一个API或者服务，而是一个验证授权(Authorization)的开放标准，所有人都有基于这个标准实现自己的OAuth。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Goroutine并发编程注意事项</title>

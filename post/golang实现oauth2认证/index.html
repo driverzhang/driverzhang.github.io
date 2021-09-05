@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Golang实现oauth2认证</title>
+  <meta property="og:title" content="Golang实现oauth2认证" />
+  <meta name="twitter:title" content="Golang实现oauth2认证" />
+  <meta name="description" content="Goalng实现oauth2.0认证授权
+
+oauth2.0介绍：
+
+这里不再多说给出参考链接：
+
+理解OAuth 2.0
+
+总的来说，OAuth 不是一个API或者服务，而是一个验证授权(Authorization)的开放标准，所有人都有基于这个标准实现自己的OAuth。
+
+">
+  <meta property="og:description" content="Goalng实现oauth2.0认证授权
+
+oauth2.0介绍：
+
+这里不再多说给出参考链接：
+
+理解OAuth 2.0
+
+总的来说，OAuth 不是一个API或者服务，而是一个验证授权(Authorization)的开放标准，所有人都有基于这个标准实现自己的OAuth。
+
+">
+  <meta name="twitter:description" content="Goalng实现oauth2.0认证授权
+
+oauth2.0介绍：
+
+这里不再多说给出参考链接：
+
+理解OAuth 2.0
+
+总的来说，OAuth 不是一个API或者服务，而是一个验证授权(Authorization)的开放标准，所有人都有基于这个标准实现自己的OAuth。
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Golang实现oauth2认证</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 5, 2021
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="goalng实现oauth2-0认证授权">Goalng实现oauth2.0认证授权</h1>
+
+<h2 id="oauth2-0介绍">oauth2.0介绍：</h2>
+
+<p>这里不再多说给出参考链接：</p>
+
+<p><a href="https://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html">理解OAuth 2.0</a></p>
+
+<p>总的来说，OAuth 不是一个API或者服务，而是一个验证授权(Authorization)的开放标准，所有人都有基于这个标准实现自己的OAuth。</p>
+
+<p></p>
+
+<p>在OAuth之前，HTTP Basic Authentication, 即用户输入用户名，密码的形式进行验证, 这种形式是不安全的。OAuth的出现就是为了解决访问资源的安全性以及灵活性。OAuth使得第三方应用对资源的访问更加安全。</p>
+
+<p>oauth2.0 有四种模式分别如下：</p>
+
+<ul>
+<li>授权码（authorization-code）</li>
+<li>隐藏式（implicit）</li>
+<li>密码式（password）：</li>
+<li>客户端凭证（client credentials）</li>
+</ul>
+
+<p>本文主要写最难理解的第一种模式： 授权码模式。</p>
+
+<hr />
+
+<h2 id="oauth2-0-之授权码模式">oauth2.0 之授权码模式：</h2>
+
+<p>标准的Server授权模式，非常适合Server端的Web应用。一旦资源的拥有者授权访问他们的数据之后，他们将会被重定向到Web应用并在URL的查询参数中附带一个授权码（code）。</p>
+
+<p>在客户端里，该code用于请求访问令牌（access_token）。并且该令牌交换的过程是两个服务端之前完成的，防止其他人甚至是资源拥有者本人得到该令牌。</p>
+
+<p>另外，在该授权模式下可以通过refresh_token来刷新令牌以延长访问授权时间。</p>
+
+<p>先介绍下四个基本名字：</p>
+
+<ul>
+<li>资源拥有者（resource owner）: 通常就是用户自己，能授权访问受保护资源的一个实体，如QQ用户注册了QQ拥有对应实际账号数据资源</li>
+<li>资源服务器（resource server）: 存储受保护资源，客户端通过access token请求资源，资源服务器响应受保护资源给客户端；其实就是QQ服务器，它存储着你的QQ账号数据。</li>
+<li>授权服务器（authorization server）: 验证资源拥有者并获取授权之后，授权服务器颁发授权令牌（Access Token）给客户端，一般来说授权认证服务器与资源服务器都是一个内部体系的，不然它凭什么给你一个access token，你就能访问对应资源了。</li>
+<li>客户端（client）：一些第三方应用，其本身不存储资源，而是资源拥有者授权通过后，使用它的授权（授权令牌）访问受保护资源，然后客户端把相应的数据展示出来。“客户端”术语不代表任何特定实现（如应用运行在一台服务器、桌面、手机或其他设备）。 比如你的网站想接入QQ或则微信直接登录你的平台。</li>
+</ul>
+
+<p>demo 时序图如下：</p>
+
+<ul>
+<li>用户浏览器，对应的用户其实自身就 resource owner，用于QQ账号</li>
+<li>豆瓣网站，对应 client，它接入了QQ登录的方式</li>
+<li>QQ授权服务：对应 authorization server， 下图也包括内部的 resource server。</li>
+</ul>
+
+<p><img src="https://images2017.cnblogs.com/blog/1096103/201708/1096103-20170824142737402-1297004164.png" alt="https://images2017.cnblogs.com/blog/1096103/201708/1096103-20170824142737402-1297004164.png" /></p>
+
+<h3 id="梳理下每一步必须要参数">梳理下每一步必须要参数：</h3>
+
+<ol>
+<li>首先你得拥有属于自己应用对应的 appkey、appsecret 分别对应 OAuth2.0 中的 client_id 与client_secret，可能一些服务端会扩展一些其他的名称。并设置好你自己的 redirect_uri 跳转回调地址，用于通知给你code码，还可以设置好 state附带返回参数，scope授权范围.</li>
+<li>当你拿到code后，就可以换取access_token了。一般都必须返回至少三个参数：refresh_token、access_token、expires_in</li>
+<li>三方应用拿到access_token后就可以请求资源服务器获取用户数据了，如果超时则用refresh_token进行重刷access_token。</li>
+</ol>
+
+<p>参数列表：</p>
+
+<ul>
+<li>response_type：表示授权类型，必选项，此处的值固定为&rdquo;code&rdquo;</li>
+<li>client_id：表示客户端的ID，必选项</li>
+<li>redirect_uri：表示重定向URI，可选项</li>
+<li>scope：表示申请的权限范围如 user，order，可选项</li>
+<li>state：表示客户端的当前状态，可以指定任意值，认证服务器会原封不动地返回这个值。</li>
+<li>code：表示授权码，必选项。通常授权码只能使用该码一次，并且会设置有效时间。</li>
+<li>grant_type：表示使用的授权模式，必选项，此处的值固定为&rdquo;authorization_code&rdquo;。</li>
+<li>client_secret:表示客户端密钥，必选项。</li>
+<li>access_token：表示访问令牌，必选项。</li>
+<li>token_type：表示令牌类型，该值大小写不敏感，必选项，可以是bearer类型或mac类型。</li>
+<li>expires_in：表示过期时间，单位为秒。如果省略该参数，必须其他方式设置过期时间。</li>
+<li>refresh_token：表示更新令牌，用来获取下一次的访问令牌，可选项。</li>
+</ul>
+
+<hr />
+
+<h2 id="golang-实现-oauth2-0-代码实战">golang 实现 oauth2.0 代码实战：</h2>
+
+<p>这里直接使用开源三方 oauth2.0 库：</p>
+
+<p><a href="https://github.com/openshift/osin">GitHub - openshift/osin: Golang OAuth2 server library</a></p>
+
+<h3 id="谈谈该库">谈谈该库：</h3>
+
+<p>优点：</p>
+
+<ul>
+<li>实现代码简单易读，实现方式可借鉴学习，典型的插件化调用。</li>
+<li>代码test和demo较为完整</li>
+<li>storage 存储只要自己实现好interface 就能自动存入对应表数据</li>
+<li>只有三张表数据结构基本满足，其中一张为临时code对应access_token表。</li>
+</ul>
+
+<p>缺点：</p>
+
+<ul>
+<li>检验机制较为单薄，如 Authorization header拼接参数的检验</li>
+<li>没有refresh_token的超时设计</li>
+<li>致命问题是返回的提示语没有code编码提示，很多错误提示都得自己看源码调试才知道原因，而且返回的错误提示大体长的都差不多。</li>
+<li>另外一个问题，请求参数输入参数没有具体文档，得自己看源码研究，参数一旦错误没有明确提示得自己debug调试，这个把我坑惨了，不过还好源码简单。。。</li>
+</ul>
+
+<h3 id="具体show-code">具体show code:</h3>
+
+<p>除开一些获取配置和前端联动的接口外，这里只设计了三个主要接口：</p>
+
+<ol>
+<li>根据client_id、redirect_uri、scope、state获取跳转地址和code码；</li>
+</ol>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OauthController</span>) <span style="color:#268bd2">GetCodeByAppID</span>(<span style="color:#268bd2">ctx</span> *<span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Context</span>) {
+	<span style="color:#93a1a1;font-style:italic">// 检验参数、系统内部授权jwt验证等...
+</span><span style="color:#93a1a1;font-style:italic"></span> <span style="color:#93a1a1;font-style:italic">// 开始调用三方库方法：
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">serverCf</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServerConfig</span>()
+<span style="color:#93a1a1;font-style:italic">// NewOauthStorage 返回的strcut需要你自行实行对应的interface接口
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">server</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServer</span>(<span style="color:#268bd2">serverCf</span>, <span style="color:#268bd2">service</span>.<span style="color:#268bd2">NewOauthStorage</span>(<span style="color:#268bd2">ctx</span>))
+<span style="color:#93a1a1;font-style:italic">// 注入你自己的Log,这样服务端才能打印对应你的日志格式
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">server</span>.<span style="color:#268bd2">Logger</span> = <span style="color:#268bd2">log</span>.<span style="color:#268bd2">G</span>(<span style="color:#268bd2">ctx</span>)
+	<span style="color:#268bd2">resp</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">NewResponse</span>()
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">Close</span>()
+
+<span style="color:#93a1a1;font-style:italic">// HandleAuthorizeRequest 会进行各种参数验证和类型逻辑判断
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#859900">if</span> <span style="color:#268bd2">ar</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">HandleAuthorizeRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>); <span style="color:#268bd2">ar</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">ar</span>.<span style="color:#268bd2">Authorized</span> = <span style="color:#859900;font-weight:bold">true</span>
+<span style="color:#93a1a1;font-style:italic">// 这里需要注入你的用户相关数据，便于框架存入表中
+</span><span style="color:#93a1a1;font-style:italic">// UserData 是个 interface类型，需要你自己定义用户数据 strcut
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">ar</span>.<span style="color:#268bd2">UserData</span> = <span style="color:#268bd2">model</span>.<span style="color:#268bd2">UserData</span>{
+			<span style="color:#268bd2">ID</span>:        <span style="color:#268bd2">sess</span>.<span style="color:#268bd2">UID</span>,
+			<span style="color:#268bd2">Account</span>:   <span style="color:#268bd2">sess</span>.<span style="color:#268bd2">Account</span>,
+			<span style="color:#268bd2">AccountDB</span>: <span style="color:#268bd2">sess</span>.<span style="color:#268bd2">AccountDB</span>,
+		}
+<span style="color:#93a1a1;font-style:italic">// FinishAuthorizeRequest 执行数据生产如token产生和赋值
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#268bd2">server</span>.<span style="color:#268bd2">FinishAuthorizeRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>, <span style="color:#268bd2">ar</span>)
+	}
+	<span style="color:#859900">if</span> <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">IsError</span> &amp;&amp; <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">InternalError</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">response</span>.<span style="color:#268bd2">RespError</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">InternalError</span>)
+		<span style="color:#859900">return</span>
+	}
+
+<span style="color:#93a1a1;font-style:italic">// 最终输出前端 或 302跳转
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">OutputJSON</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Writer</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">response</span>.<span style="color:#268bd2">RespError</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">InternalError</span>)
+		<span style="color:#859900">return</span>
+	}
+}</code></pre></div>
+<ol>
+<li>根据 code、state 换取 access_token</li>
+</ol>
+
+<p>这个接口入参如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">Authorization	header	  认证授权：Basic空格{加密字段f}	        string	是
+grant_type	  formData	授权类型 固定填写 <span style="color:#2aa198">&#34;authorization_code&#34;</span>	string	是
+code	        formData	code编码	                            string	是
+state	        formData	state附带参数	                      string	no
+
+加密字段f = {client}:{secret} ==&gt; base<span style="color:#2aa198;font-weight:bold">64</span> encode
+
+golang demo:
+auth := <span style="color:#2aa198">&#34;1234&#34;</span> + <span style="color:#2aa198">&#34;:&#34;</span> + <span style="color:#2aa198">&#34;abcd&#34;</span>
+
+base<span style="color:#2aa198;font-weight:bold">64</span>.StdEncoding.EncodeToString([]byte(auth))</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OauthController</span>) <span style="color:#268bd2">GetAccessToken</span>(<span style="color:#268bd2">ctx</span> *<span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Context</span>) {
+  <span style="color:#93a1a1;font-style:italic">// 获取参数检验...
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 这里建议自己实现一次 参数验证，固定code返回格式便于错误定位。
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 这里只要 接口1调通并且拿到正确的code，这里框架直接应用，会自动就生成返回数据：
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">serverCf</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServerConfig</span>()
+	<span style="color:#859900">var</span> <span style="color:#268bd2">server</span> = <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServer</span>(<span style="color:#268bd2">serverCf</span>, <span style="color:#268bd2">service</span>.<span style="color:#268bd2">NewOauthStorage</span>(<span style="color:#268bd2">ctx</span>))
+	<span style="color:#268bd2">resp</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">NewResponse</span>()
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">Close</span>()
+
+	<span style="color:#859900">if</span> <span style="color:#268bd2">ar</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">HandleAccessRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>); <span style="color:#268bd2">ar</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">ar</span>.<span style="color:#268bd2">Authorized</span> = <span style="color:#859900;font-weight:bold">true</span>
+		<span style="color:#268bd2">server</span>.<span style="color:#268bd2">FinishAccessRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>, <span style="color:#268bd2">ar</span>)
+	}
+
+	<span style="color:#268bd2">err</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">OutputJSON</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Writer</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">response</span>.<span style="color:#268bd2">RespError</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">InternalError</span>)
+		<span style="color:#859900">return</span>
+	}
+	<span style="color:#859900">return</span>
+}</code></pre></div>
+<p>该接口返回格式如下：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#268bd2;font-weight:bold">&#34;access_token&#34;</span>: <span style="color:#2aa198">&#34;SKb9y_ZkQrmGg9UXJHIldA&#34;</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;expires_in&#34;</span>: <span style="color:#2aa198;font-weight:bold">3600</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;refresh_token&#34;</span>: <span style="color:#2aa198">&#34;YfoYnjYmS3a-jpmKezSWbQ&#34;</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;token_type&#34;</span>: <span style="color:#2aa198">&#34;Bearer&#34;</span>
+}</code></pre></div>
+<ol>
+<li>根据refresh_token 重新刷新access_token</li>
+</ol>
+
+<p>入参：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">Authorization	header	认证授权：Basic空格{加密字段f}	      string	是
+grant_type	  formData	授权类型 固定填写 <span style="color:#2aa198">&#34;refresh_token&#34;</span>	string	是
+refresh_token	formData	refresh_token	                  string	是
+state	        formData	state附带参数	                  string	no</code></pre></div><div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">func</span> (<span style="color:#268bd2">o</span> *<span style="color:#268bd2">OauthController</span>) <span style="color:#268bd2">GetRefreshAccessToken</span>(<span style="color:#268bd2">ctx</span> *<span style="color:#268bd2">gin</span>.<span style="color:#268bd2">Context</span>) {
+	<span style="color:#93a1a1;font-style:italic">// 参数检验
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 正式授权换token
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">serverCf</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServerConfig</span>()
+<span style="color:#93a1a1;font-style:italic">// 注意这里 AllowedAccessTypes ： REFRESH_TOKEN 需要加载
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">serverCf</span>.<span style="color:#268bd2">AllowedAccessTypes</span> = <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">AllowedAccessType</span>{<span style="color:#268bd2">osin</span>.<span style="color:#268bd2">REFRESH_TOKEN</span>}
+	<span style="color:#268bd2">server</span> := <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">NewServer</span>(<span style="color:#268bd2">serverCf</span>, <span style="color:#268bd2">storageDao</span>)
+	<span style="color:#268bd2">server</span>.<span style="color:#268bd2">Logger</span> = <span style="color:#268bd2">log</span>.<span style="color:#268bd2">G</span>(<span style="color:#268bd2">ctx</span>)
+	<span style="color:#268bd2">resp</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">NewResponse</span>()
+	<span style="color:#859900">defer</span> <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">Close</span>()
+
+	<span style="color:#859900">if</span> <span style="color:#268bd2">ar</span> := <span style="color:#268bd2">server</span>.<span style="color:#268bd2">HandleAccessRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>); <span style="color:#268bd2">ar</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">ar</span>.<span style="color:#268bd2">Authorized</span> = <span style="color:#859900;font-weight:bold">true</span>
+		<span style="color:#268bd2">server</span>.<span style="color:#268bd2">FinishAccessRequest</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>, <span style="color:#268bd2">ar</span>)
+	}
+
+	<span style="color:#268bd2">err</span> = <span style="color:#268bd2">osin</span>.<span style="color:#268bd2">OutputJSON</span>(<span style="color:#268bd2">resp</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Writer</span>, <span style="color:#268bd2">ctx</span>.<span style="color:#268bd2">Request</span>)
+	<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> {
+		<span style="color:#268bd2">response</span>.<span style="color:#268bd2">RespError</span>(<span style="color:#268bd2">ctx</span>, <span style="color:#268bd2">resp</span>.<span style="color:#268bd2">InternalError</span>)
+		<span style="color:#859900">return</span>
+	}
+	<span style="color:#859900">return</span>
+}</code></pre></div>
+<p>依旧返回：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+    <span style="color:#268bd2;font-weight:bold">&#34;access_token&#34;</span>: <span style="color:#2aa198">&#34;SKb9y_ZkQrmGg9UXJHIldA&#34;</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;expires_in&#34;</span>: <span style="color:#2aa198;font-weight:bold">3600</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;refresh_token&#34;</span>: <span style="color:#2aa198">&#34;YfoYnjYmS3a-jpmKezSWbQ&#34;</span>,
+    <span style="color:#268bd2;font-weight:bold">&#34;token_type&#34;</span>: <span style="color:#2aa198">&#34;Bearer&#34;</span>
+}</code></pre></div>
+<p>主题流程就走通了，其余就是自己根据业务系统进行调整即可。</p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f&amp;text=Golang%e5%ae%9e%e7%8e%b0oauth2%e8%ae%a4%e8%af%81&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f&amp;title=Golang%e5%ae%9e%e7%8e%b0oauth2%e8%ae%a4%e8%af%81" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f&amp;title=Golang%e5%ae%9e%e7%8e%b0oauth2%e8%ae%a4%e8%af%81" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f&amp;title=Golang%e5%ae%9e%e7%8e%b0oauth2%e8%ae%a4%e8%af%81" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2fgolang%25E5%25AE%259E%25E7%258E%25B0oauth2%25E8%25AE%25A4%25E8%25AF%2581%2f&amp;description=Golang%e5%ae%9e%e7%8e%b0oauth2%e8%ae%a4%e8%af%81" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/goroutine%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" data-toggle="tooltip" data-placement="top" title="Goroutine并发编程注意事项">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2021
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
