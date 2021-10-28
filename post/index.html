@@ -187,6 +187,50 @@
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/">
+                <h2 class="post-title">借一次线上BUG学习Golang内存模型</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 29, 2021
+  
+  
+  
+</span>
+
+
+              </p>
+              <div class="post-entry">
+                
+                  <h1 id="借一次线上bug学习golang内存模型">借一次线上BUG学习Golang内存模型</h1>
+
+<h2 id="线上代码bug回顾">线上代码BUG回顾：</h2>
+
+<blockquote>
+<p>主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；</p>
+</blockquote>
+
+<p></p>
+                  <a href="https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/">
                 <h2 class="post-title">Golang实现oauth2认证</h2>
 
@@ -440,48 +484,6 @@
                     <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
                   
                     <a href="https://driverzhang.github.io//tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">最佳实践</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/">
-                <h2 class="post-title">Golang函数内联优化</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 18, 2020
-  
-  
-  
-</span>
-
-
-              </p>
-              <div class="post-entry">
-                
-                  <h2 id="内联优化背景">内联优化背景：</h2>
-
-<p>最近使用 onec.Do 对应 sync 的 once.go 文件的源码，发现在最近一年内发生了不小的变动，而且这模式的变动在多处被以相同的方法进行了优化，就是函数内联优化。</p>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/golang%E5%87%BD%E6%95%B0%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/">代码优化</a>&nbsp;
                   
                 </div>
               

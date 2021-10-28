@@ -7,10 +7,27 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <copyright>All rights reserved 2016 - 2018</copyright>
-    <lastBuildDate>Sun, 05 Sep 2021 18:29:34 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 29 Oct 2021 00:22:42 +0800</lastBuildDate>
     
 	<atom:link href="https://driverzhang.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>借一次线上BUG学习Golang内存模型</title>
+      <link>https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Fri, 29 Oct 2021 00:22:42 +0800</pubDate>
+      
+      <guid>https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;h1 id=&#34;借一次线上bug学习golang内存模型&#34;&gt;借一次线上BUG学习Golang内存模型&lt;/h1&gt;
+
+&lt;h2 id=&#34;线上代码bug回顾&#34;&gt;线上代码BUG回顾：&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Golang实现oauth2认证</title>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>借一次线上BUG学习Golang内存模型</title>
+  <meta property="og:title" content="借一次线上BUG学习Golang内存模型" />
+  <meta name="twitter:title" content="借一次线上BUG学习Golang内存模型" />
+  <meta name="description" content="借一次线上BUG学习Golang内存模型
+
+线上代码BUG回顾：
+
+
+主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；
+
+
+">
+  <meta property="og:description" content="借一次线上BUG学习Golang内存模型
+
+线上代码BUG回顾：
+
+
+主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；
+
+
+">
+  <meta name="twitter:description" content="借一次线上BUG学习Golang内存模型
+
+线上代码BUG回顾：
+
+
+主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；
+
+
+">
+  <meta name="author" content="Gopherzhang"/>
+  <link href='https://driverzhang.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:image" content="https://driverzhang.github.io/img/gopher-head.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gopherzhang" />
+
+  <meta name="generator" content="Hugo 0.48" />
+  <link rel="canonical" href="https://driverzhang.github.io/post/%E5%80%9F%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8Abug%E5%AD%A6%E4%B9%A0golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" />
+  <link rel="alternate" href="https://driverzhang.github.io/index.xml" type="application/rss+xml" title="Gopherzhang">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://driverzhang.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://driverzhang.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://driverzhang.github.io/">Gopherzhang</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="tags" href="/tags/">tags</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="my life" href="/life/">my life</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="about me" href="/about/">about me</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">gitbooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://chai2010.gitbooks.io/advanced-go-programming-book/content/">Advanced Go Programming</a>
+                
+                  <a href="https://jimmysong.io/kubernetes-handbook/">Kubernetes Handbook</a>
+                
+                  <a href="https://books.studygolang.com/gopl-zh/index.html">The Go Programming Language</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">mybooks</a>
+              <div class="navlinks-children">
+                
+                  <a href="https://gopherzhang-1992.gitbook.io/golang-server-side/">Go后知后觉</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Gopherzhang" href="https://driverzhang.github.io/">
+            <img class="avatar-img" src="https://driverzhang.github.io/img/gopher-head.png" alt="Gopherzhang" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>借一次线上BUG学习Golang内存模型</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on October 29, 2021
+  
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h1 id="借一次线上bug学习golang内存模型">借一次线上BUG学习Golang内存模型</h1>
+
+<h2 id="线上代码bug回顾">线上代码BUG回顾：</h2>
+
+<blockquote>
+<p>主要是 config 配置文件（公共配置版，很多包都会去Init一下），利用全局变量进行替换加载，但是没加锁进行同步控制导致 config 里面对应的值读取有一定概率为 空值；</p>
+</blockquote>
+
+<p></p>
+
+<p>直接说下代码表现形式吧，直接上demo代码不废话：</p>
+
+<p>下面这段demo代码是一个config的基础配置组件包，每个项目可以自己定义一个项目独有的config，但是绝大部分都会在内嵌该基础配置包；</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">var</span> <span style="color:#268bd2">c</span> *<span style="color:#268bd2">Config</span>
+
+<span style="color:#859900">type</span> <span style="color:#268bd2">Config</span> <span style="color:#859900">struct</span> {
+	<span style="color:#93a1a1;font-style:italic">// 一大堆属性嵌套配置
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// ......
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// Get 获取配置 外部通过调用该方法直接获取全局变量c
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> <span style="color:#268bd2">Get</span>() *<span style="color:#268bd2">Config</span> {
+	<span style="color:#859900">return</span> <span style="color:#268bd2">c</span>
+}
+
+<span style="color:#93a1a1;font-style:italic">// Init 初始化
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#859900">func</span> (<span style="color:#268bd2">config</span> *<span style="color:#268bd2">Config</span>) <span style="color:#268bd2">Init</span>(<span style="color:#268bd2">opts</span> ...<span style="color:#268bd2">Option</span>) <span style="color:#859900;font-weight:bold">error</span> {
+	<span style="color:#93a1a1;font-style:italic">// 开始各种给 config 赋值
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#93a1a1;font-style:italic">// 然后最终给了一个全局变量c
+</span><span style="color:#93a1a1;font-style:italic"></span>	<span style="color:#268bd2">c</span> = <span style="color:#268bd2">config</span>
+	<span style="color:#859900">return</span> <span style="color:#859900;font-weight:bold">nil</span>
+}</code></pre></div>
+<p>外部程序加载调用上面的包代码：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#859900">type</span> <span style="color:#268bd2">Config</span> <span style="color:#859900">struct</span> {
+	<span style="color:#268bd2">ginConfig</span>.<span style="color:#268bd2">Config</span> <span style="color:#93a1a1;font-style:italic">// 直接嵌套上面的结构体Config
+</span><span style="color:#93a1a1;font-style:italic"></span>}
+
+<span style="color:#93a1a1;font-style:italic">// 调用方式如下：
+</span><span style="color:#93a1a1;font-style:italic"></span><span style="color:#268bd2">config</span> = &amp;<span style="color:#268bd2">Config</span>{<span style="color:#268bd2">FlagDisable</span>: <span style="color:#859900;font-weight:bold">true</span>}
+<span style="color:#859900">if</span> <span style="color:#268bd2">err</span> := <span style="color:#268bd2">config</span>.<span style="color:#268bd2">Init</span>(); <span style="color:#268bd2">err</span> != <span style="color:#859900;font-weight:bold">nil</span> { <span style="color:#93a1a1;font-style:italic">// 这里调用的就是上面的  Init 初始化 函数
+</span><span style="color:#93a1a1;font-style:italic"></span>		<span style="color:#859900">return</span> <span style="color:#268bd2">err</span>
+}</code></pre></div>
+<p>以上就是部分代码初始化和调用过程。其实有经验的 gopher 一眼可以看出，一个全局变量在进行Init() 函数初始化时（注意它这里并木有走go自带的默认加载 init() 方式，它是自定义的大写Init函数手动调用加载）对其进行赋值写操作，它这里并没有任何类似任何锁的操作。</p>
+
+<p>如果整个程序你的所有服务都是显示的都只在 main 函数中加载那么一次，通过显示传递到要使用config 的函数中就可能不会发生读写竞争的情况。但是我司一些基础项目结构包封装并没有这样搞，而是隐式操作，直接在想加载初始化配置文件的任何地方进行类似 config.Init() 操作。</p>
+
+<p>比如一个业务数据 Dao 层的初始化需要获取对应该业务独有的 config 包，你只有去调一下它的 Init() 函数，不然势必会报 空指针 panic，结果就是如上面所说的那样，这个 Init() 函数中也加载了一次 config 的基础配置组件包。类似这种无感知的封装操作，多处都在写入 config 操作同一个全局变量，又不加锁，情况可想而知！</p>
+
+<p>它就是可能会读出空值（至于为什么，请往下看）。直接导致本次操作接口无效报错。</p>
+
+<h3 id="这种错误原因如下">这种错误原因如下：</h3>
+
+<ul>
+<li>对 golang 本身的内存模型不够熟知</li>
+<li>对 golang 项目组织参数传递，包组件的应用配置设计的不合理</li>
+</ul>
+
+<h3 id="正确建议">正确建议：</h3>
+
+<ul>
+<li>消除全局变量，显示传入任何需要用到的config的地方，让调用者明确清楚需要的数据源。</li>
+<li>实在有全局变量，如果程序中修改数据时有其他goroutine同时读取，那么必须将读取串行化，为了串行化访问，请使用channel或其他同步原语，例如sync和sync/atomic来保护数据。</li>
+<li>对Go语言内存模型加深学习；正文开始如下：</li>
+</ul>
+
+<hr />
+
+<h2 id="内存模式">内存模式</h2>
+
+<ul>
+<li><p>基本概念：</p>
+
+<blockquote>
+<p>The Go memory model specifies the conditions under which reads of a variable in one goroutine can be guaranteed to observe values produced by writes to the same variable in a different goroutine.</p>
+</blockquote>
+
+<p>Go 内存模型指定了在何种条件下可以保证在一个 goroutine 中能正确读取到由其他 goroutine 进行写操作某相同变量所产生的值。</p></li>
+
+<li><p>核心思想把控：
+Happens Before：<strong>先行发生；</strong></p>
+
+<blockquote>
+<p>To specify the requirements of reads and writes, we define <em>happens before</em>, a partial order on the execution of memory operations in a Go program. If event *e1* happens before event <em>e2</em>, then we say that *e2* happens after <em>e1</em>. Also, if *e1* does not happen before *e2* and does not happen after <em>e2</em>, then we say that *e1* and *e2* happen concurrently.</p>
+</blockquote>
+
+<p>这里的这段概念你去看原文后发现说了个啥，比较晦涩，这端话之前原文还提到 ：</p>
+
+<blockquote>
+<p>Within a single goroutine, reads and writes must behave as if they executed in the order specified by the program. That is, compilers and processors may reorder the reads and writes executed within a single goroutine only when the reordering does not change the behavior within that goroutine as defined by the language specification. Because of this reordering, the execution order observed by one goroutine may differ from the order perceived by another.</p>
+</blockquote>
+
+<p>在一个 goroutine 中读写的行为势必是按照指定好的顺序去执行， 而编译器和处理器会让你指定的这种顺序进行重排 reorder；</p>
+
+<blockquote>
+<p>For example, if one goroutine executes <code>a = 1; b = 2;</code>, another might observe the updated value of <code>b</code> before the updated value of <code>a</code>.</p>
+</blockquote>
+
+<p>比如在一个g中写入了<code>a = 1; b = 2;</code>，但在另外一个g中读取时可能看到<code>b</code>在<code>a</code>之前更新，即结果可能是 a = 0; b =2； 而不是你想的 要么都没读取到即都为0，要么都读取完a=1;b=2的情况。</p>
+
+<p>看看几个demo其实就很好理解了：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#dc322f;font-weight:bold">package</span> <span style="color:#268bd2">main</span>
+    
+<span style="color:#dc322f;font-weight:bold">import</span> <span style="color:#2aa198">&#34;time&#34;</span>
+    
+<span style="color:#859900">var</span> <span style="color:#268bd2">a</span>, <span style="color:#268bd2">b</span> <span style="color:#859900;font-weight:bold">int</span>
+    
+<span style="color:#859900">func</span> <span style="color:#268bd2">f</span>() {
+    <span style="color:#268bd2">a</span> = <span style="color:#2aa198;font-weight:bold">1</span>
+    <span style="color:#268bd2">b</span> = <span style="color:#2aa198;font-weight:bold">2</span>
+}
+    
+<span style="color:#859900">func</span> <span style="color:#268bd2">g</span>() {
+    <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Sleep</span>(<span style="color:#2aa198;font-weight:bold">1</span> * <span style="color:#268bd2">time</span>.<span style="color:#268bd2">Microsecond</span>)
+    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">b</span>)
+    <span style="color:#cb4b16">print</span>(<span style="color:#268bd2">a</span>)
+}
+    
+<span style="color:#859900">func</span> <span style="color:#268bd2">main</span>() {
+    <span style="color:#859900">go</span> <span style="color:#268bd2">f</span>()
+    <span style="color:#268bd2">g</span>()
+}</code></pre></div>
+<p>输出结果可能如下：</p>
+
+<ul>
+<li>21</li>
+<li>20</li>
+<li>01</li>
+<li>00
+<br /></li>
+</ul>
+
+<p>To specify the requirements of reads and writes, we define <em>happens before</em>, a partial order on the execution of memory operations in a Go program. If event *e1* happens before event <em>e2</em>, then we say that *e2* happens after <em>e1</em>. Also, if *e1* does not happen before *e2* and does not happen after <em>e2</em>, then we say that *e1* and *e2* happen concurrently.</p></li>
+</ul>
+
+<p>再来回顾下happens-before：</p>
+
+<p>如果满足下面条件，对变量v的读操作r可以侦测到对变量v的写操作w：</p>
+
+<ul>
+<li>r does not happen before w.</li>
+<li>There is no other write w to v that happens after w but before r.</li>
+</ul>
+
+<p>为了保证对变量v的读操作r可以侦测到某个对v的写操作w，必须确保w是r可以侦测到的唯一的写操作。</p>
+
+<p>所有结合文章开头说的BUG现象，代码中的全局变量 c, 要想再config.Get()读取时不为空值（即为侦测到某个对c的写操作w），那必须确保对 c 的写操作是对于读取该变量时的唯一写操作。</p>
+
+<ul>
+<li><p>运用工具函数包等：</p>
+
+<p>sync包中比如 锁操作、once、atomic包等，包括利用 channel，来通过通讯来共享变量，而不是共享变量来进行通讯。</p></li>
+</ul>
+
+<p>想深入了解可以看下面 参考文章，尤其是官方原版 ，建议读5遍！</p>
+
+<hr />
+
+<h3 id="参考">参考</h3>
+
+<ul>
+<li><strong>The Go Memory Model（英文原版，反复读五遍）</strong></li>
+</ul>
+
+<p><a href="https://golang.org/ref/mem">The Go Memory Model</a></p>
+
+<ul>
+<li>中文翻译版</li>
+</ul>
+
+<p><a href="https://www.jianshu.com/p/5e44168f47a3">Go的内存模型</a></p>
+
+<ul>
+<li>民间解说版本</li>
+</ul>
+
+<p><a href="https://tiancaiamao.gitbooks.io/go-internals/content/zh/10.1.html">内存模型</a></p>
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://driverzhang.github.io//tags/golang/">golang</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f&amp;text=%e5%80%9f%e4%b8%80%e6%ac%a1%e7%ba%bf%e4%b8%8aBUG%e5%ad%a6%e4%b9%a0Golang%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b&amp;via="
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f&amp;title=%e5%80%9f%e4%b8%80%e6%ac%a1%e7%ba%bf%e4%b8%8aBUG%e5%ad%a6%e4%b9%a0Golang%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f&amp;title=%e5%80%9f%e4%b8%80%e6%ac%a1%e7%ba%bf%e4%b8%8aBUG%e5%ad%a6%e4%b9%a0Golang%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f&amp;title=%e5%80%9f%e4%b8%80%e6%ac%a1%e7%ba%bf%e4%b8%8aBUG%e5%ad%a6%e4%b9%a0Golang%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fdriverzhang.github.io%2fpost%2f%25E5%2580%259F%25E4%25B8%2580%25E6%25AC%25A1%25E7%25BA%25BF%25E4%25B8%258Abug%25E5%25AD%25A6%25E4%25B9%25A0golang%25E5%2586%2585%25E5%25AD%2598%25E6%25A8%25A1%25E5%259E%258B%2f&amp;description=%e5%80%9f%e4%b8%80%e6%ac%a1%e7%ba%bf%e4%b8%8aBUG%e5%ad%a6%e4%b9%a0Golang%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://driverzhang.github.io/post/golang%E5%AE%9E%E7%8E%B0oauth2%E8%AE%A4%E8%AF%81/" data-toggle="tooltip" data-placement="top" title="Golang实现oauth2认证">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://www.facebook.com/xiaoxin.zhang" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/driverzhang" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://driverzhang.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              Gopherzhang
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2021
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://driverzhang.github.io/">Gopherzhang</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.48</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/main.js"></script>
+<script src="https://driverzhang.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://driverzhang.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
