@@ -230,53 +230,6 @@
           
           
             <article class="post-preview">
-              <a href="https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
-                <h2 class="post-title">高性能数据库集群：分库分表</h2>
-                
-                
-              </a>
-
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp;Posted on September 6, 2018
-  
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h1 id="高性能数据库集群-分库分表">高性能数据库集群：分库分表</h1>
-
-<blockquote>
-<p>读写分离分散了数据库读写操作的压力，但没有分散存储压力，当数据量达到千万甚至上亿条的时候，单台数据库服务器的存储能力会成为系统的瓶颈，主要体现在这几个方面：</p>
-</blockquote>
-
-<ul>
-<li>数据量太大，读写的性能会下降，即使有索引，索引也会变得很大，性能同样会下降。</li>
-<li>数据文件会变得很大，数据库备份和恢复需要耗费很长时间。</li>
-<li>数据文件越大，极端情况下丢失数据的风险越高（例如，机房火灾导致数据库主备机都发生故障）。</li>
-</ul>
-
-<p></p>
-                  <a href="https://driverzhang.github.io/post/%E9%AB%98%E6%80%A7%E8%83%BD%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://driverzhang.github.io//tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>&nbsp;
-                  
-                    <a href="https://driverzhang.github.io//tags/%E6%9E%B6%E6%9E%84/">架构</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
               <a href="https://driverzhang.github.io/post/goroutin-%E4%B8%8E-map-%E5%B9%B6%E5%8F%91%E7%9A%84%E9%87%87%E5%9D%91%E4%BA%8B%E4%BB%B6/">
                 <h2 class="post-title">goroutin 与 map 并发的采坑事件</h2>
                 
@@ -551,6 +504,56 @@ interfaces -&gt; nil</pre></div>
               
             </article>
           
+            <article class="post-preview">
+              <a href="https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/">
+                <h2 class="post-title">本地配置SSH 登录服务商</h2>
+                
+                
+              </a>
+
+              <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on July 8, 2018
+  
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  <h1 id="本地配置ssh-登录服务商">本地配置SSH 登录服务商</h1>
+
+<h2 id="1-创建ssh公钥和私钥">1. 创建ssh公钥和私钥</h2>
+
+<p>在你的终端输入：</p>
+<div class="highlight"><pre style="color:#586e75;background-color:#eee8d5;-moz-tab-size:4;-o-tab-size:4;tab-size:4">ssh-keygen
+
+cd .ssh/
+
+open ./</pre></div>
+<p>你就会看见 有两个文件：</p>
+
+<ul>
+<li>### id_rsa (这是用于你本地登录服务器的秘钥)</li>
+<li>### id_rsa.pub (这就是要给服务器配置你的公钥)</li>
+</ul>
+
+<p></p>
+                  <a href="https://driverzhang.github.io/post/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AEssh-%E7%99%BB%E5%BD%95%E6%9C%8D%E5%8A%A1%E5%95%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://driverzhang.github.io//tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">服务器</a>&nbsp;
+                  
+                </div>
+              
+            </article>
+          
         </div>
 
         
@@ -615,7 +618,7 @@ interfaces -&gt; nil</pre></div>
           
 
           &nbsp;&bull;&nbsp;
-          2021
+          2022
 
           
             &nbsp;&bull;&nbsp;
